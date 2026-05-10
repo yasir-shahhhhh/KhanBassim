@@ -1084,7 +1084,7 @@ function initializeKhanLogic() {
         });
     }
 
-    const KHAN_SYSTEM_VER = '2.3.1';
+    const KHAN_SYSTEM_VER = '4.3';
     const CONTEXT_LIMIT = 30; // Max messages in one session
 
     // â”€â”€ System Update Check â”€â”€
