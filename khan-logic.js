@@ -2,6 +2,7 @@
 const Cookie = {
     set(name, value, days = 365) {
         const d = new Date(); d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
+
         document.cookie = `${name}=${encodeURIComponent(value)};expires=${d.toUTCString()};path=/;SameSite=Lax`;
     },
     get(name) {
@@ -19,7 +20,7 @@ function playMsgSound(type) {
     // Optional: add sound files if needed
 }
 
-        // ─────────────────────────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         const BaasimDB = (() => {
             const DB_NAME = 'BaasimPortfolioDB', DB_VER = 2;
             let db = null;
@@ -125,15 +126,15 @@ function playMsgSound(type) {
             return { open, put, get, getByIndex, getAllByIndex, del, getAllByIndexRange, clearAll };
         })();
 
-        // ─────────────────────────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         // Automatic System Cleanup for v2.2 Update
-        // ─────────────────────────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         (async function() {
             try {
                 const CURRENT_SYSTEM_VER = '2.3.1';
                 const lastVer = localStorage.getItem('khan_system_ver');
                 if (lastVer !== CURRENT_SYSTEM_VER) {
-                    console.warn('⚡ System Update Detected: Purging stale database and cache...');
+                    console.warn('âš¡ System Update Detected: Purging stale database and cache...');
                     await BaasimDB.clearAll();
                     // Clear PWA caches manually as well
                     if ('caches' in window) {
@@ -141,15 +142,15 @@ function playMsgSound(type) {
                         await Promise.all(keys.map(k => caches.delete(k)));
                     }
                     localStorage.setItem('khan_system_ver', CURRENT_SYSTEM_VER);
-                    console.log('✅ System purged. Refreshing for clean slate...');
+                    console.log('âœ… System purged. Refreshing for clean slate...');
                     setTimeout(() => window.location.reload(), 100);
                 }
             } catch (e) { console.error('Auto-cleanup error:', e); }
         })();
 
-        // ─────────────────────────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         // Auth State (Refactored for Google OAuth)
-        // ─────────────────────────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         const Auth = (() => {
             let isGoogleAuthInitialized = false;
             let _currentUser = null;
@@ -297,9 +298,9 @@ function playMsgSound(type) {
             return { getCurrentUser, isGuest, isLoggedIn, handleGoogleResponse, initGoogleAuth, logout, restoreSession };
         })();
 
-        // ─────────────────────────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         // Conversation DB (for logged-in users) + Guest (sessionStorage)
-        // ─────────────────────────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         const ConvDB = (() => {
             // Guest conversations live in sessionStorage
             function _guestLoad() {
@@ -448,9 +449,9 @@ function playMsgSound(type) {
             return { getAllConversations, createConversation, getMessages, addMessage, updateConversationName, archiveConversation, pinConversation, deleteConversation };
         })();
 
-        // ─────────────────────────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         // AI Conversation Naming
-        // ─────────────────────────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         async function generateConvName(messages, apiKey, apiUrl) {
             const sample = messages.filter(m => m.role !== 'system').slice(0, 4)
                 .map(m => m.role + ': ' + m.content.slice(0, 120)).join('\n');
@@ -473,9 +474,9 @@ function playMsgSound(type) {
             } catch { return null; }
         }
 
-        // ─────────────────────────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         // Cookie Popup & Auth Initialization
-        // ─────────────────────────────────────────────────────────────
+        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         window.addEventListener('DOMContentLoaded', async () => {
             // Pre-warm IndexedDB so first save has no latency
             BaasimDB.open().catch(e => console.warn('BaasimDB init:', e));
@@ -596,7 +597,7 @@ function playMsgSound(type) {
             }
         }
 
-        // ── API Configuration ─────────────────────────────────────────────
+        // â”€â”€ API Configuration â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         // SECURITY WARNING: These API keys are exposed client-side.
         // Secure API key loading from environment variables
         // Keys are now loaded from .env file and protected from inspection
@@ -612,7 +613,7 @@ function playMsgSound(type) {
 
         const GROQ_CHAT_URL = '/.netlify/functions/chat';
 
-        // ── Rate Limiting ──────────────────────────────────────────────────
+        // â”€â”€ Rate Limiting â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         const RateLimiter = (() => {
             const requests = new Map();
             const MAX_REQUESTS = 10; // Max 10 requests
@@ -645,12 +646,12 @@ function playMsgSound(type) {
             return { canProceed, getRetryAfter };
         })();
 
-        // ── Configuration ──
+        // â”€â”€ Configuration â”€â”€
         const DIRECT_ELEVEN_LABS_TTS_URL = '/.netlify/functions/tts';
         let currentAudio = null;
         let isSpeaking = false;
 
-        // ── Toast Manager ─────────────────────────────────────────────────
+        // â”€â”€ Toast Manager â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         const ToastManager = {
             init() {
                 if (!document.querySelector('.sys-toast-container')) {
@@ -677,7 +678,7 @@ function playMsgSound(type) {
             }
         };
 
-        // ── Audio Manager ─────────────────────────────────────────────────
+        // â”€â”€ Audio Manager â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         class AudioManager {
             constructor() {
                 this.currentAudio = null; this.currentBtn = null;
@@ -833,7 +834,7 @@ function playMsgSound(type) {
         const audioManager = new AudioManager();
         window.speakText = (text, btn) => audioManager.speak(text, btn);
 
-        // ── Helpers ───────────────────────────────────────────────────────
+        // â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         function copyToClipboard(btn, text) {
             const doFallback = () => {
                 try {
@@ -948,7 +949,7 @@ function playMsgSound(type) {
             } catch (e) { }
         }
 
-        // ── System Prompt ─────────────────────────────────────────────────
+        // â”€â”€ System Prompt â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         const SYSTEM_PROMPT = `You are KHAN AI, an ambient assistive intelligence integrated into Baasim Fayaz Khan's digital presence.
 
 IDENTITY & MISSION:
@@ -981,7 +982,7 @@ CORE DIRECTIVES:
 - ASSISTIVE: Help users explore the portfolio at their own pace. Do not overpower the experience.
 - MISSION: Reflect the quality and intention of Baasim's digital headquarters.`;
 
-        // ── Scroll Reveal ─────────────────────────────────────────────────
+        // â”€â”€ Scroll Reveal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         function reveal() {
             document.querySelectorAll('.reveal').forEach(el => {
                 if (el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add('active');
@@ -990,7 +991,7 @@ CORE DIRECTIVES:
         window.addEventListener('scroll', reveal, { passive: true });
         reveal();
 
-        // ── Project detail toggle ──────────────────────────────────────────
+        // â”€â”€ Project detail toggle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         function toggleProjectDetail(id, btn) {
             const d = document.getElementById(id); if (!d) return;
             const open = d.classList.toggle('open');
@@ -1006,7 +1007,7 @@ CORE DIRECTIVES:
         window.openSidebar = () => { };
         window.closeSidebar = () => { };
         window.toggleSidebar = () => { };
-        // ── Main DOMContentLoaded ─────────────────────────────────────────
+        // â”€â”€ Main DOMContentLoaded â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         function initializeKhanLogic() {
             // Remove site loader
             const loader = document.getElementById('site-loader');
@@ -1066,7 +1067,7 @@ CORE DIRECTIVES:
             const thinkToggle = document.getElementById('think-toggle');
             const attachButton = document.getElementById('attach-button');
             const chatFileInput = document.getElementById('chat-file-input');
-            // ── Scroll & Nav Polish ──
+            // â”€â”€ Scroll & Nav Polish â”€â”€
             const topNav = document.getElementById('top-nav');
             if (topNav) {
                 window.addEventListener('scroll', () => {
@@ -1078,7 +1079,7 @@ CORE DIRECTIVES:
             const KHAN_SYSTEM_VER = '2.3.1';
             const CONTEXT_LIMIT = 30; // Max messages in one session
 
-            // ── System Update Check ──
+            // â”€â”€ System Update Check â”€â”€
             const lastVer = localStorage.getItem('khan_sys_ver');
             if (lastVer !== KHAN_SYSTEM_VER) {
                 // Clear cache/old data on update
@@ -1122,7 +1123,7 @@ CORE DIRECTIVES:
             const dynGreeting = window._dynamicGreeting || "Hello! How can I assist you today?";
             if (firstMsg) attachMessageActions(firstMsg, dynGreeting);
 
-            // ── Navigation ────────────────────────────────────────────────
+            // â”€â”€ Navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             function setActive(link) {
                 allNavLinks.forEach(l => l.classList.remove('active'));
                 if (link) {
@@ -1155,7 +1156,7 @@ CORE DIRECTIVES:
 
                 if (section && titleMap.has(section)) {
                     const info = titleMap.get(section);
-                    document.title = `${info.name} | Baasim Fayaz Khan — Building the Future`;
+                    document.title = `${info.name} | Baasim Fayaz Khan â€” Building the Future`;
                     
                     // Push state for advanced navigation
                     const newUrl = new URL(window.location.href);
@@ -1246,7 +1247,7 @@ CORE DIRECTIVES:
             });
             navCta && navCta.addEventListener('click', showContact);
             document.getElementById('contactBtn') && document.getElementById('contactBtn').addEventListener('click', showContact);
-            // ── Tab Routing System ──
+            // â”€â”€ Tab Routing System â”€â”€
             function handleRouting() {
                 const params = new URLSearchParams(window.location.search);
                 const tab = params.get('tab');
@@ -1285,7 +1286,7 @@ CORE DIRECTIVES:
                 });
             });
 
-            // ── Conversation History (IndexedDB / Guest sessionStorage) ──
+            // â”€â”€ Conversation History (IndexedDB / Guest sessionStorage) â”€â”€
             let activeConvId = null;   // current conversation DB id
             let convMsgCount = 0;      // track exchanges for AI naming trigger
             let currentFilter = 'all';
@@ -1351,7 +1352,7 @@ CORE DIRECTIVES:
                     html += `<div class="sb-date-group">${groupName}</div>`;
                     items.forEach(c => {
                         const isActive = String(c.id) === String(activeConvId);
-                        const pinIcon = c.isPinned ? '<span class="sb-conv-pin">★</span>' : '';
+                        const pinIcon = c.isPinned ? '<span class="sb-conv-pin">â˜…</span>' : '';
                         const name = escapeHtml(c.name || 'Untitled');
                         const relTime = relativeTime(c.updatedAt || c.createdAt || 0);
                         html += `<div class="sb-conv-row${isActive ? ' sb-conv-active' : ''}" data-id="${c.id}">
@@ -1590,7 +1591,7 @@ CORE DIRECTIVES:
                 });
             });
 
-            // ── Chat open/close ───────────────────────────────────────────
+            // â”€â”€ Chat open/close â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             window.toggleChat = () => {
                 // Check auth if new user
                 if (!chatOpen && Auth.isGuest() && !sessionStorage.getItem('khan_guest_visited')) {
@@ -1616,7 +1617,7 @@ CORE DIRECTIVES:
             closeSidebar = () => { };
             toggleSidebar = () => { };
 
-            // ── Site Loader ───────────────────────────────────────────────
+            // â”€â”€ Site Loader â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             window.addEventListener('load', () => {
                 const bar = document.getElementById('loader-bar');
                 if (bar) bar.style.width = '100%';
@@ -1628,7 +1629,7 @@ CORE DIRECTIVES:
 
             function scrollChatToBottom() { chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' }); }
 
-            // ── Thinking state ────────────────────────────────────────────
+            // â”€â”€ Thinking state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             function setThinkingState(mode, detail) {
                 if (!typingIndicator) return;
                 typingIndicator.style.display = 'flex';
@@ -1653,7 +1654,7 @@ CORE DIRECTIVES:
                 }
             }
 
-            // ── Progressive text render ───────────────────────────────────
+            // â”€â”€ Progressive text render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             async function renderProgressiveText(target, text) {
                 if (!target) return;
                 const words = (text || '').split(/\s+/).filter(Boolean);
@@ -1667,7 +1668,7 @@ CORE DIRECTIVES:
                 }
             }
 
-            // ── Add message ───────────────────────────────────────────────
+            // â”€â”€ Add message â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             window._chatAddMessage = async function(role, content, options = {}) {
                 return addMessage(role, content, options);
             };
@@ -1704,7 +1705,7 @@ CORE DIRECTIVES:
                     if (!chatOpen) {
                         hasNotification = true;
                         const notif = document.getElementById('chat-notification'), preview = document.getElementById('notif-preview-text');
-                        if (notif && preview) { preview.textContent = finalAnswer.slice(0, 48) + (finalAnswer.length > 48 ? '…' : ''); notif.classList.add('show'); setTimeout(() => notif.classList.remove('show'), 6000); }
+                        if (notif && preview) { preview.textContent = finalAnswer.slice(0, 48) + (finalAnswer.length > 48 ? 'â€¦' : ''); notif.classList.add('show'); setTimeout(() => notif.classList.remove('show'), 6000); }
                     }
                 } else {
                     msgDiv.className = 'cm-user chat-message';
@@ -1726,7 +1727,7 @@ CORE DIRECTIVES:
                 playMsgSound(isAssistant ? 'received' : 'sent');
             }
 
-            // ── Vision helpers ────────────────────────────────────────────
+            // â”€â”€ Vision helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             async function optimizeImageForVision(dataUrl) {
                 return new Promise((resolve) => {
                     try {
@@ -1800,7 +1801,7 @@ CORE DIRECTIVES:
                 throw new Error(lastError || 'vision_failed');
             }
 
-            // ── Send message ──────────────────────────────────────────────
+            // â”€â”€ Send message â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             async function sendMessage(userMessage) {
                 enforceContextLimit();
                 // Rate limiting check
@@ -1877,14 +1878,14 @@ CORE DIRECTIVES:
                     typingIndicator.style.display = 'none';
                     const msg = currentHasImage
                         ? 'I could not analyze that image right now. Please try again.'
-                        : (error.message.includes('Groq') ? '⚠️ ' + error.message : 'I am temporarily unable to connect. Please retry in a few seconds.');
+                        : (error.message.includes('Groq') ? 'âš ï¸ ' + error.message : 'I am temporarily unable to connect. Please retry in a few seconds.');
                     await addMessage('assistant', msg, { stream: false });
                 } finally {
                     typingIndicator.style.display = 'none';
                 }
             }
 
-            // ── doSend ────────────────────────────────────────────────────
+            // â”€â”€ doSend â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             async function doSend() {
                 const msg = userInput.value.trim();
                 const currentImg = uploadedImageDataUrl;
@@ -1897,7 +1898,7 @@ CORE DIRECTIVES:
                 await sendMessage(finalMsg);
             }
 
-            // ── Toggle buttons ────────────────────────────────────────────
+            // â”€â”€ Toggle buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             thinkToggle && thinkToggle.addEventListener('click', () => {
                 window.deepThinkEnabled = !window.deepThinkEnabled;
                 thinkToggle.classList.toggle('active', window.deepThinkEnabled);
@@ -1954,7 +1955,7 @@ CORE DIRECTIVES:
                 });
             }
 
-            // ── File / Image attach ───────────────────────────────────────
+            // â”€â”€ File / Image attach â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             attachButton && attachButton.addEventListener('click', () => {
                 hapticVibrate(10);
                 chatFileInput && chatFileInput.click();
@@ -2031,7 +2032,7 @@ CORE DIRECTIVES:
                 if (chatFileInput) chatFileInput.value = '';
             });
 
-            // ── Chat open/close wiring ────────────────────────────────────
+            // â”€â”€ Chat open/close wiring â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             chatButton && chatButton.addEventListener('click', () => { if (!chatOpen) window.toggleChat(); });
             document.getElementById('close-chat-btn') && document.getElementById('close-chat-btn').addEventListener('click', (e) => { e.stopPropagation(); toggleChat(); });
             document.getElementById('sidebar-toggle-btn') && document.getElementById('sidebar-toggle-btn').addEventListener('click', (e) => { e.stopPropagation(); toggleSidebar(); });
@@ -2092,7 +2093,7 @@ CORE DIRECTIVES:
             });
             window.addEventListener('resize', syncMobileSurfaceState);
 
-            // ── Contact form ──────────────────────────────────────────────
+            // â”€â”€ Contact form â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             const contactForm = document.getElementById('emailContactForm');
             if (contactForm) {
                 contactForm.addEventListener('submit', function (e) {
@@ -2122,7 +2123,7 @@ CORE DIRECTIVES:
                 });
             }
 
-            // ── Speech Recognition ────────────────────────────────────────
+            // â”€â”€ Speech Recognition â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             const micButton = document.getElementById('mic-button');
             const listeningIndicator = document.getElementById('listening-indicator');
             let recognition = null, isListening = false;
@@ -2194,7 +2195,7 @@ CORE DIRECTIVES:
                 });
             }
 
-            // ── Sidebar CSS (inject if missing) ───────────────────────────
+            // â”€â”€ Sidebar CSS (inject if missing) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             if (!document.querySelector('.sidebar-convo-row')) {
                 const s = document.createElement('style');
                 s.textContent = '.sidebar-convo-row{display:flex;align-items:center;gap:4px;margin-bottom:2px}.sidebar-convo-delete{background:none;border:none;cursor:pointer;color:var(--ink-faint);padding:3px;border-radius:4px;flex-shrink:0;display:flex;align-items:center}.sidebar-convo-delete:hover{color:#ef4444;background:rgba(239,68,68,.08)}.thinking-logo{animation:glow 2s infinite ease-in-out}.typing-search span,.typing-deep span{font-style:italic}@keyframes glow{0%{box-shadow:0 0 0 rgba(37,99,235,0)}50%{box-shadow:0 0 14px rgba(37,99,235,.6)}100%{box-shadow:0 0 0 rgba(37,99,235,0)}}';
@@ -2209,7 +2210,7 @@ CORE DIRECTIVES:
             const goLiveBtn = document.getElementById('call-btn');
             if (goLiveBtn) goLiveBtn.addEventListener('click', () => window.openGoLive());
 
-            // ── Chat Drag & Drop Logic ────────────────────────────────────
+            // â”€â”€ Chat Drag & Drop Logic â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             const dropZone = document.getElementById('chat-drop-zone');
             
             if (dropZone) {
@@ -2247,9 +2248,9 @@ CORE DIRECTIVES:
                 });
             }
 
-        // ════════════════════════════════════════════════════════════
-        // ══  GO LIVE SYSTEM  ════════════════════════════════════════
-        // ════════════════════════════════════════════════════════════
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // â•â•  GO LIVE SYSTEM  â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
         const GoLive = (() => {
             let isOpen = false, wasChatOpen = false, micActive = false, cameraActive = false, cameraStream = null, recognition = null, glConvHistory = [], speaking = false, currentGlAudio = null, callTimer = null, startTime = 0;
             let currentFacingMode = 'user';
@@ -2404,7 +2405,7 @@ CORE DIRECTIVES:
 
                 // Load history context
                 const chatCtx = window._chatConversationHistory || [];
-                glConvHistory = [{ role: 'system', content: SYSTEM_PROMPT + '\n\nVoice mode: Be concise — 1-3 sentences max. Natural and conversational.' }];
+                glConvHistory = [{ role: 'system', content: SYSTEM_PROMPT + '\n\nVoice mode: Be concise â€” 1-3 sentences max. Natural and conversational.' }];
                 // Ensure we don't duplicate the system prompt from context
                 chatCtx.filter(m => m.role !== 'system').slice(-10).forEach(m => glConvHistory.push({role: m.role, content: m.content}));
 
@@ -2555,7 +2556,7 @@ CORE DIRECTIVES:
             async function getAIResponse(userText) {
                 setStatus('Thinking...', 'thinking');
                 const frame = captureFrame();
-                const sysPrompt = SYSTEM_PROMPT + '\n\nVoice mode: Be concise — 1-3 sentences max. If the camera is on, you can see the user. Describe what you see if relevant.';
+                const sysPrompt = SYSTEM_PROMPT + '\n\nVoice mode: Be concise â€” 1-3 sentences max. If the camera is on, you can see the user. Describe what you see if relevant.';
                 
                 if (glConvHistory.length === 0 || glConvHistory[0].role !== 'system') {
                     glConvHistory.unshift({ role: 'system', content: sysPrompt });
