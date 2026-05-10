@@ -1782,8 +1782,12 @@ CORE DIRECTIVES:
                             })
                         });
                         if (!response.ok) {
-                            const errData = await response.json().catch(() => ({}));
-                            lastError = errData?.error?.message || `HTTP ${response.status}`;
+                            let msg = `HTTP ${response.status}`;
+                            try {
+                                const errData = await response.json();
+                                msg = errData?.error?.message || msg;
+                            } catch (e) {}
+                            lastError = msg;
                             continue;
                         }
                         const data = await response.json();
@@ -2664,12 +2668,20 @@ CORE DIRECTIVES:
                         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + GROQ_API_KEY },
                         body: JSON.stringify(body)
                     });
+                    
+                    if (!response.ok) {
+                        if (response.status === 404) throw new Error('API proxy not found. Ensure Netlify functions are deployed.');
+                        if (response.status === 401 || response.status === 403) throw new Error('API Key missing or invalid in Netlify settings.');
+                        throw new Error(`Connection error (${response.status})`);
+                    }
+
                     const data = await response.json();
                     const reply = (data?.choices?.[0]?.message?.content || 'I did not catch that.').replace(/[*#`]/g, '').trim();
                     glConvHistory.push({ role: 'assistant', content: reply });
                     return reply;
                 } catch (err) {
-                    return 'I am having trouble connecting right now.';
+                    console.error('AI Error:', err);
+                    return 'Connection error: ' + err.message;
                 }
             }
 
