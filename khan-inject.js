@@ -346,6 +346,22 @@
     @keyframes glFadeIn { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes kimFade { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
+    /* Image Modal Glitch Fix */
+    #khan-image-modal { 
+        position: fixed; inset: 0; z-index: 100002; display: none; 
+        align-items: center; justify-content: center; background: rgba(0,0,0,0.9);
+        backdrop-filter: blur(10px); animation: fadeIn 0.3s ease;
+    }
+    #khan-image-modal.show { display: flex; }
+    #kim-img { max-width: 90%; max-height: 80%; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+    .kim-close-btn { 
+        position: absolute; top: 30px; right: 30px; background: rgba(255,255,255,0.1); 
+        border: none; color: #fff; width: 50px; height: 50px; border-radius: 50%;
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+        transition: all 0.3s;
+    }
+    .kim-close-btn:hover { background: rgba(255,255,255,0.2); transform: rotate(90deg); }
+
     /* Mobile Adaptations */
     @media (max-width: 480px) {
         #chat-interface { right: 0; bottom: 0; width: 100%; height: 100%; max-height: 100%; border-radius: 0; border: none; }
