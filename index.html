@@ -4,6 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Basim Khan (Khan Basim) | Official Portfolio | Proteios Education</title>
+    <script>
+        // SMART CACHE BUSTER & MAINTENANCE MODE
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('clear') === 'true') {
+                localStorage.clear();
+                sessionStorage.clear();
+                if (window.indexedDB) {
+                    indexedDB.databases().then(dbs => {
+                        dbs.forEach(db => indexedDB.deleteDatabase(db.name));
+                    });
+                }
+                // Also clear cache storage if any
+                if (window.caches) {
+                    caches.keys().then(keys => {
+                        keys.forEach(key => caches.delete(key));
+                    });
+                }
+                alert('All cache and memory wiped successfully! Loading the absolute latest version...');
+                window.location.href = window.location.pathname;
+            }
+        })();
+    </script>
     <meta name="description" content="Basim Khan (Khan Basim) is an Operations & Coordination Lead at Proteios Education. Explore the official portfolio of Basim Fayaz Khan, featuring his work, leadership, and AI initiatives in Kashmir.">
     <meta name="keywords" content="Basim Khan, Khan Basim, Baasim Fayaz Khan, Basim Fayaz Khan, Khan Baasim, Proteios Education, Kashmir, Operations Lead, Strategic Operator, Youth Development, Leadership, Portfolio, Khan AI">
     <meta name="author" content="Basim Khan (Khan Basim)">

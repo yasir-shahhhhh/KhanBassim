@@ -367,8 +367,9 @@
 
     async function initAll() {
         try {
-            await loadScript('config.js', 'khan-config-js');
-            await loadScript('khan-logic.js', 'khan-logic-js');
+            const v = Date.now(); // Cache buster
+            await loadScript('config.js?v=' + v, 'khan-config-js');
+            await loadScript('khan-logic.js?v=' + v, 'khan-logic-js');
             if (window.lucide) window.lucide.createIcons();
         } catch (e) {
             console.error('Khan AI failed to load dependencies:', e);
