@@ -2807,8 +2807,8 @@ CORE DIRECTIVES:
         // Register Service Worker for PWA (Requires HTTP/HTTPS server)
         if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then(reg => console.log('Service Worker registered in me.html', reg))
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registered', reg))
                     .catch(err => console.error('Service Worker registration failed', err));
             });
         }
