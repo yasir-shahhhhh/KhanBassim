@@ -733,6 +733,14 @@ a {
     aspect-ratio: 4/3;
     cursor: pointer;
     border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.05);
+    background: #000;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.image-card:hover {
+    box-shadow: 0 0 40px rgba(255,255,255,0.05), 0 0 100px rgba(255,255,255,0.02);
+    border-color: rgba(255,255,255,0.2);
 }
 
 .image-card img {
@@ -740,22 +748,35 @@ a {
     height: 100%;
     object-fit: cover;
     transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s ease;
-    filter: brightness(0.8) contrast(1.1);
+    filter: brightness(0.9) contrast(1.1);
 }
 
 .image-card:hover img {
-    transform: scale(1.1);
+    transform: scale(1.08);
     filter: brightness(1) contrast(1);
 }
 
 .category-title {
     font-size: 1.5rem;
-    font-weight: 500;
+    font-weight: 700;
     margin-bottom: var(--spacing-md);
     display: flex;
     align-items: center;
     gap: 0.8rem;
     color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+/* Mobile Optimism Grid */
+@media (max-width: 768px) {
+    .project-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+        padding: 0 10px;
+    }
+    .project-card {
+        border-radius: 20px;
+    }
 }
 
 .category-title i {

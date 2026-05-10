@@ -1,4 +1,4 @@
-const CACHE_NAME = 'khan-ai-v3';
+const CACHE_NAME = 'khan-ai-v3.5-crunchy';
 const ASSETS = [
     '/',
     '/index.html',
