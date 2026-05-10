@@ -352,33 +352,6 @@ Avoid jargon. Talk like a sophisticated human friend.`;
         async function speak(text) {
             speaking = true; setStatus('Speaking...'); 
             
-            // Try ElevenLabs first
-            const elKey = CONFIG.ELEVENLABS_API_KEY;
-            const voiceId = CONFIG.VOICE_ID;
-            if (elKey && voiceId) {
-                try {
-                    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'xi-api-key': elKey },
-                        body: JSON.stringify({
-                            text,
-                            model_id: 'eleven_multilingual_v2',
-                            voice_settings: { stability: 0.4, similarity_boost: 0.8 }
-                        })
-                    });
-                    if (res.ok) {
-                        const blob = await res.blob();
-                        const blobUrl = window.URL.createObjectURL(blob);
-                        const audio = new Audio(blobUrl);
-                        return new Promise(resolve => {
-                            audio.onended = () => { speaking = false; setStatus('Listening...', true); resolve(); };
-                            audio.onerror = () => { speaking = false; resolve(); };
-                            audio.play().catch(resolve);
-                        });
-                    }
-                } catch (e) { console.warn('EL failed, falling back.'); }
-            }
-
             // Browser Fallback
             return new Promise(resolve => {
                 const ut = new SpeechSynthesisUtterance(text);
