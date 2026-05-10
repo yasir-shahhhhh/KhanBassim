@@ -1,4 +1,4 @@
-﻿
+
 const Cookie = {
     set(name, value, days = 365) {
         const d = new Date(); d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
@@ -802,11 +802,19 @@ class AudioManager {
 
         const utt = new SpeechSynthesisUtterance(text);
         const voices = window.speechSynthesis.getVoices();
-        // Order of preference for "British Male" vibes
-        const preferred = ['Google UK English Male', 'Microsoft George Online', 'en-GB'];
+        // FORCEFULLY SELECT HIGH-QUALITY EDGE NATURAL VOICES
+        const preferred = [
+            'Microsoft Aria Online (Natural)', 
+            'Microsoft Guy Online (Natural)',
+            'Microsoft Thomas Online (Natural)',
+            'Microsoft Natasha Online (Natural)',
+            'Google UK English Male', 
+            'en-GB'
+        ];
         let voice = null;
         for (const p of preferred) {
-            voice = voices.find(v => v.name.includes(p) || v.lang === p);
+            voice = voices.find(v => v.name.includes(p) || (v.lang === p && v.name.includes('Natural')));
+            if (!voice) voice = voices.find(v => v.name.includes(p));
             if (voice) break;
         }
         if (voice) utt.voice = voice;
@@ -2673,10 +2681,12 @@ function initializeKhanLogic() {
                 const ut = new SpeechSynthesisUtterance(text);
                 const voices = glCachedVoices.length ? glCachedVoices : window.speechSynthesis.getVoices();
 
-                // FORCEFULLY SELECT HIGH-QUALITY NEURAL VOICES
-                const targetVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Neural') || v.name.includes('Online') || v.name.includes('Natural') || v.name.includes('Edge'))) ||
+                // FORCEFULLY SELECT HIGH-QUALITY NEURAL/EDGE VOICES
+                const targetVoice = voices.find(v => v.name.includes('Aria Online (Natural)')) ||
+                    voices.find(v => v.name.includes('Guy Online (Natural)')) ||
+                    voices.find(v => v.name.includes('Thomas Online (Natural)')) ||
+                    voices.find(v => v.lang.startsWith('en') && (v.name.includes('Neural') || v.name.includes('Online') || v.name.includes('Natural') || v.name.includes('Edge'))) ||
                     voices.find(v => v.lang.startsWith('en') && v.name.includes('Google')) ||
-                    voices.find(v => v.lang.startsWith('en') && v.localService === false) ||
                     voices.find(v => v.lang.startsWith('en')) ||
                     voices[0];
 

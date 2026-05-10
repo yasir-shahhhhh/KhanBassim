@@ -1,17 +1,17 @@
 :root {
-    /* Basim Vibe - Generative Obsidian Palette */
+    /* Basim Vibe - Generative Obsidian Palette (Nuclear Dark) */
     --bg-primary: #000000;
     --bg-secondary: #050505;
-    --bg-surface: rgba(15, 15, 20, 0.7);
+    --bg-surface: rgba(10, 10, 12, 0.7);
     --text-primary: #ffffff;
     --text-secondary: #a1a1aa;
     --text-muted: #52525b;
     --accent: #ffffff;
     --accent-glow: rgba(255, 255, 255, 0.15);
-    --vibrant-1: rgba(138, 43, 226, 0.08); /* Deep Violet */
-    --vibrant-2: rgba(0, 191, 255, 0.08);   /* Deep Blue */
-    --border-color: rgba(255, 255, 255, 0.1);
-    --border-color-light: rgba(255, 255, 255, 0.2);
+    --vibrant-1: rgba(255, 255, 255, 0.03); 
+    --vibrant-2: rgba(255, 255, 255, 0.02);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-color-light: rgba(255, 255, 255, 0.15);
     
     /* Typography */
     --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -25,8 +25,8 @@
     
     /* Transitions */
     --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-medium: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-slow: 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-medium: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-slow: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Reset & Base Styles */
@@ -57,12 +57,12 @@ body {
 
 /* RGB Generative Text */
 .rgb-text {
-    background: linear-gradient(to right, #ff0080, #7928ca, #4299e1, #ff0080);
+    background: linear-gradient(to right, #ffffff, #a1a1aa, #ffffff, #a1a1aa);
     background-size: 200% auto;
     color: transparent;
     -webkit-background-clip: text;
     background-clip: text;
-    animation: shine 4s linear infinite;
+    animation: shine 6s linear infinite;
 }
 
 @keyframes shine {
@@ -168,20 +168,20 @@ a {
 /* Navigation - Framer Style Floating Pill */
 .navbar {
     position: fixed;
-    top: 20px;
+    top: 24px;
     left: 50%;
     transform: translateX(-50%);
     width: auto;
-    min-width: 300px;
-    padding: 10px 25px;
-    background: rgba(15, 15, 20, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    min-width: 320px;
+    padding: 12px 28px;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     z-index: 1000;
     border-radius: 100px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     transition: all var(--transition-medium);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
 }
 
 .navbar.scrolled {
