@@ -2729,22 +2729,12 @@ CORE DIRECTIVES:
                 stopCurrentAudio();
                 startVisualizer();
                 
-                // Priority 1: ElevenLabs (High Fidelity)
-                const elUrl = await speakElevenLabs(text);
-                if (elUrl) {
-                    currentGlAudio = new Audio(elUrl);
-                    currentGlAudio.onended = () => {
-                        speaking = false;
-                        if (isOpen) setStatus(micActive ? 'Listening...' : 'Paused', micActive ? 'listening' : 'paused');
-                        stopVisualizer();
-                    };
-                    currentGlAudio.play();
-                } else {
-                    // Fallback: Browser High Quality TTS
-                    await speakBrowserHQ(text);
-                    speaking = false;
-                    if (isOpen) setStatus(micActive ? 'Listening...' : 'Paused', micActive ? 'listening' : 'paused');
-                }
+                // Exclusively use Microsoft Edge Natural voices / Browser HQ TTS
+                await speakBrowserHQ(text);
+                
+                speaking = false;
+                if (isOpen) setStatus(micActive ? 'Listening...' : 'Paused', micActive ? 'listening' : 'paused');
+                stopVisualizer();
             }
 
             async function speakBrowserHQ(text) {
@@ -2802,9 +2792,7 @@ CORE DIRECTIVES:
         })();
 
         window.openGoLive = function(withCam = false) { 
-            // Remember where the user was so call.html can return them here
-            sessionStorage.setItem('khan_call_return', window.location.href);
-            window.location.href = 'call.html';
+            GoLive.open(withCam);
         }
 
         window.showOrgDetails = (orgId) => {
