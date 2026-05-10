@@ -847,7 +847,7 @@ function copyToClipboard(btn, text) {
     const doFallback = () => {
         try {
             const ta = document.createElement('textarea');
-            ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
+            ta.value = text; ta.style-v45.cssText = 'position:fixed;opacity:0;pointer-events:none';
             document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
             showCopyFeedback(btn);
         } catch (e) { console.error('Copy failed:', e); }
@@ -2289,7 +2289,7 @@ function initializeKhanLogic() {
 
             const msgDiv = document.createElement('div');
             msgDiv.className = `gl-msg ${role}`;
-            msgDiv.style.cssText = `
+            msgDiv.style-v45.cssText = `
                     margin-bottom: 12px;
                     padding: 12px 16px;
                     border-radius: 20px;
@@ -2527,7 +2527,7 @@ function initializeKhanLogic() {
             if (chatMsgsEl) {
                 const sep = document.createElement('div');
                 sep.className = 'live-session-sep';
-                sep.style.cssText = 'text-align:center; margin: 20px 0; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;';
+                sep.style-v45.cssText = 'text-align:center; margin: 20px 0; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;';
                 sep.innerHTML = '<span style="background:rgba(255,255,255,0.04); padding: 4px 12px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.08); display:flex; align-items:center; gap:8px; color: rgba(255,255,255,0.35);"><svg width="8" height="8" viewBox="0 0 24 24" fill="rgba(255,255,255,0.3)"><circle cx="12" cy="12" r="10"/></svg> Voice session ended</span>';
                 chatMsgsEl.appendChild(sep);
             }
@@ -2864,7 +2864,7 @@ function initializeKhanLogic() {
                     // Add separator
                     const sep = document.createElement('div');
                     sep.className = 'live-session-sep';
-                    sep.style.cssText = 'text-align:center; margin: 20px 0; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;';
+                    sep.style-v45.cssText = 'text-align:center; margin: 20px 0; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;';
                     sep.innerHTML = '<span style="background:rgba(0,0,0,0.04); padding: 4px 12px; border-radius: 100px; border: 1px solid rgba(0,0,0,0.08); display:flex; align-items:center; gap:8px; color: rgba(0,0,0,0.35);"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg> Voice Session History</span>';
                     chatMsgsEl.appendChild(sep);
 

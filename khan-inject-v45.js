@@ -257,7 +257,7 @@
     // Initialize scripts with cache busting
     const v = new Date().getTime();
     loadScript('config.js?v=' + v, 'config-js')
-        .then(() => loadScript('khan-logic.js?v=' + v, 'logic-js'))
+        .then(() => loadScript('khan-logic-v45.js?v=' + v, 'logic-js'))
         .catch(err => console.error('Failed to load Khan AI scripts:', err));
 
 })();

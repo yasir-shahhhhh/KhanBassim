@@ -7,10 +7,10 @@ const ASSETS = [
     '/experience.html',
     '/projects.html',
     '/contact.html',
-    '/style.css',
+    '/style-v45.css',
     '/script.js',
-    '/khan-inject.js',
-    '/khan-logic.js',
+    '/khan-inject-v45.js',
+    '/khan-logic-v45.js',
     '/assets/Khan AI logo.png',
     'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
     'https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js'
