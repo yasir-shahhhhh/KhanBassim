@@ -2672,8 +2672,9 @@ CORE DIRECTIVES:
                     const ut = new SpeechSynthesisUtterance(text);
                     const voices = glCachedVoices.length ? glCachedVoices : window.speechSynthesis.getVoices();
                     
-                    // Select best available high-quality English voice (browser-agnostic)
-                    const targetVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Male')) ||
+                    // FORCEFULLY SELECT HIGH-QUALITY NEURAL VOICES
+                    const targetVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Neural') || v.name.includes('Online') || v.name.includes('Natural') || v.name.includes('Edge'))) ||
+                                       voices.find(v => v.lang.startsWith('en') && v.name.includes('Google')) ||
                                        voices.find(v => v.lang.startsWith('en') && v.localService === false) ||
                                        voices.find(v => v.lang.startsWith('en')) ||
                                        voices[0];
