@@ -1855,7 +1855,7 @@ CORE DIRECTIVES:
                     const response = await fetch(GROQ_CHAT_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
-                        body: JSON.stringify({ model: modelName, messages: conversationHistory, max_tokens: maxTokens, temperature, stream: true })
+                        body: JSON.stringify({ model: modelName, messages: conversationHistory, max_tokens: maxTokens, temperature, stream: false })
                     });
 
                     if (!response.ok) {
@@ -1864,96 +1864,14 @@ CORE DIRECTIVES:
                     }
 
                     typingIndicator.style.display = 'none';
-                    const reader = response.body.getReader();
-                    const decoder = new TextDecoder();
-                    let fullContent = '', thinkingContent = '', answerContent = '';
-
-                    const aiMsgDiv = document.createElement('div');
-                    aiMsgDiv.className = 'cm-ai chat-message';
-
-                    let thinkingDetails = null;
-                    let thinkingBody = null;
-                    if (deepThinkEnabled) {
-                        thinkingDetails = document.createElement('details');
-                        thinkingDetails.className = 'cm-thought';
-                        thinkingDetails.innerHTML = `<summary><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg> Deep Reasoning</summary>`;
-                        thinkingBody = document.createElement('div');
-                        thinkingBody.className = 'cm-thought-body';
-                        thinkingDetails.appendChild(thinkingBody);
-                        thinkingDetails.style.display = 'none';
-                        aiMsgDiv.appendChild(thinkingDetails);
+                    const data = await response.json();
+                    const fullContent = data?.choices?.[0]?.message?.content || '';
+                    
+                    if (fullContent) {
+                        conversationHistory.push({ role: 'assistant', content: fullContent });
+                        await saveMessageToConv('assistant', fullContent);
+                        await addMessage('assistant', fullContent, { stream: false });
                     }
-
-                    const answerDiv = document.createElement('div');
-                    answerDiv.className = 'cm-ai-text';
-                    aiMsgDiv.appendChild(answerDiv);
-
-                    chatMessages.appendChild(aiMsgDiv);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-
-                    let lastRenderedLength = 0;
-                    while (true) {
-                        const { done, value } = await reader.read();
-                        if (done) break;
-                        const chunk = decoder.decode(value);
-                        const lines = chunk.split('\n');
-                        for (const line of lines) {
-                            if (line.startsWith('data: ')) {
-                                const dataStr = line.slice(6);
-                                if (dataStr === '[DONE]') break;
-                                try {
-                                    const data = JSON.parse(dataStr);
-                                    const delta = data.choices[0].delta.content || '';
-                                    if (!delta) continue;
-                                    fullContent += delta;
-
-                                    if (fullContent.includes('<think>')) {
-                                        if (thinkingDetails) thinkingDetails.style.display = 'block';
-                                        const parts = fullContent.split('</think>');
-                                        if (parts.length > 1) {
-                                            thinkingContent = parts[0].replace('<think>', '').trim();
-                                            answerContent = parts[1] || '';
-                                            if (thinkingBody) thinkingBody.innerHTML = renderMarkdown(thinkingContent);
-                                            answerDiv.innerHTML = renderMarkdown(answerContent);
-                                        } else {
-                                            thinkingContent = fullContent.replace('<think>', '');
-                                            if (thinkingBody) thinkingBody.innerHTML = renderMarkdown(thinkingContent);
-                                        }
-                                    } else {
-                                        if (fullContent.length - lastRenderedLength > 12 || fullContent.endsWith('\n')) {
-                                            answerDiv.innerHTML = renderMarkdown(fullContent);
-                                            lastRenderedLength = fullContent.length;
-                                            chatMessages.scrollTop = chatMessages.scrollHeight;
-                                        }
-                                    }
-                                } catch (e) { }
-                            }
-                        }
-                    }
-                    answerDiv.innerHTML = renderMarkdown(fullContent);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-
-                    conversationHistory.push({ role: 'assistant', content: fullContent });
-                    await saveMessageToConv('assistant', fullContent);
-
-
-                    const actions = document.createElement('div');
-                    actions.className = 'cm-actions';
-                    actions.innerHTML = `
-                    <button class="cma-btn cma-copy" title="Copy to clipboard">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                        <span>Copy</span>
-                    </button>
-                    <button class="cma-btn cma-tts" title="Listen to response">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-                        <span>Listen</span>
-                    </button>`;
-                    aiMsgDiv.appendChild(actions);
-
-                    const finalParsed = splitThoughtAndAnswer(fullContent);
-                    const finalFinalAnswer = sanitizeAssistantReply(finalParsed.answer || fullContent);
-                    attachMessageActions(aiMsgDiv, finalFinalAnswer);
-
                 } catch (error) {
                     console.error('Error:', error);
                     typingIndicator.style.display = 'none';

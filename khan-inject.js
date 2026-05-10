@@ -242,19 +242,19 @@
     .pill-btn.active { background: #000; border-color: #000; color: #fff; }
     .pill-btn svg { width: 13px; height: 13px; }
 
-    #chat-io-actions { display: flex; align-items: center; gap: 10px; }
-    .io-btn { background: transparent; border: none; color: #666; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; }
+    .io-tools, .io-actions { display: flex; align-items: center; gap: 8px; }
+    .io-btn { background: transparent; border: none; color: #666; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; padding: 4px; }
     .io-btn:hover { color: #000; transform: scale(1.1); }
-    .io-btn svg { width: 18px; height: 18px; stroke-width: 2.2; }
+    .io-btn svg { width: 19px; height: 19px; stroke-width: 2; }
     
     .send-pill-btn {
-        width: 32px; height: 32px; border-radius: 50% !important;
+        width: 34px; height: 34px; border-radius: 50% !important;
         background: #000 !important; color: #fff !important; display: flex !important;
         align-items: center; justify-content: center; border: none; cursor: pointer; transition: all 0.2s;
-        margin-left: 4px;
+        margin-left: 2px;
     }
-    .send-pill-btn:hover { transform: scale(1.08); background: #333 !important; }
-    .send-pill-btn svg { width: 16px; height: 16px; stroke-width: 2.5; }
+    .send-pill-btn:hover { transform: scale(1.05); background: #333 !important; }
+    .send-pill-btn svg { width: 18px; height: 18px; stroke-width: 3; }
     
     #chat-disclaimer { text-align: center; font-size: 0.65rem; color: #aaa; margin-top: 10px; font-weight: 500; }
 
