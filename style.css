@@ -55,6 +55,22 @@ body {
     overflow-x: hidden;
 }
 
+/* RGB Generative Text */
+.rgb-text {
+    background: linear-gradient(to right, #ff0080, #7928ca, #4299e1, #ff0080);
+    background-size: 200% auto;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: shine 4s linear infinite;
+}
+
+@keyframes shine {
+    to {
+        background-position: 200% center;
+    }
+}
+
 /* Custom Cursor */
 .cursor-dot {
     width: 6px;
@@ -68,7 +84,7 @@ body {
     z-index: 9999;
     transform: translate(-50%, -50%);
     mix-blend-mode: difference;
-    box-shadow: 0 0 15px rgba(255,255,255,0.5);
+    box-shadow: 0 0 15px rgba(255,255,255,0.8);
 }
 
 .cursor-outline {

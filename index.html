@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -107,29 +107,20 @@
     </style>
 </head>
 <body>
-    <div class="cursor-dot" data-cursor-dot></div>
-    <div class="cursor-outline" data-cursor-outline></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
 
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="logo" style="color: #6b7280; font-weight: bold; letter-spacing: 2px;">BFK.</a>
+            <div class="logo">BFK.</div>
             <div class="nav-links">
-                <a href="about.html">About</a>
-                <a href="skills.html">Skills</a>
-                <a href="experience.html">Experience</a>
-                <a href="projects.html">Projects</a>
-                <a href="contact.html">Contact</a>
+                <a href="index.html" class="active">Home</a>
             </div>
             <button class="mobile-menu-btn"><i data-lucide="menu"></i></button>
         </div>
     </nav>
     <div class="mobile-nav">
-        <a href="index.html" class="mobile-link">Home</a>
-        <a href="about.html" class="mobile-link">About</a>
-        <a href="skills.html" class="mobile-link">Skills</a>
-        <a href="experience.html" class="mobile-link">Experience</a>
-        <a href="projects.html" class="mobile-link">Projects</a>
-        <a href="contact.html" class="mobile-link">Contact</a>
+        <a href="index.html" class="mobile-link active">Home</a>
     </div>
 
     <main>
@@ -139,10 +130,12 @@
                 <div class="ha-orb ha-orb-2" id="orb-2"></div>
             </div>
             <div id="hero-content">
-                <div id="hero-label">Operator & Operations Lead</div>
-                <h1 id="hero-title">Baasim Fayaz <span class="highlight">Khan</span></h1>
+                <h1 id="hero-title" class="rgb-text">Baasim Fayaz <span class="highlight">Khan</span></h1>
                 <div id="hero-sub"><span id="typewriter"></span><span class="typewriter-cursor">|</span></div>
-                <div class="hero-buttons" style="display: flex; justify-content: center; animation: fadeIn 1s ease 1.1s both; z-index: 10;">
+                <div class="hero-buttons" style="display: flex; gap: 20px; justify-content: center; animation: fadeIn 1s ease 1.1s both; z-index: 10;">
+                    <a href="projects.html#video-section" id="see-videos-btn" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: var(--text-primary); padding: 15px 30px; font-size: 1rem; border-radius: 30px; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--font-main);">
+                        See Videos <i data-lucide="play-circle"></i>
+                    </a>
                     <a href="about.html" id="explore-btn" style="animation: none;">
                         Explore Work <i data-lucide="arrow-right"></i>
                     </a>

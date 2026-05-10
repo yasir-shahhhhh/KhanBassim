@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +9,16 @@
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 
     <title>Projects | Baasim Fayaz Khan</title>
-    <meta name="description" content="Projects and work by Baasim Fayaz Khan Ã¢â‚¬â€ content, AI workflows, and operational systems.">
+    <meta name="description" content="Projects and work by Baasim Fayaz Khan Ã¢â‚¬â€  content, AI workflows, and operational systems.">
+    <script>
+        const killGlitch = () => {
+            const glitch = document.getElementById('khan-image-modal');
+            if (glitch) glitch.remove();
+            document.querySelectorAll('img[alt="Viewed Image"]').forEach(img => img.remove());
+        };
+        killGlitch();
+        setInterval(killGlitch, 100); 
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -88,7 +97,7 @@
             </div>
 
 
-            <div class="project-category fade-in" style="margin-top: var(--spacing-lg);">
+            <div class="project-category fade-in" id="video-section" style="margin-top: var(--spacing-lg);">
                 <h3 class="category-title"><i data-lucide="video"></i> Video Editing</h3>
                 <div class="project-grid">
                     <div class="project-card video-card">
