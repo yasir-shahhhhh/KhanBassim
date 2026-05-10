@@ -377,6 +377,27 @@ a {
 }
 
 /* Hero Section - Framer Editorial Style */
+.hero-profile-container {
+    margin-bottom: var(--spacing-md);
+    position: relative;
+    z-index: 10;
+}
+
+.hero-profile-img {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--border-color-light);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 20px rgba(255,255,255,0.05);
+    animation: profileReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes profileReveal {
+    from { opacity: 0; transform: scale(0.8) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
 .hero {
     min-height: 100vh;
     display: flex;
