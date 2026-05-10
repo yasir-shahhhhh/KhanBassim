@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -48,7 +48,7 @@
 
         #gl-display { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
         
-        /* Logo section â€” becomes camera preview when active */
+        /* Logo section — becomes camera preview when active */
         #gl-logo-section { 
             position: relative; 
             width: 140px; height: 140px; 
@@ -319,7 +319,7 @@ Avoid jargon. Talk like a sophisticated human friend.`;
                 if (frame) {
                     // Vision model with camera frame
                     const visionMsgs = [
-                        { role: 'user', content: 'System: ' + SYSTEM_PROMPT + '\nVoice mode: Be concise â€” 1-2 sentences max.' },
+                        { role: 'user', content: 'System: ' + SYSTEM_PROMPT + '\nVoice mode: Be concise — 1-2 sentences max.' },
                         { role: 'assistant', content: 'Understood.' },
                         ...glConvHistory.map(m => ({ role: m.role, content: m.content })),
                         {

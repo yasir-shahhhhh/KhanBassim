@@ -1,6 +1,6 @@
 (function() {
     // FORCE CACHE PURGE FOR "SUPER CRUNCHY" UPDATE
-    const SITE_VERSION = '3.5';
+    const SITE_VERSION = '4.3';
     if (localStorage.getItem('khan_site_version') !== SITE_VERSION) {
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistrations().then(regs => {
