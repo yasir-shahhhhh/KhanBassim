@@ -610,7 +610,7 @@ function playMsgSound(type) {
             return getElevenKey();
         };
 
-        const GROQ_CHAT_URL = 'https://api.groq.com/openai/v1/chat/completions';
+        const GROQ_CHAT_URL = '/.netlify/functions/chat';
 
         // ── Rate Limiting ──────────────────────────────────────────────────
         const RateLimiter = (() => {
@@ -646,7 +646,7 @@ function playMsgSound(type) {
         })();
 
         // ── Configuration ──
-        const DIRECT_ELEVEN_LABS_TTS_URL = `https://api.elevenlabs.io/v1/text-to-speech/${CONFIG.VOICE_ID}`;
+        const DIRECT_ELEVEN_LABS_TTS_URL = '/.netlify/functions/tts';
         let currentAudio = null;
         let isSpeaking = false;
 
