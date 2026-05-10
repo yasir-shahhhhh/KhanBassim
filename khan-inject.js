@@ -108,7 +108,7 @@
     #chat-hdr-logo { width: 30px; height: 30px; object-fit: contain; border-radius: 8px; background: #000; padding: 4px; }
     #chat-hdr-name { font-weight: 700; font-size: 1.15rem; color: #000; letter-spacing: -0.02em; }
     
-    #chat-hdr-controls, #chat-hdr-actions { display: flex !important; flex-direction: row !important; align-items: center; gap: 6px; }
+    .chat-hdr-controls, #chat-hdr-actions { display: flex !important; flex-direction: row !important; align-items: center; gap: 8px; margin-left: auto; }
     .chat-hdr-btn {
         width: 36px; height: 36px; border-radius: 10px; border: none;
         background: transparent; color: #555;

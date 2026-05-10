@@ -1916,9 +1916,7 @@ CORE DIRECTIVES:
 
             // Call Button (Phone icon)
             document.getElementById('call-btn')?.addEventListener('click', () => {
-                if (typeof openGoLive === 'function') {
-                    openGoLive(false);
-                }
+                window.location.href = 'call.html';
             });
 
             // Suggestion Chips
@@ -1938,7 +1936,7 @@ CORE DIRECTIVES:
             // Voice call button (Phone icon)
             document.getElementById('call-btn')?.addEventListener('click', () => { 
                 hapticVibrate(20);
-                if (typeof openGoLive === 'function') openGoLive(false); 
+                window.location.href = 'call.html';
             });
 
             // Textarea auto-height & Enter handling
