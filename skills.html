@@ -18,114 +18,50 @@
 <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
 </head>
 <body>
-    <div class="cursor-dot" data-cursor-dot></div>
-    <div class="cursor-outline" data-cursor-outline></div>
+    <div class="bg-mesh"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
 
-    <nav class="navbar">
+    <nav class="navbar glass">
         <div class="nav-container">
-            <a href="index.html" class="logo">BFK.</a>
             <div class="nav-links">
-                <a href="about.html">About</a>
-                <a href="skills.html" class="active">Skills</a>
-                <a href="experience.html">Experience</a>
+                <a href="index.html">Home</a>
                 <a href="projects.html">Projects</a>
+                <a href="about.html">About</a>
                 <a href="contact.html">Contact</a>
             </div>
-            <button class="mobile-menu-btn"><i data-lucide="menu"></i></button>
         </div>
     </nav>
-    <div class="mobile-nav">
-        <a href="index.html" class="mobile-link">Home</a>
-        <a href="about.html" class="mobile-link">About</a>
-        <a href="skills.html" class="mobile-link">Skills</a>
-        <a href="experience.html" class="mobile-link">Experience</a>
-        <a href="projects.html" class="mobile-link">Projects</a>
-        <a href="contact.html" class="mobile-link">Contact</a>
-    </div>
 
     <main style="padding-top: 100px; min-height: 80vh;">
-        <section class="skills section-padding">
+        <section class="section-padding">
             <div class="section-header fade-in">
-                <h2 class="section-title">Skills</h2>
+                <h2 class="section-title">Skills & Expertise</h2>
                 <div class="section-line"></div>
             </div>
             <div class="skills-grid">
-                <div class="skill-category fade-in delay-1">
-                    <div class="category-header">
-                        <i data-lucide="settings"></i>
-                        <h3>Operations</h3>
-                    </div>
+                <div class="skill-category glass fade-in">
+                    <div class="category-header"><i data-lucide="settings"></i> <h3>Operations</h3></div>
                     <ul class="skill-list">
                         <li>Workflow Architecture</li>
                         <li>Strategic Coordination</li>
                         <li>Execution Management</li>
-                        <li>Resource Allocation</li>
-                        <li>Systems Optimization</li>
                     </ul>
                 </div>
-                <div class="skill-category fade-in delay-2">
-                    <div class="category-header">
-                        <i data-lucide="users"></i>
-                        <h3>Leadership</h3>
-                    </div>
-                    <ul class="skill-list">
-                        <li>Team Alignment</li>
-                        <li>Conflict Resolution</li>
-                        <li>Mentorship & Guidance</li>
-                        <li>Visionary Planning</li>
-                        <li>Accountability Frameworks</li>
-                    </ul>
-                </div>
-                <div class="skill-category fade-in delay-3">
-                    <div class="category-header">
-                        <i data-lucide="palette"></i>
-                        <h3>Creative</h3>
-                    </div>
-                    <ul class="skill-list">
-                        <li>Brand Identity Design</li>
-                        <li>Visual Storytelling</li>
-                        <li>Aesthetic Direction</li>
-                        <li>Graphic Design</li>
-                        <li>UI/UX Concepts</li>
-                    </ul>
-                </div>
-                <div class="skill-category fade-in delay-1">
-                    <div class="category-header">
-                        <i data-lucide="pen-tool"></i>
-                        <h3>Content</h3>
-                    </div>
-                    <ul class="skill-list">
-                        <li>Narrative Strategy</li>
-                        <li>Professional Writing</li>
-                        <li>Scripting & Copy</li>
-                        <li>Media Production</li>
-                        <li>Social Ecosystems</li>
-                    </ul>
-                </div>
-                <div class="skill-category fade-in delay-2">
-                    <div class="category-header">
-                        <i data-lucide="cpu"></i>
-                        <h3>AI</h3>
-                    </div>
+                <div class="skill-category glass fade-in">
+                    <div class="category-header"><i data-lucide="cpu"></i> <h3>AI Systems</h3></div>
                     <ul class="skill-list">
                         <li>Prompt Engineering</li>
                         <li>Generative AI Workflows</li>
-                        <li>Image Synthesis</li>
                         <li>Automated Systems</li>
-                        <li>AI Implementation</li>
                     </ul>
                 </div>
-                <div class="skill-category fade-in delay-3">
-                    <div class="category-header">
-                        <i data-lucide="globe"></i>
-                        <h3>Digital</h3>
-                    </div>
+                <div class="skill-category glass fade-in">
+                    <div class="category-header"><i data-lucide="palette"></i> <h3>Creative</h3></div>
                     <ul class="skill-list">
-                        <li>Web Management</li>
-                        <li>Digital Presence</li>
-                        <li>Search Optimization</li>
-                        <li>Tool Integration</li>
-                        <li>Online Culture Navigation</li>
+                        <li>Brand Identity</li>
+                        <li>Visual Storytelling</li>
+                        <li>UI/UX Design</li>
                     </ul>
                 </div>
             </div>
@@ -137,13 +73,11 @@
                 <div class="section-line"></div>
             </div>
             <div class="project-grid">
-                <div class="project-card image-card fade-in delay-1">
-                    <img src="assets/certificate_gd.jpeg?v=5.0" alt="Graphic Designing Certificate" loading="lazy">
-                    <div class="card-overlay">Graphic Designing Certificate</div>
+                <div class="project-card glass image-card fade-in">
+                    <img src="assets/certificate_gd.jpeg?v=5.0" alt="Graphic Design" loading="lazy">
                 </div>
-                <div class="project-card image-card fade-in delay-2">
-                    <img src="assets/certificate_math.jpeg?v=5.0" alt="Mathematics Certificate" loading="lazy">
-                    <div class="card-overlay">Mathematics Certificate</div>
+                <div class="project-card glass image-card fade-in">
+                    <img src="assets/certificate_math.jpeg?v=5.0" alt="Mathematics" loading="lazy">
                 </div>
             </div>
         </section>
@@ -151,11 +85,13 @@
 
     <footer>
         <div class="footer-content">
-            <p>&copy; 2026 Baasim Fayaz Khan. All rights reserved.</p>
+            <p>&copy; 2026 Baasim Fayaz Khan. Strategic Execution.</p>
         </div>
     </footer>
 
-    <script src="script.js?v=5.0"></script><script src="glitch-fix.js?v=5.0"></script>
+    <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
+    <script src="main-v5.js?v=5.0"></script>
     <script src="khan-inject-v45.js?v=5.0"></script>
-<script>if(window.lucide) { window.lucide.createIcons(); }</script></body>
+</body>
+</html>
 </html>

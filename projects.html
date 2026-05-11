@@ -27,30 +27,20 @@
 <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
 </head>
 <body>
-    <div class="cursor-dot" data-cursor-dot></div>
-    <div class="cursor-outline" data-cursor-outline></div>
+    <div class="bg-mesh"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
 
-    <nav class="navbar">
+    <nav class="navbar glass">
         <div class="nav-container">
-            <a href="index.html" class="logo">BFK.</a>
             <div class="nav-links">
-                <a href="about.html">About</a>
-                <a href="skills.html">Skills</a>
-                <a href="experience.html">Experience</a>
+                <a href="index.html">Home</a>
                 <a href="projects.html" class="active">Projects</a>
+                <a href="about.html">About</a>
                 <a href="contact.html">Contact</a>
             </div>
-            <button class="mobile-menu-btn"><i data-lucide="menu"></i></button>
         </div>
     </nav>
-    <div class="mobile-nav">
-        <a href="index.html" class="mobile-link">Home</a>
-        <a href="about.html" class="mobile-link">About</a>
-        <a href="skills.html" class="mobile-link">Skills</a>
-        <a href="experience.html" class="mobile-link">Experience</a>
-        <a href="projects.html" class="mobile-link">Projects</a>
-        <a href="contact.html" class="mobile-link">Contact</a>
-    </div>
 
     <main style="padding-top: 100px; min-height: 80vh;">
         <section class="section-padding">
@@ -58,73 +48,47 @@
                 <h2 class="section-title">Projects</h2>
                 <div class="section-line"></div>
             </div>
+            
             <div class="project-category fade-in">
                 <h3 class="category-title"><i data-lucide="image"></i> YouTube Thumbnails</h3>
                 <div class="project-grid">
-                    <div class="project-card image-card" onclick="location.href='thumbnail-1.html'">
+                    <div class="project-card glass image-card" onclick="location.href='thumbnail-1.html'">
                         <img src="assets/thumbnail1.jpeg?v=5.0" alt="31 DAYS" loading="lazy">
                         <div class="card-overlay">31 DAYS</div>
                         <div class="project-details">
-                            <p class="what-is"><strong>What it is:</strong> An educational thumbnail designed to highlight personal growth and YouTube success milestones.</p>
-                            <p class="how-made"><strong>How it's made:</strong> High-contrast growth chart with bright green accents and authority-building badges.</p>
+                            <p><strong>Success Milestones:</strong> Educational growth chart design with authority-building badges.</p>
                         </div>
                     </div>
-                    <div class="project-card image-card" onclick="location.href='thumbnail-2.html'">
+                    <div class="project-card glass image-card" onclick="location.href='thumbnail-2.html'">
                         <img src="assets/thumbnail2.jpeg?v=5.0" alt="INDIA" loading="lazy">
                         <div class="card-overlay">INDIA</div>
                         <div class="project-details">
-                            <p class="what-is"><strong>What it is:</strong> A nature-focused tech/discussion thumbnail featuring an elephant to evoke adventure and discovery.</p>
-                            <p class="how-made"><strong>How it's made:</strong> Bold typography with a cut-out effect integrated into deep forest colors.</p>
+                            <p><strong>Nature Tech:</strong> Bold typography integrated into deep forest colors for discovery content.</p>
                         </div>
                     </div>
-                    <div class="project-card image-card" onclick="location.href='thumbnail-3.html'">
+                    <div class="project-card glass image-card" onclick="location.href='thumbnail-3.html'">
                         <img src="assets/thumbnail3.jpeg?v=5.0" alt="YOU DON'T NEED ADS" loading="lazy">
-                        <div class="card-overlay">YOU DON'T NEED ADS</div>
+                        <div class="card-overlay">NO ADS</div>
                         <div class="project-details">
-                            <p class="what-is"><strong>What it is:</strong> A high-impact personal brand thumbnail designed to challenge common marketing beliefs.</p>
-                            <p class="how-made"><strong>How it's made:</strong> Recognized celebrity portraits with bold underlining and a soft background glow.</p>
-                        </div>
-                    </div>
-                    <div class="project-card image-card" onclick="location.href='thumbnail-4.html'">
-                        <img src="assets/Awareness.jpeg?v=5.0" alt="AWARENESS" loading="lazy">
-                        <div class="card-overlay">AWARENESS</div>
-                        <div class="project-details">
-                            <p class="what-is"><strong>What it is:</strong> A powerful awareness campaign thumbnail designed to educate and drive social impact.</p>
-                            <p class="how-made"><strong>How it's made:</strong> Bold typography with high-contrast imagery and emotive visual storytelling.</p>
+                            <p><strong>Brand Strategy:</strong> High-impact challenge to traditional marketing beliefs.</p>
                         </div>
                     </div>
                 </div>
             </div>
-
 
             <div class="project-category fade-in" id="video-section" style="margin-top: var(--spacing-lg);">
                 <h3 class="category-title"><i data-lucide="video"></i> Video Editing</h3>
-                <div class="project-grid">
-                    <div class="project-card video-card">
+                <div class="project-grid" style="grid-template-columns: 1fr;">
+                    <div class="project-card glass video-card">
                         <div class="video-wrapper">
                             <video controls class="project-video" playsinline preload="metadata">
                                 <source src="assets/edit_video1.mp4" type="video/mp4">
-                                Your browser does not support the video tag.
                             </video>
                         </div>
                         <div class="video-info">
-                            <h4>A generation shaped by the environment in which they lived</h4>
-                            <p>Edited by Baasim Khan</p>
+                            <h4>Generation Perspectives</h4>
+                            <p>Strategic Video Edit by Baasim Khan</p>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="project-category fade-in" style="margin-top: var(--spacing-lg);">
-                <h3 class="category-title"><i data-lucide="pen-tool"></i> Logo Designs</h3>
-                <div class="project-grid">
-                    <div class="project-card image-card">
-                        <img src="assets/logodesigned1.jpeg?v=5.0" alt="Logo 1" loading="lazy">
-                    </div>
-                    <div class="project-card image-card">
-                        <img src="assets/logodesigined2.jpeg?v=5.0" alt="Logo 2" loading="lazy">
-                    </div>
-                    <div class="project-card image-card">
-                        <img src="assets/logo3.jpeg?v=5.0" alt="Logo 3" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -137,10 +101,12 @@
         </div>
     </footer>
 
-    <script src="script.js?v=5.0"></script><script src="glitch-fix.js?v=5.0"></script>
+    <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
+    <script src="main-v5.js?v=5.0"></script>
     <script src="khan-inject-v45.js?v=5.0"></script>
-<script>if(window.lucide) { window.lucide.createIcons(); }</script></body>
+</body>
 </html>
+
 
 
 

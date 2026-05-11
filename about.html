@@ -18,30 +18,20 @@
 <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
 </head>
 <body>
-    <div class="cursor-dot" data-cursor-dot></div>
-    <div class="cursor-outline" data-cursor-outline></div>
+    <div class="bg-mesh"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
 
-    <nav class="navbar">
+    <nav class="navbar glass">
         <div class="nav-container">
-            <a href="index.html" class="logo">BFK.</a>
             <div class="nav-links">
-                <a href="about.html" class="active">About</a>
-                <a href="skills.html">Skills</a>
-                <a href="experience.html">Experience</a>
+                <a href="index.html">Home</a>
                 <a href="projects.html">Projects</a>
+                <a href="about.html" class="active">About</a>
                 <a href="contact.html">Contact</a>
             </div>
-            <button class="mobile-menu-btn"><i data-lucide="menu"></i></button>
         </div>
     </nav>
-    <div class="mobile-nav">
-        <a href="index.html" class="mobile-link">Home</a>
-        <a href="about.html" class="mobile-link">About</a>
-        <a href="skills.html" class="mobile-link">Skills</a>
-        <a href="experience.html" class="mobile-link">Experience</a>
-        <a href="projects.html" class="mobile-link">Projects</a>
-        <a href="contact.html" class="mobile-link">Contact</a>
-    </div>
 
     <main style="padding-top: 100px; min-height: 80vh;">
         <section class="about section-padding">
@@ -50,36 +40,33 @@
                 <div class="section-line"></div>
             </div>
             <div class="about-grid">
-                <div class="about-text fade-in delay-1">
+                <div class="about-text fade-in">
                     <p class="lead-text">
-                        I'm a Humanities student in Class 11, but beyond academics, I'm actively involved in building real-world skills and experience.
+                        I'm a Humanities student in Class 11, working at the intersection of education, content, and digital systems.
                     </p>
                     <p>
-                        I work as an <strong>Operations & Coordination Lead</strong> at Proteios, where I handle execution, team alignment, and project flow. My focus is on making sure ideas are not just discussed, but actually implemented.
+                        As an <strong>Operations & Coordination Lead</strong> at Proteios, I focus on strategic execution and team alignment. I bridge the gap between vision and reality.
                     </p>
-                    <a href="proteios.html" class="btn btn-outline btn-sm" style="margin-top: 10px; margin-bottom: 25px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none;">
-                        Know more about Proteios <i data-lucide="arrow-right"></i>
+                    <a href="proteios.html" class="btn btn-secondary" style="margin-top: 10px; margin-bottom: 25px;">
+                        Proteios Initiative <i data-lucide="arrow-right"></i>
                     </a>
                     <p>
-                        Alongside this, I've explored multiple domains including content writing, graphic design, video editing, and AI-based workflows like prompting, image generation, and basic web generation.
-                    </p>
-                    <p class="focus-text">
-                        I'm focused on learning, building, and gaining clarity through action—not just theory.
+                        My expertise spans content architecture, AI-driven workflows, and operational efficiency. I'm building systems that matter.
                     </p>
                 </div>
-                <div class="about-image fade-in delay-2">
+                <div class="about-image fade-in">
                     <img src="assets/profile-v5.jpeg?v=5.0" alt="Baasim Fayaz Khan" class="profile-img">
                 </div>
-                <div class="about-stats fade-in delay-3">
-                    <div class="stat-card">
+                <div class="about-stats fade-in">
+                    <div class="stat-card glass">
                         <span class="stat-value">17</span>
-                        <span class="stat-label">Years Old</span>
+                        <span class="stat-label">Age</span>
                     </div>
-                    <div class="stat-card">
-                        <span class="stat-value">11th</span>
-                        <span class="stat-label">Class (Humanities)</span>
+                    <div class="stat-card glass">
+                        <span class="stat-value">Lead</span>
+                        <span class="stat-label">Operations</span>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card glass">
                         <span class="stat-value"><i data-lucide="map-pin"></i></span>
                         <span class="stat-label">Kashmir</span>
                     </div>
@@ -94,7 +81,8 @@
         </div>
     </footer>
 
-    <script src="script.js?v=5.0"></script><script src="glitch-fix.js?v=5.0"></script>
+    <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
+    <script src="main-v5.js?v=5.0"></script>
     <script src="khan-inject-v45.js?v=5.0"></script>
-<script>if(window.lucide) { window.lucide.createIcons(); }</script></body>
+</body>
 </html>

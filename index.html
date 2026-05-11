@@ -86,78 +86,58 @@
     <link rel="stylesheet" href="style-v45.css?v=5.0">
     
     <style>
-        body, html { margin: 0; padding: 0; height: auto; min-height: 100%; overflow-x: hidden; background: var(--bg-primary); scroll-behavior: smooth; }
+        body, html { margin: 0; padding: 0; overflow-x: hidden; }
         #hero { position: relative; height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; }
-        .hero-aurora { position: absolute; inset: 0; overflow: hidden; z-index: -1; background: radial-gradient(circle at 50% 50%, rgba(20, 20, 25, 1) 0%, #050505 100%); }
-        .ha-orb { position: absolute; filter: blur(120px); opacity: 0.15; border-radius: 50%; transition: transform 0.2s ease-out; }
-        .ha-orb-1 { width: 300px; height: 300px; background: rgba(255, 255, 255, 0.1); top: 20%; left: 30%; }
-        .ha-orb-2 { width: 400px; height: 400px; background: rgba(160, 160, 170, 0.05); bottom: 10%; right: 20%; }
         #hero-content { text-align: center; z-index: 2; padding: 20px; }
-        
-        #hero-title { font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 700; line-height: 1.1; margin-bottom: 15px; color: var(--text-primary); animation: fadeIn 1s ease 0.7s both; }
-        #hero-title .highlight { color: #a1a1aa; }
+        #hero-title { font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 700; line-height: 1.1; margin-bottom: 15px; animation: fadeIn 1s ease 0.7s both; }
         #hero-sub { font-size: clamp(1rem, 2.5vw, 1.5rem); color: var(--text-secondary); font-weight: 300; height: 30px; margin-bottom: 40px; animation: fadeIn 1s ease 0.9s both; }
         .typewriter-cursor { animation: blink 1s step-end infinite; }
         @keyframes blink { 50% { opacity: 0; } }
-        #explore-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: var(--text-primary); padding: 15px 30px; font-size: 1rem; border-radius: 30px; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--font-main); animation: fadeIn 1s ease 1.1s both; }
-        #explore-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--border-color-light); transform: translateY(-3px); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Logo Reveal Styles */
-        .logo-section { padding: 100px 5%; background: var(--bg-primary); position: relative; z-index: 20; }
+        .logo-section { padding: 100px 5%; position: relative; z-index: 20; }
         .logo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto; }
         .logo-item { cursor: pointer; transition: all 0.3s ease; text-align: center; }
-        .logo-item img { width: 100%; max-width: 220px; filter: grayscale(1); opacity: 0.6; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 8px; }
-        .logo-item:hover img { filter: grayscale(0); opacity: 1; transform: scale(1.05); box-shadow: 0 10px 30px rgba(255,255,255,0.05); }
-        .logo-details { max-height: 0; overflow: hidden; transition: all 0.5s ease; background: var(--bg-surface); border-radius: 12px; margin-top: 20px; padding: 0 20px; text-align: left; }
-        .logo-details.active { max-height: 300px; padding: 25px; border: 1px solid var(--border-color); }
-        .logo-details h4 { color: var(--text-primary); margin-bottom: 10px; font-size: 1.2rem; }
-        .logo-details p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; }
-        /* Chat Button explicitly enabled */
+        .logo-item img { width: 100%; max-width: 220px; filter: grayscale(1); opacity: 0.6; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 12px; }
+        .logo-item:hover img { filter: grayscale(0); opacity: 1; transform: scale(1.05); box-shadow: 0 10px 30px var(--accent-glow); }
         #chat-button { display: flex !important; }
     </style>
 </head>
 <body>
+    <div class="bg-mesh"></div>
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
-    <nav class="navbar">
+    <nav class="navbar glass">
         <div class="nav-container">
-            <div class="logo">BFK.</div>
             <div class="nav-links">
                 <a href="index.html" class="active">Home</a>
+                <a href="projects.html">Projects</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
             </div>
-            <button class="mobile-menu-btn"><i data-lucide="menu"></i></button>
         </div>
     </nav>
-    <div class="mobile-nav">
-        <a href="index.html" class="mobile-link active">Home</a>
-    </div>
 
     <main>
         <section id="hero">
-            <div class="hero-aurora">
-                <div class="ha-orb ha-orb-1" id="orb-1"></div>
-                <div class="ha-orb ha-orb-2" id="orb-2"></div>
-            </div>
             <div id="hero-content">
                 <div class="hero-profile-container">
                     <img src="assets/profile-v5.jpeg?v=5.0" alt="Baasim Fayaz Khan" class="hero-profile-img">
                 </div>
-                <h1 id="hero-title" class="rgb-text">Baasim Fayaz <span class="highlight">Khan</span></h1>
+                <h1 id="hero-title" class="rgb-text">Baasim Fayaz Khan</h1>
                 <div id="hero-sub"><span id="typewriter"></span><span class="typewriter-cursor">|</span></div>
-                <div class="hero-buttons" style="display: flex; gap: 20px; justify-content: center; animation: fadeIn 1s ease 1.1s both; z-index: 10;">
-                    <a href="projects.html#video-section" id="see-videos-btn" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: var(--text-primary); padding: 15px 30px; font-size: 1rem; border-radius: 30px; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--font-main);">
+                <div class="hero-buttons" style="display: flex; gap: 20px; justify-content: center; margin-top: 30px;">
+                    <a href="projects.html#video-section" class="btn btn-secondary">
                         See Videos <i data-lucide="play-circle"></i>
                     </a>
-                    <a href="about.html" id="explore-btn" style="animation: none;">
+                    <a href="about.html" class="btn btn-primary">
                         Explore Work <i data-lucide="arrow-right"></i>
                     </a>
                 </div>
             </div>
         </section>
 
-        <section class="logo-section">
+        <section class="logo-section glass" style="margin: 0 5%; border-radius: 40px; padding: 60px;">
             <div class="logo-grid fade-in">
                 <div class="logo-item">
                     <img src="assets/logodesigned1.jpeg?v=5.0" alt="Logo Design 1">
@@ -174,56 +154,19 @@
 
     <footer>
         <div class="footer-content">
-            <p>&copy; 2026 Baasim Fayaz Khan. All rights reserved.</p>
+            <p>&copy; 2026 Baasim Fayaz Khan. Strategic Execution & Leadership.</p>
         </div>
     </footer>
 
     <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
-    <script src="script.js?v=5.0"></script><script src="glitch-fix.js?v=5.0"></script>
-    <script src="glitch-fix.js?v=5.0"></script>
+    <script src="main-v5.js?v=5.0"></script>
     <script src="khan-inject-v45.js?v=5.0"></script>
-    <script>
-        lucide.createIcons();
-        
-        function toggleLogo(id) {
-            const details = document.getElementById(id);
-            document.querySelectorAll('.logo-details').forEach(d => {
-                if(d.id !== id) d.classList.remove('active');
-            });
-            details.classList.toggle('active');
-        }
 
-        // Hero Mouse Effect
-        const orb1 = document.getElementById('orb-1');
-        const orb2 = document.getElementById('orb-2');
-        window.addEventListener('mousemove', (e) => {
-            const x = (e.clientX / window.innerWidth) - 0.5;
-            const y = (e.clientY / window.innerHeight) - 0.5;
-            orb1.style.transform = `translate(${x * 50}px, ${y * 50}px)`;
-            orb2.style.transform = `translate(${x * -80}px, ${y * -80}px)`;
-        });
-
-        // Typewriter Effect
-        const phrases = ["Building Systems.", "Leading Operations.", "Executing Vision.", "Designing Content."];
-        let i = 0; let j = 0; let current = ""; let isDeleting = false;
-        function type() {
-            const full = phrases[i % phrases.length];
-            if (isDeleting) { current = full.substring(0, j - 1); j--; }
-            else { current = full.substring(0, j + 1); j++; }
-            document.getElementById('typewriter').textContent = current;
-            let speed = isDeleting ? 50 : 100;
-            if (!isDeleting && j === full.length) { speed = 2000; isDeleting = true; }
-            else if (isDeleting && j === 0) { isDeleting = false; i++; speed = 500; }
-            setTimeout(type, speed);
-        }
-        type();
-    </script>
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js');
-            });
-        }
+        // Hero specific typewriter (if needed here or in main)
+        // Kept separate if it's ONLY for index.html
     </script>
 </body>
 </html>
+
+
