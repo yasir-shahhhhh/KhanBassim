@@ -1606,7 +1606,14 @@ function initializeKhanLogic() {
             sessionStorage.setItem('khan_guest_visited', '1');
             return; // Wait for auth or guest choice
         }
+        if (!chatOpen && !window._explicitChatOpen) {
+            // Prevent auto-opening if not explicitly triggered
+            if (document.body.classList.contains('hero-mode')) return;
+        }
+
         chatOpen = !chatOpen;
+        if (chatOpen) window._explicitChatOpen = true;
+        
         chatInterface.style.display = chatOpen ? 'flex' : 'none';
         if (chatButton) chatButton.classList.toggle('chat-open-hidden', chatOpen);
         hapticVibrate(chatOpen ? 18 : 10);

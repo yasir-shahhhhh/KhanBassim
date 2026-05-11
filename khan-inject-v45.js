@@ -452,6 +452,18 @@
         .gl-btn { width: 56px; height: 56px; }
         #gl-timer-pill { padding: 8px 16px; font-size: 0.9rem; }
     }
+    #chat-drop-zone {
+        position: fixed; inset: 0; z-index: 100003;
+        background: rgba(122, 141, 255, 0.15);
+        backdrop-filter: blur(15px);
+        display: none; align-items: center; justify-content: center;
+        color: #fff; font-size: 1.8rem; font-weight: 800;
+        border: 4px dashed rgba(122, 141, 255, 0.5);
+        margin: 30px; border-radius: 40px;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        text-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+    #chat-drop-zone.active { display: flex; }
     `;
 
     const el = document.createElement('div');
