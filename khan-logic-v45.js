@@ -2876,10 +2876,10 @@ function initializeKhanLogic() {
         if (session && session.messages && session.messages.length > 0) {
             // Wait for components to be ready
             setTimeout(async () => {
-                // Open chat if not open
-                if (typeof chatOpen !== 'undefined' && !chatOpen) {
-                    if (typeof window.toggleChat === 'function') window.toggleChat();
-                }
+                // Populate history but DO NOT auto-open the chat
+                // if (typeof chatOpen !== 'undefined' && !chatOpen) {
+                //     if (typeof window.toggleChat === 'function') window.toggleChat();
+                // }
 
                 const chatMsgsEl = document.getElementById('chat-messages');
                 if (chatMsgsEl) {
