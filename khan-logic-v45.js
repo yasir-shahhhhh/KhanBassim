@@ -131,7 +131,7 @@ const BaasimDB = (() => {
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 (async function () {
     try {
-        const CURRENT_SYSTEM_VER = '2.3.1';
+        const CURRENT_SYSTEM_VER = '2.3.2';
         const lastVer = localStorage.getItem('khan_system_ver');
         if (lastVer !== CURRENT_SYSTEM_VER) {
             console.warn('âš¡ System Update Detected: Purging stale database and cache...');
