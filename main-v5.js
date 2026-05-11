@@ -1,161 +1,282 @@
 /**
- * Baasim Portfolio v5 Core Logic
- * Handles Custom Cursor, Background Mesh, Animations, and Routing
+ * Baasim Portfolio v5.8 - Cinematic Experience Engine
+ * Handles: Preloader, Hero Video/Audio Sync, Smooth Routing, and Global UX Polish
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Inject Background Mesh if not present
-    if (!document.querySelector('.bg-mesh')) {
-        const mesh = document.createElement('div');
-        mesh.className = 'bg-mesh';
-        document.body.prepend(mesh);
-    }
-
-    // 2. Custom Cursor
-    const dot = document.querySelector('.cursor-dot') || document.createElement('div');
-    const outline = document.querySelector('.cursor-outline') || document.createElement('div');
     
-    if (!document.querySelector('.cursor-dot')) {
-        dot.className = 'cursor-dot';
-        outline.className = 'cursor-outline';
-        document.body.appendChild(dot);
-        document.body.appendChild(outline);
-    }
+    /* ═══════════════════════════════════════════════════════
+       1. GLOBAL STATE & SELECTORS
+       ═══════════════════════════════════════════════════════ */
+    const heroVideo = document.getElementById('hero-video');
+    const preloader = document.getElementById('preloader');
+    const navbar = document.querySelector('.navbar');
+    let experienceActivated = false;
 
-    window.addEventListener('mousemove', (e) => {
-        dot.style.left = e.clientX + 'px';
-        dot.style.top = e.clientY + 'px';
-        
-        outline.animate({
-            left: e.clientX + 'px',
-            top: e.clientY + 'px'
-        }, { duration: 500, fill: 'forwards' });
-    });
+    /* ═══════════════════════════════════════════════════════
+       2. CINEMATIC PRELOADER & VIDEO INIT
+       ═══════════════════════════════════════════════════════ */
+    const initExperience = () => {
+        if (!heroVideo) return;
 
-    // 3. Lucide Icons
-    if (window.lucide) {
-        lucide.createIcons();
-    }
+        heroVideo.muted = true;
+        heroVideo.loop = true;
+        heroVideo.playsInline = true;
+        heroVideo.preload = 'auto';
 
-    // 4. Hover Effects
-    const updateHoverEffects = () => {
-        const clickables = document.querySelectorAll('a, button, .logo-item, .project-card, .stat-card');
-        clickables.forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                outline.style.width = '80px';
-                outline.style.height = '80px';
-                outline.style.background = 'rgba(255, 255, 255, 0.05)';
-                outline.style.borderColor = 'var(--accent-1)';
-                outline.style.boxShadow = '0 0 20px var(--accent-glow)';
-            });
-            el.addEventListener('mouseleave', () => {
-                outline.style.width = '40px';
-                outline.style.height = '40px';
-                outline.style.background = 'transparent';
-                outline.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                outline.style.boxShadow = 'none';
-            });
-        });
+        heroVideo.play().catch(e => console.warn("Autoplay blocked:", e));
+
+        const onReady = () => {
+            setTimeout(() => {
+                if (preloader) {
+                    preloader.classList.add('fade-out');
+                    navbar?.classList.add('show');
+                }
+            }, 1000);
+        };
+
+        if (heroVideo.readyState >= 3) {
+            onReady();
+        } else {
+            heroVideo.addEventListener('canplaythrough', onReady, { once: true });
+        }
+
+        setTimeout(() => {
+            if (!experienceActivated) {
+                const hint = document.getElementById('unmute-hint');
+                if (hint) hint.style.opacity = '1';
+            }
+        }, 3000);
+
+        setTimeout(() => {
+            if (preloader && !preloader.classList.contains('fade-out')) {
+                preloader.classList.add('fade-out');
+                navbar?.classList.add('show');
+            }
+        }, 5000);
     };
-    updateHoverEffects();
 
-    // 5. Navbar Scroll Effect
-    const nav = document.querySelector('.navbar');
-    if (nav) {
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) nav.classList.add('scrolled');
-            else nav.classList.remove('scrolled');
+    /* ═══════════════════════════════════════════════════════
+       3. THE ACTIVATION BRIDGE
+       ═══════════════════════════════════════════════════════ */
+    const activateAudio = () => {
+        if (experienceActivated || !heroVideo) return;
+        
+        const hint = document.getElementById('unmute-hint');
+        if (hint) hint.style.opacity = '0';
+
+        heroVideo.muted = false;
+        heroVideo.volume = 0; 
+        
+        let vol = 0;
+        const fadeInterval = setInterval(() => {
+            vol += 0.1;
+            if (vol >= 1) {
+                heroVideo.volume = 1;
+                clearInterval(fadeInterval);
+            } else {
+                heroVideo.volume = vol;
+            }
+        }, 50);
+
+        experienceActivated = true;
+        
+        document.removeEventListener('click', activateAudio);
+        document.removeEventListener('touchstart', activateAudio, { passive: true });
+        document.removeEventListener('keydown', activateAudio);
+    };
+
+    document.addEventListener('click', activateAudio, { once: true });
+    document.addEventListener('touchstart', activateAudio, { once: true, passive: true });
+    document.addEventListener('keydown', activateAudio, { once: true });
+
+    if (heroVideo) {
+        // Native loop is usually better, but we ensure play() is called if it stops
+        heroVideo.addEventListener('ended', () => {
+            heroVideo.currentTime = 0;
+            heroVideo.play().catch(e => console.error("Loop failed:", e));
         });
     }
 
-    // 6. Scroll Reveal
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('appear');
+    /* ═══════════════════════════════════════════════════════
+       5. NAVIGATION HIGHLIGHTING (The Dash Notation)
+       ═══════════════════════════════════════════════════════ */
+    const updateNavHighlight = (targetUrl) => {
+        const navLinks = document.querySelectorAll('.nav-links a');
+        if (!navLinks.length) return;
+
+        // Extract filename from URL (e.g., 'about.html')
+        let currentFile = targetUrl.split('/').pop().split('?')[0].split('#')[0] || 'index.html';
+        if (currentFile === '' || currentFile === '/') currentFile = 'index.html';
+
+        navLinks.forEach(link => {
+            const linkHref = link.getAttribute('href');
+            link.classList.remove('active');
+            
+            // Exact match or handle index fallback
+            if (linkHref === currentFile) {
+                link.classList.add('active');
+            } else if (currentFile === 'index.html' && (linkHref === '/' || linkHref === '')) {
+                link.classList.add('active');
             }
         });
+    };
+
+    /* ═══════════════════════════════════════════════════════
+       6. INTERSECTION OBSERVER (Fade-in Animations)
+       ═══════════════════════════════════════════════════════ */
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('appear');
+        });
     }, { threshold: 0.1 });
-    
+
     const observeFaders = () => {
-        document.querySelectorAll('.fade-in, .section-header, .stat-card, .project-card').forEach(el => {
-            el.classList.add('fade-in'); // Ensure class is present
+        document.querySelectorAll('.fade-in, .section-header, .stat-card, .project-card, .company-card, .skill-category').forEach(el => {
+            el.classList.add('fade-in');
             observer.observe(el);
         });
     };
-    observeFaders();
 
-    // 7. Typewriter Effect (index.html only)
-    const typewriterEl = document.getElementById('typewriter');
-    if (typewriterEl) {
-        const phrases = ["Building Systems.", "Leading Operations.", "Executing Vision.", "Designing Content."];
-        let ti = 0, tj = 0, tCurrent = "", tDeleting = false;
-        function typeWrite() {
-            const full = phrases[ti % phrases.length];
-            if (tDeleting) { tCurrent = full.substring(0, tj - 1); tj--; }
-            else { tCurrent = full.substring(0, tj + 1); tj++; }
-            typewriterEl.textContent = tCurrent;
-            let speed = tDeleting ? 50 : 100;
-            if (!tDeleting && tj === full.length) { speed = 2000; tDeleting = true; }
-            else if (tDeleting && tj === 0) { tDeleting = false; ti++; speed = 500; }
-            setTimeout(typeWrite, speed);
-        }
-        typeWrite();
-    }
+    /* ═══════════════════════════════════════════════════════
+       6. SMOOTH NAVIGATION (View Transitions API)
+       ═══════════════════════════════════════════════════════ */
+    const handleNavClick = async (e) => {
+        const link = e.target.closest('a');
+        if (!link) return;
+        
+        const url = link.getAttribute('href');
+        if (!url || url.startsWith('http') || url.startsWith('#') || url.includes('mailto:')) return;
 
-    // 8. Smooth SPA-like Routing
-    const handleLinkClick = (e) => {
-        const href = e.currentTarget.getAttribute('href');
-        if (href && href.endsWith('.html') && !href.startsWith('http') && !href.includes('#')) {
-            e.preventDefault();
-            loadPage(href);
+        e.preventDefault();
+
+        if (document.startViewTransition) {
+            document.startViewTransition(async () => {
+                await performRouting(url);
+            });
+        } else {
+            await performRouting(url);
         }
     };
 
-    const loadPage = async (url) => {
+    const performRouting = async (url) => {
         try {
-            // Start transition
-            document.body.style.opacity = '0.5';
-            document.body.style.transform = 'scale(0.98)';
-            document.body.style.transition = 'all 0.5s ease';
-
             const response = await fetch(url);
             const html = await response.text();
             const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            
-            const newMain = doc.querySelector('main');
+            const newDoc = parser.parseFromString(html, 'text/html');
+            const newMain = newDoc.querySelector('main');
             const currentMain = document.querySelector('main');
-            
+
             if (newMain && currentMain) {
+                const isHeroTarget = url === 'index.html' || url === '/' || url === '';
+                
+                // 1. Toggle Hero Mode
+                if (isHeroTarget) {
+                    document.body.classList.add('hero-mode');
+                } else {
+                    document.body.classList.remove('hero-mode');
+                }
+
+                // 2. Extract and Inject styles
+                const newStyles = newDoc.querySelectorAll('head style');
+                document.querySelectorAll('head style[data-page-style]').forEach(s => s.remove());
+                newStyles.forEach(s => {
+                    const clone = s.cloneNode(true);
+                    clone.setAttribute('data-page-style', '');
+                    document.head.appendChild(clone);
+                });
+
+                // 3. Swap content
                 currentMain.innerHTML = newMain.innerHTML;
-                document.title = doc.title;
+                document.title = newDoc.title;
                 window.history.pushState({}, '', url);
                 
-                // Re-initialize logic
-                if (window.lucide) lucide.createIcons();
-                updateHoverEffects();
+                // 4. Update Nav Highlighting
+                updateNavHighlight(url);
+
+                // 5. Re-init Engines
+                if (window.lucide) window.lucide.createIcons();
                 observeFaders();
                 
-                // End transition
-                document.body.style.opacity = '1';
-                document.body.style.transform = 'scale(1)';
-                window.scrollTo(0, 0);
-            } else {
-                window.location.href = url; // Fallback
+                if (isHeroTarget) {
+                    initTypewriter();
+                    if (heroVideo) heroVideo.play();
+                } else {
+                    if (heroVideo) heroVideo.pause();
+                }
+
+                window.scrollTo({ top: 0, behavior: 'instant' });
+                updateCursor();
             }
         } catch (err) {
-            console.error('Routing error:', err);
-            window.location.href = url; // Fallback
+            console.error('Navigation failed:', err);
+            window.location.href = url;
         }
     };
 
-    document.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', handleLinkClick);
-    });
+    window.navigateTo = performRouting;
+    document.addEventListener('click', handleNavClick);
 
-    // Handle back/forward buttons
-    window.addEventListener('popstate', () => {
-        window.location.reload();
-    });
+    /* ═══════════════════════════════════════════════════════
+       7. GLOBAL CURSOR HANDLER
+       ═══════════════════════════════════════════════════════ */
+    const updateCursor = () => {
+        const interactive = document.querySelectorAll('a, button, .btn, .project-card, .skill-category, .stat-card, .contact-item, .company-card');
+        interactive.forEach(el => {
+            el.style.cursor = 'pointer';
+        });
+    };
+
+    updateCursor();
+    const cursorObserver = new MutationObserver(updateCursor);
+    cursorObserver.observe(document.body, { childList: true, subtree: true });
+
+    /* ═══════════════════════════════════════════════════════
+       8. TYPEWRITER EFFECT
+       ═══════════════════════════════════════════════════════ */
+    const initTypewriter = () => {
+        const typewriter = document.getElementById('typewriter');
+        if (!typewriter) return;
+        
+        typewriter.textContent = ""; 
+        const phrases = [
+            "Operations & Coordination Lead",
+            "Strategic Execution Expert",
+            "AI Systems Architect",
+            "Youth Leadership Advocate"
+        ];
+        let i = 0, j = 0, isDeleting = false;
+
+        const type = () => {
+            const current = phrases[i];
+            const el = document.getElementById('typewriter');
+            if (!el) return;
+            el.textContent = isDeleting 
+                ? current.substring(0, j--) 
+                : current.substring(0, j++);
+
+            if (!isDeleting && j === current.length + 1) {
+                isDeleting = true;
+                setTimeout(type, 2000);
+            } else if (isDeleting && j === 0) {
+                isDeleting = false;
+                i = (i + 1) % phrases.length;
+                setTimeout(type, 500);
+            } else {
+                setTimeout(type, isDeleting ? 30 : 60);
+            }
+        };
+        type();
+    };
+
+    /* ═══════════════════════════════════════════════════════
+       10. INITIALIZE
+       ═══════════════════════════════════════════════════════ */
+    initExperience();
+    initTypewriter();
+    observeFaders();
+    updateNavHighlight(window.location.pathname);
+    if (window.lucide) window.lucide.createIcons();
 });
+

@@ -13,16 +13,17 @@
     <script src="config.js"></script>
     <style>
         :root {
-            --bg: #ffffff;
-            --text: #000000;
-            --accent: #ff4d4d;
-            --pill-bg: #e0f2ff;
-            --pill-text: #2563eb;
-            --gray-light: #f3f4f6;
-            --gray-mid: #9ca3af;
-            --vision-green: #22c55e;
+            --bg: #02030b;
+            --text: #ffffff;
+            --accent: #22c55e;
+            --pill-bg: rgba(255, 255, 255, 0.05);
+            --pill-text: rgba(255, 255, 255, 0.7);
+            --gray-mid: #666;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; }
+        
         body { 
             background: var(--bg); 
             color: var(--text); 
@@ -34,142 +35,155 @@
             justify-content: center;
         }
 
+        /* Cinematic Background */
+        .bg-mesh {
+            position: fixed; inset: 0; z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(182, 107, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(34, 197, 94, 0.05) 0%, transparent 50%);
+            filter: blur(80px);
+        }
+
         #gl-container {
             width: 100%; 
             max-width: 500px; 
             height: 100%; 
             display: flex; 
             flex-direction: column; 
-            padding: 60px 24px 20px; 
-            animation: fadeIn 1s ease-out;
+            padding: 60px 24px 40px; 
+            animation: fadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); filter: blur(10px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
 
-        #gl-display { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
+        #gl-display { display: flex; flex-direction: column; align-items: center; margin-bottom: 30px; }
         
-        /* Logo section — becomes camera preview when active */
         #gl-logo-section { 
             position: relative; 
-            width: 140px; height: 140px; 
-            margin-bottom: 20px; 
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 160px; height: 160px; 
+            margin-bottom: 30px; 
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
         #gl-logo-section.camera-active {
-            width: 280px; height: 210px;
-            border-radius: 16px;
+            width: 320px; height: 240px;
+            border-radius: 24px;
         }
         #gl-main-logo { 
-            width: 100%; height: 100%; object-fit: cover; border-radius: 50%; 
-            background: #000; padding: 4px; border: 4px solid #fff;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 100%; height: 100%; object-fit: contain; border-radius: 50%; 
+            background: rgba(255,255,255,0.05); padding: 30px; border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(10px);
         }
-        #gl-logo-section.camera-active #gl-main-logo {
-            display: none;
-        }
+        #gl-logo-section.camera-active #gl-main-logo { opacity: 0; visibility: hidden; }
+        
         #gl-logo-glow {
-            position: absolute; inset: -20px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(165, 243, 252, 0.4) 0%, transparent 70%);
+            position: absolute; inset: -30px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(34, 197, 94, 0.1) 0%, transparent 70%);
             z-index: -1;
-            transition: opacity 0.3s;
+            transition: opacity 0.5s;
+            animation: pulse 3s infinite ease-in-out;
         }
-        #gl-logo-section.camera-active #gl-logo-glow { opacity: 0; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(1.15); opacity: 0.6; } }
 
-        /* Camera preview inside logo section */
         #gl-video {
-            display: none;
-            width: 100%; height: 100%;
-            object-fit: cover;
-            border-radius: 16px;
-            background: #111;
-            transform: scaleX(-1);
+            position: absolute; inset: 0;
+            display: none; width: 100%; height: 100%;
+            object-fit: cover; border-radius: 24px;
+            background: #000; transform: scaleX(-1);
+            border: 2px solid var(--glass-border);
         }
-        #gl-logo-section.camera-active #gl-video {
-            display: block;
-        }
+        #gl-logo-section.camera-active #gl-video { display: block; }
 
         #gl-info { text-align: center; }
-        #gl-name { font-size: 2.2rem; font-weight: 700; color: #374151; margin-bottom: 12px; letter-spacing: -0.02em; }
+        #gl-name { font-size: 2.5rem; font-weight: 800; color: #fff; margin-bottom: 12px; letter-spacing: -0.04em; }
         
-        /* Status pills row */
-        #gl-status-row {
-            display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
-        }
+        #gl-status-row { display: flex; align-items: center; justify-content: center; gap: 12px; }
         #gl-vision-pill {
-            display: none; padding: 6px 16px; 
-            background: #fef2f2; color: #ef4444;
-            border-radius: 100px; font-weight: 800; font-size: 0.7rem; 
-            letter-spacing: 0.04em; text-transform: uppercase;
+            display: none; padding: 6px 14px; 
+            background: rgba(34, 197, 94, 0.1); color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 100px; font-weight: 800; font-size: 0.65rem; 
+            letter-spacing: 0.1em; text-transform: uppercase;
         }
         #gl-vision-pill.show { display: inline-block; }
 
         #gl-status-pill {
             display: inline-block; padding: 6px 16px; background: var(--pill-bg); color: var(--pill-text);
-            border-radius: 100px; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.02em;
+            border: 1px solid var(--glass-border);
+            border-radius: 100px; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.05em;
+            text-transform: uppercase;
         }
 
         #gl-content { 
-            flex: 1; width: 100%; overflow-y: auto; margin: 16px 0; padding-right: 10px;
+            flex: 1; width: 100%; overflow-y: auto; margin: 20px 0; padding: 0 10px;
             display: flex; flex-direction: column; scrollbar-width: none;
+            mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
         }
         #gl-content::-webkit-scrollbar { display: none; }
         #gl-transcript-msg { 
-            margin: auto; color: var(--gray-mid); font-size: 1.05rem; font-style: italic; text-align: center; 
+            margin: auto; color: #444; font-size: 1rem; font-style: italic; text-align: center; 
             max-width: 280px; line-height: 1.6;
         }
 
         .gl-msg {
-            margin-bottom: 14px; padding: 12px 18px; border-radius: 20px; max-width: 85%;
+            margin-bottom: 16px; padding: 14px 20px; border-radius: 22px; max-width: 85%;
             font-size: 0.95rem; line-height: 1.5; word-wrap: break-word; 
-            animation: msgFade 0.4s ease;
+            animation: msgFade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(10px);
         }
-        @keyframes msgFade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes msgFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .gl-msg.user { background: #f3f4f6; color: #111; align-self: flex-end; border-bottom-right-radius: 4px; }
-        .gl-msg.ai { background: #111; color: #fff; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .gl-msg.user { background: rgba(255,255,255,0.06); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
+        .gl-msg.ai { background: #fff; color: #000; align-self: flex-start; border-bottom-left-radius: 4px; font-weight: 500; }
 
         #gl-bottom-controls {
             width: 100%; display: flex; align-items: center; justify-content: center; gap: 20px;
-            padding: 16px 0;
+            padding-top: 20px;
         }
 
         .gl-round-btn {
-            width: 56px; height: 56px; border-radius: 50%; border: none;
+            width: 64px; height: 64px; border-radius: 50%; border: none;
             display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; transition: all 0.2s ease;
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(255,255,255,0.05); color: #fff;
+            border: 1px solid var(--glass-border);
         }
+        .gl-round-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-4px); border-color: rgba(255,255,255,0.2); }
         .gl-round-btn:active { transform: scale(0.92); }
-        .gl-round-btn svg { width: 22px; height: 22px; }
+        .gl-round-btn svg { width: 24px; height: 24px; }
 
-        #gl-mic-btn { background: #f0f7ff; color: #2563eb; }
-        #gl-mic-btn.active { background: #2563eb; color: #fff; }
-        #gl-camera-btn { background: #f3f4f6; color: #374151; }
-        #gl-camera-btn.active { background: #111; color: #fff; }
+        #gl-mic-btn.active { background: var(--accent); color: #000; border-color: var(--accent); box-shadow: 0 0 30px rgba(34, 197, 94, 0.3); }
+        #gl-camera-btn.active { background: #fff; color: #000; border-color: #fff; }
+        
         #gl-switch-btn { 
-            background: #e0f2ff; color: #2563eb; 
-            width: 48px; height: 48px;
+            width: 50px; height: 50px;
             display: none;
         }
-        #gl-switch-btn svg { width: 20px; height: 20px; }
-        #gl-close-btn { background: #fecaca; color: #dc2626; }
 
         #gl-timer-pill { 
-            background: #f8fafc; color: #94a3b8; font-weight: 700; font-size: 0.85rem;
-            padding: 8px 16px; border-radius: 100px;
+            background: rgba(255,255,255,0.03); color: #fff; font-weight: 700; font-size: 1.1rem;
+            padding: 10px 20px; border-radius: 100px; border: 1px solid var(--glass-border);
+            font-family: monospace;
         }
 
+        #gl-close-btn { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+        #gl-close-btn:hover { background: #ef4444; color: #fff; box-shadow: 0 0 30px rgba(239, 68, 68, 0.3); }
+
         @media (max-width: 480px) {
-            #gl-container { padding: 30px 16px 16px; }
-            #gl-name { font-size: 1.8rem; }
-            #gl-logo-section.camera-active { width: 240px; height: 180px; }
-            .gl-round-btn { width: 50px; height: 50px; }
-            #gl-bottom-controls { gap: 14px; }
+            #gl-container { padding: 40px 16px 30px; }
+            #gl-name { font-size: 2rem; }
+            #gl-logo-section.camera-active { width: 100%; height: 280px; border-radius: 0; position: fixed; top: 0; left: 0; z-index: -1; }
+            #gl-logo-section.camera-active #gl-video { border-radius: 0; border: none; }
+            .gl-round-btn { width: 56px; height: 56px; }
+            #gl-bottom-controls { gap: 12px; }
+            #gl-timer-pill { padding: 8px 16px; font-size: 0.9rem; }
         }
     </style>
 </head>
 <body>
     <div id="gl-container">
+        <div class="bg-mesh"></div>
         <div id="gl-display">
             <div id="gl-logo-section">
                 <div id="gl-logo-glow"></div>

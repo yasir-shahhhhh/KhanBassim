@@ -22,9 +22,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style-v45.css?v=5.0">
-    
-<script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
+    <link rel="stylesheet" href="style-v45.css?v=5.6">
 </head>
 <body>
     <div class="bg-mesh"></div>
@@ -33,10 +31,11 @@
 
     <nav class="navbar glass">
         <div class="nav-container">
-            <div class="nav-links">
-                <a href="index.html">Home</a>
-                <a href="projects.html" class="active">Projects</a>
+                        <div class="nav-links">
                 <a href="about.html">About</a>
+                <a href="experience.html">Experience</a>
+                <a href="skills.html">Skills</a>
+                <a href="projects.html">Projects</a>
                 <a href="contact.html">Contact</a>
             </div>
         </div>
@@ -73,21 +72,77 @@
                             <p><strong>Brand Strategy:</strong> High-impact challenge to traditional marketing beliefs.</p>
                         </div>
                     </div>
+                    <div class="project-card glass image-card" onclick="location.href='thumbnail-4.html'">
+                        <img src="assets/thumbnail4.jpeg?v=5.0" alt="HACKER GAMEPLAY" loading="lazy">
+                        <div class="card-overlay">HACKER GAMEPLAY</div>
+                        <div class="project-details">
+                            <p><strong>Gaming Hype Edit:</strong> Anime-energy composition with neon contrast and sniper-frame action to maximize click impulse.</p>
+                        </div>
+                    </div>
+                    <div class="project-card glass image-card" onclick="location.href='thumbnail-5.html'">
+                        <img src="assets/thumbnail5.jpeg?v=5.0" alt="KASHMIR GREAT LAKES" loading="lazy">
+                        <div class="card-overlay">KASHMIR GREAT LAKES</div>
+                        <div class="project-details">
+                            <p><strong>Travel Documentary:</strong> Wide scenic framing with high-clarity typography to instantly communicate destination storytelling.</p>
+                        </div>
+                    </div>
+                    <div class="project-card glass image-card" onclick="location.href='thumbnail-6.html'">
+                        <img src="assets/thumbnail6.jpeg?v=5.0" alt="PHYSICS BY ERNEST RUTHERFORD" loading="lazy">
+                        <div class="card-overlay">PHYSICS</div>
+                        <div class="project-details">
+                            <p><strong>Educational Authority:</strong> Subject-led layout blending portrait, symbols, and textbook cues for instant academic recognition.</p>
+                        </div>
+                    </div>
+                    <div class="project-card glass image-card" onclick="location.href='thumbnail-7.html'">
+                        <img src="assets/thumbnail7.jpeg?v=5.0" alt="ABANDONED MANSIONS" loading="lazy">
+                        <div class="card-overlay">ABANDONED MANSIONS</div>
+                        <div class="project-details">
+                            <p><strong>True-Crime Mystery:</strong> High-drama monochrome portrait and location arrow direct attention to narrative tension.</p>
+                        </div>
+                    </div>
+                    <div class="project-card glass image-card" onclick="location.href='thumbnail-8.html'">
+                        <img src="assets/thumbnail8.jpeg?v=5.0" alt="DARK PSYCHOLOGY AND MANIPULATION" loading="lazy">
+                        <div class="card-overlay">DARK PSYCHOLOGY</div>
+                        <div class="project-details">
+                            <p><strong>Cinematic Concept:</strong> Minimal dark palette and chess symbolism communicate strategy, control, and psychological depth.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <div class="project-category fade-in" style="margin-top: var(--spacing-lg);">
+                <h3 class="category-title"><i data-lucide="book-open-text"></i> Covers Made</h3>
+                <div class="project-grid">
+                    <div class="project-card glass image-card" onclick="location.href='cover-1.html'">
+                        <img src="assets/Cover.jpeg?v=5.1" alt="Porsche Cover Design" loading="lazy">
+                        <div class="card-overlay">PORSCHE 911 GT3 RS</div>
+                        <div class="project-details">
+                            <p><strong>Automotive Cover:</strong> Monochrome-green editorial style built for premium performance branding and poster identity.</p>
+                        </div>
+                    </div>
+                    <div class="project-card glass image-card" onclick="location.href='cover-2.html'">
+                        <img src="assets/cover2.jpeg?v=5.1" alt="Proteios Rollup Cover" loading="lazy">
+                        <div class="card-overlay">PROTEIOS ROLLUP</div>
+                        <div class="project-details">
+                            <p><strong>Institutional Cover:</strong> Clean vertical hierarchy emphasizing clarity, trust, and student-first communication.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="project-category fade-in" id="video-section" style="margin-top: var(--spacing-lg);">
                 <h3 class="category-title"><i data-lucide="video"></i> Video Editing</h3>
                 <div class="project-grid" style="grid-template-columns: 1fr;">
-                    <div class="project-card glass video-card">
-                        <div class="video-wrapper">
-                            <video controls class="project-video" playsinline preload="metadata">
+                    <div class="project-card glass" style="padding: 0; overflow: hidden;">
+                        <div class="video-wrapper" style="position: relative; width: 100%; padding-top: 56.25%; background: #000;">
+                            <video controls playsinline preload="metadata" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 20px 20px 0 0;">
                                 <source src="assets/edit_video1.mp4" type="video/mp4">
                             </video>
                         </div>
-                        <div class="video-info">
-                            <h4>Generation Perspectives</h4>
-                            <p>Strategic Video Edit by Baasim Khan</p>
+                        <div class="video-info" style="padding: var(--spacing-md);">
+                            <h4 style="font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">Generation Perspectives</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);">Strategic Video Edit by Baasim Fayaz Khan</p>
                         </div>
                     </div>
                 </div>
@@ -101,9 +156,8 @@
         </div>
     </footer>
 
-    <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
-    <script src="main-v5.js?v=5.0"></script>
-    <script src="khan-inject-v45.js?v=5.0"></script>
+    <script src="main-v5.js?v=5.6"></script>
+    <script src="khan-inject-v45.js?v=5.2"></script>
 </body>
 </html>
 

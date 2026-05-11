@@ -847,7 +847,7 @@ function copyToClipboard(btn, text) {
     const doFallback = () => {
         try {
             const ta = document.createElement('textarea');
-            ta.value = text; ta.style-v45.cssText = 'position:fixed;opacity:0;pointer-events:none';
+            ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
             document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
             showCopyFeedback(btn);
         } catch (e) { console.error('Copy failed:', e); }
@@ -858,23 +858,16 @@ function copyToClipboard(btn, text) {
 }
 function showCopyFeedback(btn) {
     if (!btn) return;
-    const span = btn.querySelector('span');
     const svg = btn.querySelector('svg');
-    if (!span || !svg) return;
+    if (!svg) return;
 
-    const origText = span.textContent;
     const origSvg = svg.innerHTML;
-
-    span.textContent = 'Copied!';
     svg.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
-    btn.style.color = '#10b981';
-    btn.style.borderColor = '#10b981';
+    btn.classList.add('success');
 
     setTimeout(() => {
-        span.textContent = origText;
         svg.innerHTML = origSvg;
-        btn.style.color = '';
-        btn.style.borderColor = '';
+        btn.classList.remove('success');
     }, 2000);
 }
 window.copyToClipboard = copyToClipboard;
@@ -1015,6 +1008,7 @@ window.toggleChat = () => { };
 window.openSidebar = () => { };
 window.closeSidebar = () => { };
 window.toggleSidebar = () => { };
+window.openGoLive = () => { }; // Placeholder, assigned later
 // â”€â”€ Main DOMContentLoaded â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function initializeKhanLogic() {
     // Remove site loader
@@ -1070,11 +1064,14 @@ function initializeKhanLogic() {
     const chatButton = document.getElementById('chat-button');
     const chatInterface = document.getElementById('chat-interface');
     const chatMessages = document.getElementById('chat-messages');
-    const userInput = document.getElementById('user-input');
+    const userInput = document.getElementById('chat-user-input');
     const typingIndicator = document.getElementById('typing-indicator');
     const thinkToggle = document.getElementById('think-toggle');
     const attachButton = document.getElementById('attach-button');
     const chatFileInput = document.getElementById('chat-file-input');
+    const voiceInputBtn = document.getElementById('voice-input-btn');
+    const resetChatBtn = document.getElementById('reset-chat-btn');
+    const chatSendBtn = document.getElementById('chat-send-btn');
     // â”€â”€ Scroll & Nav Polish â”€â”€
     const topNav = document.getElementById('top-nav');
     if (topNav) {
@@ -1690,13 +1687,20 @@ function initializeKhanLogic() {
         const msgDiv = document.createElement('div');
 
         if (isAssistant) {
-            msgDiv.className = 'cm-ai chat-message';
+            msgDiv.className = 'cm-ai chat-message' + (options.isLive ? ' live-data' : '');
             const thoughtHtml = (parsed.thought && deepThinkEnabled)
                 ? `<details class="cm-thought"><summary><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg> Thought</summary><div class="cm-thought-body">${renderMarkdown(parsed.thought)}</div></details>`
                 : '';
 
+            const liveBadge = options.isLive ? `
+                <div class="live-call-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    Live Call Data
+                </div>` : '';
+
             msgDiv.innerHTML = `
                     ${thoughtHtml}
+                    ${liveBadge}
                     <div class="cm-ai-text">${isAssistant ? renderMarkdown(parsed.answer) : renderMarkdown(finalAnswer)}</div>
                     <div class="cm-actions">
                         <button class="cma-btn cma-copy" title="Copy to clipboard">
@@ -1863,13 +1867,14 @@ function initializeKhanLogic() {
 
             const response = await fetch(GROQ_CHAT_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ model: modelName, messages: conversationHistory, max_tokens: maxTokens, temperature, stream: false })
             });
 
             if (!response.ok) {
-                const err = await response.json().catch(() => ({}));
-                throw new Error(err?.error?.message || `Groq error ${response.status}`);
+                const errData = await response.json().catch(() => ({}));
+                console.error('[CHAT ERROR]', errData);
+                throw new Error(errData?.error?.message || errData?.message || `Service returned ${response.status}`);
             }
 
             typingIndicator.style.display = 'none';
@@ -1907,6 +1912,7 @@ function initializeKhanLogic() {
     }
 
     // â”€â”€ Toggle buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // Toggle buttons
     thinkToggle && thinkToggle.addEventListener('click', () => {
         window.deepThinkEnabled = !window.deepThinkEnabled;
         thinkToggle.classList.toggle('active', window.deepThinkEnabled);
@@ -1914,41 +1920,81 @@ function initializeKhanLogic() {
         ToastManager?.show(window.deepThinkEnabled ? 'DeepThink enabled' : 'DeepThink disabled', 'info');
     });
 
-    // Reset Chat Button (Trash icon)
-    document.getElementById('reset-chat-btn')?.addEventListener('click', () => {
-        hapticVibrate(20);
-        conversationHistory = [];
-        const chatMessages = document.getElementById('chat-messages');
-        if (chatMessages) chatMessages.innerHTML = '';
-        ToastManager?.show('Conversation cleared', 'info');
+    let recognition = null, isListening = false;
+
+    // Voice & Call Listeners
+    voiceInputBtn && voiceInputBtn.addEventListener('click', async () => {
+        hapticVibrate(15);
+        if (isListening) { 
+            if (recognition) recognition.stop(); 
+            return; 
+        }
+        
+        if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+            ToastManager?.show('Speech recognition not supported in this browser.', 'warning');
+            return;
+        }
+
+        try {
+            if (!recognition) {
+                const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SR();
+                recognition.continuous = false;
+                recognition.interimResults = true;
+                recognition.lang = 'en-IN';
+
+                recognition.onstart = () => {
+                    isListening = true;
+                    voiceInputBtn.classList.add('listening');
+                    if (userInput) userInput.placeholder = 'Listening...';
+                };
+                recognition.onend = () => {
+                    isListening = false;
+                    voiceInputBtn.classList.remove('listening');
+                    if (userInput) userInput.placeholder = 'Message Khan AI...';
+                };
+                recognition.onresult = (event) => {
+                    let final = '', interim = '';
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const t = event.results[i][0].transcript;
+                        if (event.results[i].isFinal) final += t; else interim += t;
+                    }
+                    if (interim && userInput) userInput.value = interim;
+                    if (final && userInput) {
+                        userInput.value = final;
+                        doSend();
+                    }
+                };
+                recognition.onerror = (e) => {
+                    isListening = false;
+                    voiceInputBtn.classList.remove('listening');
+                    if (userInput) userInput.placeholder = 'Message Khan AI...';
+                    console.error('Speech Error:', e.error);
+                };
+            }
+            recognition.start();
+        } catch (e) {
+            console.error('Speech Start Error:', e);
+        }
     });
 
-    // Call Button (Phone icon)
-    document.getElementById('call-btn')?.addEventListener('click', () => {
-        window.location.href = 'call.html';
+    const callBtn = document.getElementById('call-btn');
+    callBtn && callBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        hapticVibrate(25);
+        if (typeof window.openGoLive === 'function') {
+            try {
+                window.openGoLive();
+            } catch (err) {
+                console.error('Call Error:', err);
+                window.location.href = 'call.html';
+            }
+        } else {
+            window.location.href = 'call.html';
+        }
     });
 
-    // Suggestion Chips
-    document.querySelectorAll('.chip').forEach(chip => {
-        chip.addEventListener('click', () => {
-            userInput.value = chip.textContent;
-            doSend();
-        });
-    });
-
-    // Voice Input Button
-    document.getElementById('voice-input-btn')?.addEventListener('click', () => {
-        hapticVibrate(10);
-        if (typeof openGoLive === 'function') openGoLive(false);
-    });
-
-    // Voice call button (Phone icon)
-    document.getElementById('call-btn')?.addEventListener('click', () => {
-        hapticVibrate(20);
-        window.location.href = 'call.html';
-    });
-
-    // Textarea auto-height & Enter handling
+    // Unified Input Handling
     if (userInput) {
         userInput.addEventListener('input', () => {
             userInput.style.height = 'auto';
@@ -1962,6 +2008,38 @@ function initializeKhanLogic() {
             }
         });
     }
+
+    // Reset Chat Button (Trash icon)
+    resetChatBtn && resetChatBtn.addEventListener('click', () => {
+        hapticVibrate(30);
+        activeConvId = null; 
+        conversationHistory = [{ role: 'system', content: SYSTEM_PROMPT }];
+        if (chatMessages) {
+            chatMessages.innerHTML = '';
+            const txt = "Hello! I am KHAN AI. Before we begin, may I ask your name and how you discovered Baasim's portfolio?";
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'cm-ai chat-message';
+            msgDiv.innerHTML = `
+                <div class="cm-ai-text">${renderMarkdown(txt)}</div>
+                <div class="cm-actions">
+                    <button class="cma-btn cma-copy" title="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                    <button class="cma-btn cma-tts" title="Listen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></button>
+                </div>`;
+            chatMessages.appendChild(msgDiv);
+            attachMessageActions(msgDiv, txt);
+        }
+        ToastManager?.show('Conversation cleared', 'success');
+    });
+
+    // Suggestion Chips
+    document.querySelectorAll('.chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            if (userInput) {
+                userInput.value = chip.textContent;
+                doSend();
+            }
+        });
+    });
 
     // â”€â”€ File / Image attach â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     attachButton && attachButton.addEventListener('click', () => {
@@ -2076,29 +2154,7 @@ function initializeKhanLogic() {
     });
     document.getElementById('notif-open-chat') && document.getElementById('notif-open-chat').addEventListener('click', () => { document.getElementById('chat-notification')?.classList.remove('show'); if (!chatOpen) window.toggleChat(); });
     document.getElementById('notif-close') && document.getElementById('notif-close').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('chat-notification')?.classList.remove('show'); });
-    document.getElementById('chat-send-btn') && document.getElementById('chat-send-btn').addEventListener('click', doSend);
-    userInput && userInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doSend(); } });
-    document.getElementById('clear-chat') && document.getElementById('clear-chat').addEventListener('click', () => {
-        hapticVibrate(12);
-        activeConvId = null; convMsgCount = 0;
-        const txt = window._dynamicGreeting || "Hello! How can I assist you today?";
-        const msgDiv = document.createElement('div');
-        msgDiv.className = 'cm-ai chat-message';
-        msgDiv.innerHTML = `
-                <div class="cm-ai-text">${renderMarkdown(txt)}</div>
-                <div class="cm-actions">
-                    <button class="cma-btn cma-copy" title="Copy">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                    </button>
-                    <button class="cma-btn cma-tts" title="Listen">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-                    </button>
-                </div>`;
-        chatMessages.innerHTML = '';
-        chatMessages.appendChild(msgDiv);
-        attachMessageActions(msgDiv, txt);
-        conversationHistory = [{ role: 'system', content: SYSTEM_PROMPT }];
-    });
+    chatSendBtn && chatSendBtn.addEventListener('click', doSend);
     window.addEventListener('resize', syncMobileSurfaceState);
 
     // â”€â”€ Contact form â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -2131,54 +2187,7 @@ function initializeKhanLogic() {
         });
     }
 
-    // â”€â”€ Speech Recognition â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    const micButton = document.getElementById('mic-button');
-    const listeningIndicator = document.getElementById('listening-indicator');
-    let recognition = null, isListening = false;
-
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-        recognition = new SR(); recognition.continuous = false; recognition.interimResults = true; recognition.lang = 'en-IN';
-        recognition.onstart = () => { isListening = true; micButton.classList.add('listening'); listeningIndicator.style.display = 'block'; };
-        recognition.onend = () => { isListening = false; micButton.classList.remove('listening'); listeningIndicator.style.display = 'none'; };
-        recognition.onresult = (event) => {
-            let final = '', interim = '';
-            for (let i = event.resultIndex; i < event.results.length; i++) {
-                const t = event.results[i][0].transcript;
-                if (event.results[i].isFinal) final += t; else interim += t;
-            }
-            if (interim) userInput.value = interim;
-            if (final) { userInput.value = final; addMessage('user', final); userInput.value = ''; sendMessage(final); }
-        };
-        recognition.onerror = (event) => {
-            isListening = false; micButton.classList.remove('listening'); listeningIndicator.style.display = 'none';
-            if (event.error === 'no-speech') alert('No speech detected. Please try again.');
-            else if (event.error === 'not-allowed') alert('Microphone access denied. Please allow microphone access.');
-        };
-        micButton && micButton.addEventListener('click', async () => {
-            if (isListening) { recognition.stop(); return; }
-            try {
-                if (!window.isSecureContext) {
-                    alert('Microphone requires HTTPS (or localhost). Open on localhost or use a secure tunnel.');
-                    return;
-                }
-                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    alert('Microphone API is unavailable in this browser context.');
-                    return;
-                }
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                stream.getTracks().forEach(t => t.stop());
-                recognition.start();
-            } catch (err) {
-                if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') alert('Microphone access was denied.');
-                else if (err.name === 'NotFoundError') alert('No microphone found.');
-                else alert('Could not access microphone: ' + err.message);
-            }
-        });
-    } else {
-        micButton && micButton.addEventListener('click', () => alert('Speech recognition not supported. Please use Chrome or Edge.'));
-        if (micButton) { micButton.style.opacity = '0.5'; micButton.title = 'Speech recognition not supported'; }
-    }
+    // Transcription logic moved to initialize block for reliability
 
     // Reference top_nav for hero button
     const top_nav = document.getElementById('top-nav');
@@ -2215,8 +2224,7 @@ function initializeKhanLogic() {
     window._chatAddMessage = addMessage;
     window._chatSaveMsg = saveMessageToConv;
 
-    const goLiveBtn = document.getElementById('call-btn');
-    if (goLiveBtn) goLiveBtn.addEventListener('click', () => window.openGoLive());
+    // Redundant call-btn listener removed
 
     // â”€â”€ Chat Drag & Drop Logic â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const dropZone = document.getElementById('chat-drop-zone');
@@ -2289,7 +2297,7 @@ function initializeKhanLogic() {
 
             const msgDiv = document.createElement('div');
             msgDiv.className = `gl-msg ${role}`;
-            msgDiv.style-v45.cssText = `
+            msgDiv.style.cssText = `
                     margin-bottom: 12px;
                     padding: 12px 16px;
                     border-radius: 20px;
@@ -2395,10 +2403,11 @@ function initializeKhanLogic() {
         }
 
         async function open(startWithCamera = false) {
-            // Ensure HTTPS or localhost for camera access
-            if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-                ToastManager?.show('Voice Mode requires HTTPS for camera and microphone access.', 'error');
-                return;
+            // Safety check for HTTPS/Localhost/Local-IP
+            const isLocalIP = /^(127\.|192\.168\.|10\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/.test(window.location.hostname);
+            if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost' && !isLocalIP) {
+                ToastManager?.show('Voice Mode requires HTTPS or Local Network access.', 'warning');
+                // We proceed anyway to let the browser's own permission prompt handle it if possible
             }
             isOpen = true;
             wasChatOpen = (document.getElementById('chat-interface').style.display !== 'none');
@@ -2513,30 +2522,43 @@ function initializeKhanLogic() {
             // Transfer GoLive conversation to main chat
             if (glConvHistory.length > 0) {
                 const newMsgs = glConvHistory.filter(m => m.role !== 'system');
-                newMsgs.forEach(m => {
-                    if (window._chatAddMessage) window._chatAddMessage(m.role, m.content);
-                    // Update the internal history so next GoLive call sees these
-                    if (window._chatConversationHistory) {
-                        window._chatConversationHistory.push({ role: m.role, content: m.content });
+                if (newMsgs.length > 0) {
+                    const chatMsgsEl = document.getElementById('chat-messages');
+                    if (chatMsgsEl) {
+                        const sep = document.createElement('div');
+                        sep.className = 'live-session-sep';
+                        sep.innerHTML = '<span><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg> Voice Session Ended</span>';
+                        chatMsgsEl.appendChild(sep);
                     }
-                });
-            }
 
-            // Add session separator in main chat
-            const chatMsgsEl = document.getElementById('chat-messages');
-            if (chatMsgsEl) {
-                const sep = document.createElement('div');
-                sep.className = 'live-session-sep';
-                sep.style-v45.cssText = 'text-align:center; margin: 20px 0; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;';
-                sep.innerHTML = '<span style="background:rgba(255,255,255,0.04); padding: 4px 12px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.08); display:flex; align-items:center; gap:8px; color: rgba(255,255,255,0.35);"><svg width="8" height="8" viewBox="0 0 24 24" fill="rgba(255,255,255,0.3)"><circle cx="12" cy="12" r="10"/></svg> Voice session ended</span>';
-                chatMsgsEl.appendChild(sep);
+                    newMsgs.forEach(m => {
+                        if (typeof addMessage === 'function') addMessage(m.role, m.content, { isLive: true });
+                        if (typeof saveMessageToConv === 'function') saveMessageToConv(m.role, m.content);
+                        // Update internal history
+                        if (window._chatConversationHistory) window._chatConversationHistory.push({ role: m.role, content: m.content });
+                    });
+                }
             }
 
             const overlay = $('golive-overlay');
             if (overlay) overlay.classList.remove('show');
             document.body.style.overflow = '';
 
-            if (wasChatOpen) document.getElementById('chat-interface').style.display = 'flex';
+            const isHero = document.body.classList.contains('hero-mode');
+
+            // Redirect to home if requested (only if not already there or to ensure state)
+            if (typeof window.navigateTo === 'function' && isHero) {
+                window.navigateTo('index.html');
+            }
+
+            // ONLY Open chat to show transcript if NOT in hero mode
+            if (!isHero) {
+                setTimeout(() => {
+                    if (typeof toggleChat === 'function') toggleChat(true);
+                }, 500);
+            }
+
+            if (wasChatOpen && !isHero) document.getElementById('chat-interface').style.display = 'flex';
 
             const container = $('gl-content');
             if (container) container.innerHTML = '<div id="gl-transcript-msg">Your conversation will appear here.</div>';
@@ -2864,13 +2886,12 @@ function initializeKhanLogic() {
                     // Add separator
                     const sep = document.createElement('div');
                     sep.className = 'live-session-sep';
-                    sep.style-v45.cssText = 'text-align:center; margin: 20px 0; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;';
-                    sep.innerHTML = '<span style="background:rgba(0,0,0,0.04); padding: 4px 12px; border-radius: 100px; border: 1px solid rgba(0,0,0,0.08); display:flex; align-items:center; gap:8px; color: rgba(0,0,0,0.35);"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg> Voice Session History</span>';
+                    sep.innerHTML = '<span><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg> Voice Session History</span>';
                     chatMsgsEl.appendChild(sep);
 
                     // Inject messages
                     for (const m of session.messages) {
-                        if (typeof addMessage === 'function') await addMessage(m.role, m.content);
+                        if (typeof addMessage === 'function') await addMessage(m.role, m.content, { isLive: true });
                         if (typeof saveMessageToConv === 'function') await saveMessageToConv(m.role, m.content);
                     }
 

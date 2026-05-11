@@ -85,6 +85,40 @@
     <input type="file" id="chat-file-input" style="display:none;" accept="image/*,.pdf,.txt,.csv,.json,.md,.js,.py,.html,.css">
     <div id="chat-drop-zone" class="drop-zone">Drop file to attach</div>
 
+    <div id="golive-overlay">
+        <div id="gl-display">
+            <div id="gl-video-container">
+                <video id="gl-video" autoplay playsinline muted></video>
+                <div id="gl-logo-static">
+                    <img src="assets/Khan AI logo.png" alt="Khan AI">
+                </div>
+            </div>
+            <div id="gl-pulsar"></div>
+            <div id="gl-status-pill">Ready to talk</div>
+        </div>
+        <div id="gl-content">
+            <div id="gl-transcript-msg">Your conversation will appear here.</div>
+        </div>
+        <div id="gl-vis-container">
+            <canvas id="gl-visualizer"></canvas>
+        </div>
+        <div id="gl-controls">
+            <button id="gl-mic-btn" class="gl-btn" title="Toggle Mic">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+            </button>
+            <button id="gl-camera-btn" class="gl-btn" title="Toggle Camera">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg>
+            </button>
+            <button id="gl-switch-btn" class="gl-btn" style="display:none;" title="Switch Camera">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            </button>
+            <div id="gl-timer-pill">00:00</div>
+            <button id="gl-close-btn" class="gl-btn gl-danger" title="End Call">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+        </div>
+    </div>
+
     `;
 
     const style = `
@@ -197,6 +231,17 @@
     }
     .send-pill-btn:hover { transform: scale(1.1); background: #eee !important; }
 
+    /* LISTENING STATE */
+    #voice-input-btn.listening {
+        color: #ef4444;
+        animation: micPulse 1.5s infinite ease-in-out;
+    }
+    @keyframes micPulse {
+        0% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(239, 68, 68, 0)); }
+        50% { transform: scale(1.2); filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.6)); }
+        100% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(239, 68, 68, 0)); }
+    }
+
     #chat-disclaimer { font-size: 0.65rem; color: #333; text-align: center; margin-top: 14px; }
 
     /* Image Modal Glitch Fix */
@@ -231,6 +276,181 @@
         #chat-header { padding: 18px 20px; }
         #chat-button { bottom: 20px; right: 20px; }
         #chat-messages { padding: 20px; }
+    }
+
+    /* PREMIUM MESSAGE ACTIONS */
+    .cm-actions {
+        display: flex;
+        gap: 6px;
+        margin-top: 10px;
+        opacity: 0.4;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cm-ai:hover .cm-actions {
+        opacity: 1;
+    }
+    .cma-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #777;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.25s;
+        backdrop-filter: blur(4px);
+    }
+    .cma-btn:hover {
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .cma-btn svg { width: 14px; height: 14px; stroke-width: 2.5; }
+    
+    .cma-btn.success {
+        color: #10b981 !important;
+        border-color: rgba(16, 185, 129, 0.4) !important;
+        background: rgba(16, 185, 129, 0.1) !important;
+    }
+
+    .live-call-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 3px 10px;
+        background: rgba(34, 197, 94, 0.12);
+        color: #22c55e;
+        border: 1px solid rgba(34, 197, 94, 0.25);
+        border-radius: 100px;
+        font-size: 0.68rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 10px rgba(34, 197, 94, 0.1);
+    }
+    .live-call-badge svg { width: 10px; height: 10px; stroke-width: 3.5; }
+
+    .live-session-sep {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 40px 0;
+        position: relative;
+    }
+    .live-session-sep::before {
+        content: '';
+        position: absolute;
+        left: 20px; right: 20px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        z-index: 0;
+    }
+    .live-session-sep span {
+        background: #000;
+        padding: 6px 18px;
+        border-radius: 100px;
+        border: 1px solid rgba(255,255,255,0.15);
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #777;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 1;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .live-session-sep span svg { color: #22c55e; filter: drop-shadow(0 0 5px #22c55e); }
+
+    /* GO LIVE OVERLAY PREMIUM STYLES */
+    #golive-overlay {
+        position: fixed; inset: 0; z-index: 200001;
+        background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%);
+        display: none; flex-direction: column; align-items: center; justify-content: center;
+        padding: 40px 20px;
+        animation: glFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #golive-overlay.show { display: flex; }
+    @keyframes glFadeIn { from { opacity: 0; transform: scale(1.05); filter: blur(20px); } to { opacity: 1; transform: scale(1); filter: blur(0); } }
+
+    #gl-display { position: relative; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; }
+    #gl-video-container {
+        width: 180px; height: 180px; border-radius: 50%; overflow: hidden;
+        border: 4px solid rgba(255,255,255,0.1); box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        background: #000; position: relative;
+        transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .gl-camera-active #gl-video-container { width: 300px; height: 225px; border-radius: 24px; border-color: rgba(255,255,255,0.2); }
+    
+    #gl-video { width: 100%; height: 100%; object-fit: cover; display: none; }
+    #gl-logo-static { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 40px; }
+    #gl-logo-static img { width: 100%; height: 100%; object-fit: contain; }
+    .gl-camera-active #gl-logo-static { display: none; }
+
+    #gl-pulsar {
+        position: absolute; inset: -20px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(34, 197, 94, 0.15) 0%, transparent 70%);
+        z-index: -1; animation: glPulse 2s infinite;
+    }
+    @keyframes glPulse { 0% { transform: scale(0.9); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 0.2; } 100% { transform: scale(0.9); opacity: 0.5; } }
+
+    #gl-status-pill {
+        margin-top: 20px; padding: 6px 16px; background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1); border-radius: 100px;
+        font-size: 0.75rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.1em;
+    }
+
+    #gl-content {
+        flex: 1; width: 100%; max-width: 500px; overflow-y: auto;
+        padding: 20px; display: flex; flex-direction: column;
+        scrollbar-width: none; mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+    }
+    #gl-content::-webkit-scrollbar { display: none; }
+    #gl-transcript-msg { margin: auto; color: #444; font-style: italic; text-align: center; font-size: 0.9rem; }
+
+    .gl-msg {
+        margin-bottom: 12px; padding: 12px 18px; border-radius: 20px; max-width: 85%;
+        font-size: 0.95rem; line-height: 1.5; animation: glMsgFade 0.3s ease;
+    }
+    @keyframes glMsgFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    #gl-vis-container { width: 100%; height: 60px; margin: 20px 0; display: flex; align-items: center; justify-content: center; }
+    #gl-visualizer { width: 280px; height: 100%; }
+
+    #gl-controls {
+        display: flex; align-items: center; gap: 20px; padding-bottom: 40px;
+    }
+    .gl-btn {
+        width: 64px; height: 64px; border-radius: 50%; border: none;
+        background: rgba(255,255,255,0.08); color: #fff;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; transition: all 0.2s;
+    }
+    .gl-btn:hover { background: rgba(255,255,255,0.15); transform: scale(1.05); }
+    .gl-btn:active { transform: scale(0.95); }
+    .gl-btn.active { background: #22c55e; color: #000; box-shadow: 0 0 30px rgba(34, 197, 94, 0.4); }
+    .gl-btn.gl-danger { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+    .gl-btn.gl-danger:hover { background: #ef4444; color: #fff; box-shadow: 0 0 30px rgba(239, 68, 68, 0.4); }
+
+    #gl-timer-pill {
+        padding: 10px 20px; background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1); border-radius: 100px;
+        color: #fff; font-family: monospace; font-size: 1.1rem; font-weight: 700;
+    }
+
+    @media (max-width: 480px) {
+        .gl-camera-active #gl-video-container { width: 100%; height: 260px; border-radius: 0; border: none; position: fixed; top: 0; left: 0; z-index: -1; }
+        .gl-camera-active #gl-display { margin-bottom: 200px; }
+        #gl-controls { gap: 12px; width: 100%; justify-content: center; }
+        .gl-btn { width: 56px; height: 56px; }
+        #gl-timer-pill { padding: 8px 16px; font-size: 0.9rem; }
     }
     `;
 

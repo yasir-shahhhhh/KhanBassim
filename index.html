@@ -7,7 +7,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <script>
-        const SITE_VERSION = '4.3';
+        const SITE_VERSION = '5.6';
         if (localStorage.getItem('bfk_site_version') !== SITE_VERSION) {
             localStorage.setItem('bfk_site_version', SITE_VERSION);
             window.location.reload(true);
@@ -83,26 +83,117 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style-v45.css?v=5.0">
+    <link rel="stylesheet" href="style-v45.css?v=5.6">
     
     <style>
-        body, html { margin: 0; padding: 0; overflow-x: hidden; }
-        #hero { position: relative; height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; }
-        #hero-content { text-align: center; z-index: 2; padding: 20px; }
-        #hero-title { font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 700; line-height: 1.1; margin-bottom: 15px; animation: fadeIn 1s ease 0.7s both; }
-        #hero-sub { font-size: clamp(1rem, 2.5vw, 1.5rem); color: var(--text-secondary); font-weight: 300; height: 30px; margin-bottom: 40px; animation: fadeIn 1s ease 0.9s both; }
-        .typewriter-cursor { animation: blink 1s step-end infinite; }
-        @keyframes blink { 50% { opacity: 0; } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .logo-section { padding: 100px 5%; position: relative; z-index: 20; }
-        .logo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto; }
-        .logo-item { cursor: pointer; transition: all 0.3s ease; text-align: center; }
-        .logo-item img { width: 100%; max-width: 220px; filter: grayscale(1); opacity: 0.6; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 12px; }
-        .logo-item:hover img { filter: grayscale(0); opacity: 1; transform: scale(1.05); box-shadow: 0 10px 30px var(--accent-glow); }
-        #chat-button { display: flex !important; }
+        :root { --accent: #b66bff; }
+        body, html { margin: 0; padding: 0; overflow-x: hidden; background: #02030b; }
+        
+        /* Cinematic Preloader */
+        #preloader {
+            position: fixed; inset: 0; z-index: 9999;
+            background: #02030b;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+        }
+        .loader-ring {
+            width: 60px; height: 60px;
+            border: 2px solid rgba(182, 107, 255, 0.1);
+            border-top: 2px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        .loader-text {
+            margin-top: 20px; color: rgba(255,255,255,0.4);
+            font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+            font-family: 'Inter', sans-serif;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        #preloader.fade-out { opacity: 0; visibility: hidden; }
+
+        #hero { 
+            position: relative; height: 100vh; width: 100%; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            z-index: 10; overflow: hidden;
+        }
+        #hero-video { 
+            position: absolute; inset: 0; width: 100%; height: 100%; 
+            object-fit: cover; z-index: 0; 
+            filter: saturate(1.1) brightness(0.45); 
+            transition: transform 8s ease-out;
+        }
+        #hero:hover #hero-video { transform: scale(1.05); }
+        
+        #hero-video-overlay { 
+            position: absolute; inset: 0; z-index: 1;
+            background: radial-gradient(circle at center, transparent 0%, rgba(2, 3, 11, 0.4) 100%);
+        }
+        
+        #hero-content { 
+            text-align: center; z-index: 2; padding: 40px; 
+            animation: heroEnter 1.2s cubic-bezier(0.2, 0, 0.2, 1) both;
+        }
+        
+        @keyframes heroEnter {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); filter: blur(10px); }
+            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
+        #hero-title { 
+            font-size: clamp(3rem, 8vw, 6rem); font-weight: 800; 
+            line-height: 0.9; margin-bottom: 20px; 
+            color: var(--text-primary);
+            letter-spacing: -0.04em;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        #hero-sub { 
+            font-size: clamp(1rem, 2.5vw, 1.4rem); 
+            color: rgba(255,255,255,0.7); font-weight: 400; 
+            height: 30px; margin-bottom: 50px; 
+            letter-spacing: 0.05em;
+        }
+        .typewriter-cursor { color: var(--accent); animation: blink 1s step-end infinite; }
+        
+        /* Navbar specific for Index */
+        .navbar { opacity: 0; transform: translateY(-20px); transition: all 0.8s ease 1s; }
+        .navbar.show { opacity: 1; transform: translateY(0); }
+
+        .hero-buttons .btn {
+            padding: 16px 40px; font-size: 0.95rem;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .hero-buttons .btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(182, 107, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            #hero-content { padding: 20px; }
+            #hero-title { font-size: 3.5rem; }
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           HERO MODE — Hides navigation and chat for cinematic start
+           ═══════════════════════════════════════════════════════ */
+        body.hero-mode .navbar { display: none !important; }
+        body.hero-mode #chat-button { display: none !important; }
+        /* Allow chat interface to show if explicitly opened in hero mode */
+        body.hero-mode #chat-interface:not([style*="display: none"]) { display: flex !important; }
     </style>
 </head>
-<body>
+<body class="hero-mode">
+    <!-- Cinematic Preloader -->
+    <div id="preloader">
+        <div class="loader-ring"></div>
+        <p class="loader-text">Initializing Systems</p>
+    </div>
+
     <div class="bg-mesh"></div>
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
@@ -110,9 +201,10 @@
     <nav class="navbar glass">
         <div class="nav-container">
             <div class="nav-links">
-                <a href="index.html" class="active">Home</a>
-                <a href="projects.html">Projects</a>
                 <a href="about.html">About</a>
+                <a href="experience.html">Experience</a>
+                <a href="skills.html">Skills</a>
+                <a href="projects.html">Projects</a>
                 <a href="contact.html">Contact</a>
             </div>
         </div>
@@ -120,33 +212,20 @@
 
     <main>
         <section id="hero">
+            <video id="hero-video" loop playsinline preload="auto">
+                <source src="assets/HeroSectionbackground.mp4" type="video/mp4">
+            </video>
+            <div id="hero-video-overlay"></div>
             <div id="hero-content">
-                <div class="hero-profile-container">
-                    <img src="assets/profile-v5.jpeg?v=5.0" alt="Baasim Fayaz Khan" class="hero-profile-img">
-                </div>
-                <h1 id="hero-title" class="rgb-text">Baasim Fayaz Khan</h1>
+                <h1 id="hero-title">Baasim Fayaz Khan</h1>
                 <div id="hero-sub"><span id="typewriter"></span><span class="typewriter-cursor">|</span></div>
-                <div class="hero-buttons" style="display: flex; gap: 20px; justify-content: center; margin-top: 30px;">
-                    <a href="projects.html#video-section" class="btn btn-secondary">
-                        See Videos <i data-lucide="play-circle"></i>
-                    </a>
-                    <a href="about.html" class="btn btn-primary">
+                <div class="hero-buttons" style="display: flex; flex-direction: column; gap: 20px; align-items: center; margin-top: 30px;">
+                    <a href="about.html" class="btn btn-primary" id="explore-btn">
                         Explore Work <i data-lucide="arrow-right"></i>
                     </a>
-                </div>
-            </div>
-        </section>
-
-        <section class="logo-section glass" style="margin: 0 5%; border-radius: 40px; padding: 60px;">
-            <div class="logo-grid fade-in">
-                <div class="logo-item">
-                    <img src="assets/logodesigned1.jpeg?v=5.0" alt="Logo Design 1">
-                </div>
-                <div class="logo-item">
-                    <img src="assets/logodesigined2.jpeg?v=5.0" alt="Logo Design 2">
-                </div>
-                <div class="logo-item">
-                    <img src="assets/logo3.jpeg?v=5.0" alt="Logo Design 3">
+                    <div id="unmute-hint" style="opacity: 0; transition: opacity 0.5s; font-size: 0.75rem; color: rgba(255,255,255,0.4); display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="volume-2" style="width: 14px; height: 14px;"></i> Tap anywhere for sound
+                    </div>
                 </div>
             </div>
         </section>
@@ -159,13 +238,8 @@
     </footer>
 
     <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
-    <script src="main-v5.js?v=5.0"></script>
-    <script src="khan-inject-v45.js?v=5.0"></script>
-
-    <script>
-        // Hero specific typewriter (if needed here or in main)
-        // Kept separate if it's ONLY for index.html
-    </script>
+    <script src="main-v5.js?v=5.6"></script>
+    <script src="khan-inject-v45.js?v=5.2"></script>
 </body>
 </html>
 
