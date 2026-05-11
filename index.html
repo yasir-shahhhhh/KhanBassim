@@ -1,9 +1,5 @@
 <!DOCTYPE html>
-<!-- Build Sync: 2026-05-12T00:23:00 -->
-<html lang="en">
-<head>
-<!DOCTYPE html>
-<!-- Build Sync: 2026-05-12T00:23:00 -->
+<!-- Build Sync: 2026-05-12T00:43:00 -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -32,7 +28,6 @@
                         dbs.forEach(db => indexedDB.deleteDatabase(db.name));
                     });
                 }
-                // Also clear cache storage if any
                 if (window.caches) {
                     caches.keys().then(keys => {
                         keys.forEach(key => caches.delete(key));
@@ -64,7 +59,6 @@
     <meta property="twitter:description" content="Strategic execution and leadership portfolio of Basim Khan (Khan Basim). Lead at Proteios Education in Kashmir.">
     <meta property="twitter:image" content="https://myintroductionn.netlify.app/assets/logo3.jpeg?v=5.0">
 
-    <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -89,13 +83,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style-v45.css?v=5.7">
+    <link rel="stylesheet" href="style-v45.css?v=5.8">
     
     <style>
         :root { --accent: #b66bff; }
         body, html { margin: 0; padding: 0; overflow-x: hidden; background: #02030b; }
         
-        /* Cinematic Preloader */
         #preloader {
             position: fixed; inset: 0; z-index: 9999;
             background: #02030b;
@@ -148,7 +141,7 @@
         #hero-title { 
             font-size: clamp(3rem, 8vw, 6rem); font-weight: 800; 
             line-height: 0.9; margin-bottom: 20px; 
-            color: var(--text-primary);
+            color: #ffffff;
             letter-spacing: -0.04em;
             text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
@@ -160,7 +153,6 @@
         }
         .typewriter-cursor { color: var(--accent); animation: blink 1s step-end infinite; }
         
-        /* Navbar specific for Index */
         .navbar { opacity: 0; transform: translateY(-20px); transition: all 0.8s ease 1s; }
         .navbar.show { opacity: 1; transform: translateY(0); }
 
@@ -184,17 +176,12 @@
             #hero-title { font-size: 3.5rem; }
         }
 
-        /* ═══════════════════════════════════════════════════════
-           HERO MODE — Hides navigation and chat for cinematic start
-           ═══════════════════════════════════════════════════════ */
+        /* HERO MODE - Cinematic State */
         body.hero-mode .navbar { display: none !important; }
         body.hero-mode #chat-button { display: none !important; }
-        /* Allow chat interface to show if explicitly opened in hero mode */
-        body.hero-mode #chat-interface:not([style*="display: none"]) { display: flex !important; }
     </style>
 </head>
 <body class="hero-mode">
-    <!-- Cinematic Preloader -->
     <div id="preloader">
         <div class="loader-ring"></div>
         <p class="loader-text">Initializing Systems</p>
