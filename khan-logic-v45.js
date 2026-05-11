@@ -1598,6 +1598,7 @@ function initializeKhanLogic() {
 
     // â”€â”€ Chat open/close â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     window.toggleChat = () => {
+        console.log('[KHAN AI] toggleChat triggered');
         // Check auth if new user
         if (!chatOpen && Auth.isGuest() && !sessionStorage.getItem('khan_guest_visited')) {
             const authMod = document.getElementById('auth-modal');

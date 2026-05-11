@@ -438,6 +438,22 @@ a {
 
 .profile-img:hover {
     filter: grayscale(0%);
+    box-shadow: 0 0 30px rgba(182, 107, 255, 0.4), 0 0 60px rgba(182, 107, 255, 0.2);
+    border-color: var(--accent-2);
+}
+
+.about-image {
+    position: relative;
+}
+
+.about-image::after {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    background: radial-gradient(circle at center, rgba(182, 107, 255, 0.15), transparent 70%);
+    z-index: -1;
+    filter: blur(20px);
+    pointer-events: none;
 }
 
 .lead-text {
@@ -1136,6 +1152,42 @@ summary {
     color: var(--text-secondary);
     margin-bottom: 36px;
     font-size: 1rem;
+}
+
+/* Profile Image Lighting Effect */
+.about-image {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.about-image::after {
+    content: '';
+    position: absolute;
+    inset: -20px;
+    background: radial-gradient(circle at center, rgba(182, 107, 255, 0.25), transparent 70%);
+    z-index: -1;
+    filter: blur(15px);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.about-image:hover::after {
+    opacity: 1;
+}
+
+.profile-img {
+    position: relative;
+    z-index: 1;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+}
+
+.profile-img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 20px 60px rgba(182, 107, 255, 0.25);
+    border-color: rgba(182, 107, 255, 0.5);
 }
 
 /* ═══════════════════════════════════════════════════════

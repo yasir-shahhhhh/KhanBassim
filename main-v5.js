@@ -279,4 +279,3 @@ document.addEventListener('DOMContentLoaded', () => {
     updateNavHighlight(window.location.pathname);
     if (window.lucide) window.lucide.createIcons();
 });
-
