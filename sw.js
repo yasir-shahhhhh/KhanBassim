@@ -1,29 +1,51 @@
-const CACHE_NAME = 'khan-ai-v3.5-crunchy';
+const CACHE_NAME = 'baasim-portfolio-v5.9.0';
 const ASSETS = [
     '/',
     '/index.html',
     '/about.html',
-    '/skills.html',
     '/experience.html',
+    '/skills.html',
     '/projects.html',
+    '/team-moments.html',
     '/contact.html',
-    '/style-v45.css',
-    '/script.js',
-    '/khan-inject-v45.js',
-    '/khan-logic-v45.js',
-    '/assets/Khan AI logo.png',
-    'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
-    'https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js'
+    '/proteios.html',
+    '/inamigos.html',
+    '/style-v45.css?v=5.9',
+    '/main-v5.js?v=5.8',
+    '/khan-inject-v45.js?v=5.4',
+    '/assets/profile-v5.jpeg',
+    '/assets/logo3.jpeg',
+    '/assets/thumbnail1.jpeg'
 ];
 
 self.addEventListener('install', (e) => {
+    self.skipWaiting();
     e.waitUntil(
         caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
     );
 });
 
-self.addEventListener('fetch', (e) => {
-    e.respondWith(
-        caches.match(e.request).then(res => res || fetch(e.request))
+self.addEventListener('activate', (e) => {
+    e.waitUntil(
+        caches.keys().then(keys => {
+            return Promise.all(
+                keys.map(key => {
+                    if (key !== CACHE_NAME) return caches.delete(key);
+                })
+            );
+        })
     );
+});
+
+self.addEventListener('fetch', (e) => {
+    // Network-first strategy for HTML and JS to ensure updates
+    if (e.request.mode === 'navigate' || e.request.url.endsWith('.js') || e.request.url.endsWith('.html')) {
+        e.respondWith(
+            fetch(e.request).catch(() => caches.match(e.request))
+        );
+    } else {
+        e.respondWith(
+            caches.match(e.request).then(res => res || fetch(e.request))
+        );
+    }
 });

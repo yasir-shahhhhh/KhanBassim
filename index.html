@@ -182,9 +182,13 @@
     </style>
 </head>
 <body class="hero-mode">
-    <div id="preloader">
-        <div class="loader-ring"></div>
-        <p class="loader-text">Initializing Systems</p>
+    <div class="preloader" id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-title">BAASIM</div>
+            <div class="preloader-bar">
+                <div class="preloader-progress"></div>
+            </div>
+        </div>
     </div>
 
     <div class="bg-mesh"></div>
@@ -198,14 +202,18 @@
                 <a href="experience.html">Experience</a>
                 <a href="skills.html">Skills</a>
                 <a href="projects.html">Projects</a>
+                <a href="team-moments.html">Team Moments</a>
                 <a href="contact.html">Contact</a>
             </div>
+            <button class="mobile-menu-btn" aria-label="Toggle Menu">
+                <i data-lucide="menu"></i>
+            </button>
         </div>
     </nav>
 
     <main>
-        <section id="hero">
-            <video id="hero-video" loop playsinline preload="auto">
+        <section class="hero-section" id="hero">
+            <video id="hero-video" class="hero-video" autoplay muted loop playsinline poster="assets/thumbnail1.jpeg">
                 <source src="assets/HeroSectionbackground.mp4" type="video/mp4">
             </video>
             <div id="hero-video-overlay"></div>

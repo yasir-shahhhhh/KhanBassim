@@ -3,365 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Baasim Fayaz Khan's internship at inAmigos Foundation — a Section 8 registered nonprofit focused on skill development, youth empowerment, and social impact across 10+ states in India.">
-    <meta name="keywords" content="Basim Khan, inAmigos Foundation, Graphic Designer Intern, Nonprofit India, Social Impact, Volunteering">
-    <meta name="author" content="Basim Khan (Khan Basim)">
-    <meta name="robots" content="index, follow">
-
+    <meta name="description" content="Baasim Fayaz Khan's Graphic Design Internship at inAmigos Foundation.">
     <title>inAmigos Foundation | Baasim Fayaz Khan</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style-v45.css?v=5.6">
+    <link rel="stylesheet" href="style-v45.css?v=5.8">
     <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
     <style>
-        /* ── Organization Detail Page Styles ── */
-        .org-hero {
-            padding-top: 130px;
-            padding-bottom: 50px;
-            text-align: center;
-        }
-        .org-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            background: rgba(147, 197, 253, 0.1);
-            color: #93c5fd;
-            border: 1px solid rgba(147, 197, 253, 0.15);
-            margin-bottom: 20px;
-        }
-        .org-title {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 12px;
-        }
-        .org-subtitle {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 18px auto;
-            line-height: 1.65;
-        }
-        .org-meta {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 24px;
-            flex-wrap: wrap;
-            margin-bottom: 40px;
-        }
-        .org-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 0.8rem;
-        }
-        .org-meta-item svg { width: 14px; height: 14px; }
-
-        /* ── Impact Stats Strip ── */
-        .impact-strip {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 16px;
-            max-width: 850px;
-            margin: 0 auto 50px;
-        }
-        .impact-card {
-            background: rgba(255, 255, 255, 0.025);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 24px 16px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        .impact-card:hover {
-            border-color: rgba(147, 197, 253, 0.2);
-            transform: translateY(-2px);
-            background: rgba(147, 197, 253, 0.03);
-        }
-        .impact-icon {
-            width: 40px; height: 40px;
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 12px;
-            background: rgba(147, 197, 253, 0.08);
-            color: #93c5fd;
-        }
-        .impact-icon svg { width: 20px; height: 20px; }
-        .impact-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-        .impact-label {
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
-
-        /* ── Details Card ── */
-        .org-details {
-            max-width: 800px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.025);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 40px;
-            text-align: left;
-        }
-        .org-details h3 {
-            color: var(--text-primary);
-            font-size: 1.3rem;
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .org-details h3 svg { width: 20px; height: 20px; color: #93c5fd; }
-        .org-details p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.7;
-            margin-bottom: 20px;
-        }
-        .org-details ul {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 24px 0;
-        }
-        .org-details ul li {
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-            padding-left: 24px;
-            position: relative;
-            font-size: 0.93rem;
-            line-height: 1.6;
-        }
-        .org-details ul li::before {
-            content: "→";
-            position: absolute;
-            left: 0;
-            color: #93c5fd;
-        }
-
-        /* ── Project Highlight Cards ── */
-        .project-highlights {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-            margin: 20px 0 28px;
-        }
-        .project-highlight {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px 16px;
-            transition: all 0.3s ease;
-        }
-        .project-highlight:hover {
-            border-color: rgba(147, 197, 253, 0.2);
-            background: rgba(147, 197, 253, 0.025);
-        }
-        .project-highlight h4 {
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .project-highlight p {
-            color: var(--text-secondary);
-            font-size: 0.82rem;
-            line-height: 1.55;
-            margin: 0;
-        }
-        .project-highlight .ph-stat {
-            color: #93c5fd;
-            font-weight: 700;
-            font-size: 0.85rem;
-            margin-top: 8px;
-            display: block;
-        }
-
-        /* ── Official Links ── */
-        .org-links {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 24px;
-        }
-        .org-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            font-size: 0.82rem;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        .org-link:hover {
-            border-color: rgba(147, 197, 253, 0.3);
-            color: var(--text-primary);
-            background: rgba(147, 197, 253, 0.05);
-        }
-        .org-link svg { width: 14px; height: 14px; }
-
-        /* ── Divider ── */
-        .section-divider {
-            width: 60px;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-            margin: 32px 0;
-        }
-
-        @media (max-width: 768px) {
-            .org-details { padding: 28px 20px; }
-            .impact-strip { grid-template-columns: repeat(2, 1fr); }
-            .project-highlights { grid-template-columns: 1fr; }
-        }
+        .detail-hero { padding: 120px 20px 60px; text-align: center; }
+        .detail-logo { width: 140px; height: auto; margin-bottom: 24px; border-radius: 12px; }
+        .detail-title { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; color: var(--text-primary); margin-bottom: 12px; }
+        .detail-subtitle { font-size: 1.1rem; color: var(--accent-1); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; }
+        .content-card { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 24px; padding: 40px; margin-bottom: 40px; }
+        .content-card h2 { font-size: 1.8rem; margin-bottom: 20px; color: var(--text-primary); display: flex; align-items: center; gap: 12px; }
+        .content-card p { color: var(--text-secondary); line-height: 1.8; margin-bottom: 20px; }
+        @media (max-width: 768px) { .content-card { padding: 25px; } .detail-hero { padding-top: 100px; } }
     </style>
 </head>
 <body>
     <div class="bg-mesh"></div>
-    <div class="cursor-dot"></div>
-    <div class="cursor-outline"></div>
-
     <nav class="navbar glass">
         <div class="nav-container">
             <div class="nav-links">
                 <a href="about.html">About</a>
-                <a href="experience.html" class="active">Experience</a>
+                <a href="experience.html">Experience</a>
                 <a href="skills.html">Skills</a>
                 <a href="projects.html">Projects</a>
+                <a href="team-moments.html">Team Moments</a>
                 <a href="contact.html">Contact</a>
             </div>
+            <button class="mobile-menu-btn" aria-label="Toggle Menu">
+                <i data-lucide="menu"></i>
+            </button>
         </div>
     </nav>
 
-    <main style="min-height: 80vh;">
-        <section class="org-hero section-padding fade-in">
-            <span class="org-badge">
-                <i data-lucide="award" style="width:13px;height:13px"></i> Section 8 Registered Nonprofit
-            </span>
-            <h1 class="org-title">inAmigos Foundation</h1>
-            <p class="org-subtitle">Uniting minds for social change — a nonprofit dedicated to social impact, education, skill development, and environmental sustainability across India.</p>
+    <main class="detail-page section-padding">
+        <div class="detail-hero fade-in">
+            <img src="assets/inAmigos Foundation.png" alt="inAmigos Logo" class="detail-logo">
+            <h1 class="detail-title">inAmigos Foundation</h1>
+            <p class="detail-subtitle">Graphic Design Intern</p>
+        </div>
 
-            <div class="org-meta">
-                <span class="org-meta-item">
-                    <i data-lucide="map-pin"></i> Headquarters: Chhattisgarh
-                </span>
-                <span class="org-meta-item">
-                    <i data-lucide="calendar"></i> Registered Sept 2020
-                </span>
-                <span class="org-meta-item">
-                    <i data-lucide="layers"></i> 10+ State Chapters
-                </span>
-                <span class="org-meta-item">
-                    <i data-lucide="shield-check"></i> CSR-1 & 80G Certified
-                </span>
-            </div>
+        <div class="content-card fade-in">
+            <h2><i data-lucide="award"></i> Internship Overview</h2>
+            <p>
+                During July 2025 – August 2025, Baasim Fayaz Khan served as a <strong>Graphic Design Intern</strong> for the inAmigos Foundation, a Section 8 registered nonprofit organization based in India. 
+            </p>
+            <p>
+                His work focused on visual communication for social impact campaigns, helping the foundation reach thousands of beneficiaries through clean, high-impact digital designs and social media content.
+            </p>
+        </div>
 
-            <div class="org-details">
-                <!-- Baasim's Role -->
-                <h3><i data-lucide="pen-tool"></i> Graphic Designer Intern</h3>
-                <p>
-                    During my internship from <strong>July 2025 to August 2025</strong>, I worked directly with the creative and marketing team at inAmigos Foundation. My role focused on producing high-quality visual content that amplified the foundation's social campaigns, educational outreach, and digital presence across multiple platforms.
-                </p>
+        <div class="content-card fade-in">
+            <h2><i data-lucide="palette"></i> Contributions</h2>
+            <p>
+                As part of a national creative team, Baasim deployed visual assets that aligned with the foundation's core mission of social empowerment. This role allowed him to master brand guidelines while working in a fast-paced, mission-driven environment.
+            </p>
+        </div>
 
-                <h3><i data-lucide="target"></i> Key Contributions</h3>
-                <ul>
-                    <li>Designed compelling social media graphics and campaign visuals for Project SEVA and Project VIKAS.</li>
-                    <li>Created marketing collateral including event posters, awareness infographics, and branded content for digital distribution.</li>
-                    <li>Contributed to the foundation's brand consistency and visual identity across Instagram, Facebook, and outreach materials.</li>
-                    <li>Collaborated remotely with cross-functional teams spanning content, research, and digital marketing departments.</li>
-                    <li>Delivered all design assets on deadline while maintaining high creative standards aligned with the nonprofit's mission.</li>
-                </ul>
-
-                <div class="section-divider"></div>
-
-                <!-- About the Organization -->
-                <h3><i data-lucide="info"></i> About inAmigos Foundation</h3>
-                <p>
-                    inAmigos Foundation is a <strong>Section 8 registered nonprofit</strong> under the Companies Act 2013, founded by <strong>Mr. Govind Shukla</strong> on September 23, 2020. The organization holds <strong>80G & 12A certifications, CSR-1 registration</strong>, and is officially registered with <strong>NITI Aayog (NGO Darpan)</strong>. Operating across multiple states in India, inAmigos combines grassroots volunteering, awareness campaigns, and skill-development initiatives to address systemic social challenges.
-                </p>
-
-                <h3><i data-lucide="rocket"></i> Strategic Programs</h3>
-                <div class="project-highlights">
-                    <div class="project-highlight">
-                        <h4><i data-lucide="utensils" style="width:16px;height:16px"></i> Project SEVA</h4>
-                        <p>A nationwide hunger relief initiative focusing on sustainable food distribution and community support networks.</p>
-                        <span class="ph-stat">12+ Cities Covered</span>
-                    </div>
-                    <div class="project-highlight">
-                        <h4><i data-lucide="graduation-cap" style="width:16px;height:16px"></i> Project VIKAS</h4>
-                        <p>Skill acquisition pipeline providing training in high-demand digital sectors for underprivileged youth.</p>
-                        <span class="ph-stat">2.5k+ Beneficiaries</span>
-                    </div>
-                    <div class="project-highlight">
-                        <h4><i data-lucide="book-open" style="width:16px;height:16px"></i> Project BACHPANSHALA</h4>
-                        <p>Bridging the digital divide through early-childhood literacy and tech-enabled learning centers.</p>
-                        <span class="ph-stat">National Recognition</span>
-                    </div>
-                </div>
-
-                <div class="section-divider"></div>
-
-                <h3><i data-lucide="shield-check"></i> Official Certifications & Registrations</h3>
-                <ul>
-                    <li><strong>Section 8 Company</strong> — Registered under Companies Act 2013</li>
-                    <li><strong>80G & 12A Certified</strong> — Tax exemption for donors and the organization</li>
-                    <li><strong>CSR-1 Registered</strong> — Eligible for Corporate Social Responsibility funding</li>
-                    <li><strong>NITI Aayog (NGO Darpan)</strong> — Government-recognized NGO with unique ID</li>
-                </ul>
-
-                <div class="section-divider"></div>
-
-                <h3><i data-lucide="link"></i> Official Links</h3>
-                <div class="org-links">
-                    <a href="https://inamigosfoundation.org.in" target="_blank" rel="noopener" class="org-link">
-                        <i data-lucide="globe"></i> inamigosfoundation.org.in
-                    </a>
-                    <a href="https://www.instagram.com/inamigosfoundation/" target="_blank" rel="noopener" class="org-link">
-                        <i data-lucide="instagram"></i> @inamigosfoundation
-                    </a>
-                    <a href="https://www.linkedin.com/company/inamigos-foundation/" target="_blank" rel="noopener" class="org-link">
-                        <i data-lucide="linkedin"></i> LinkedIn
-                    </a>
-                </div>
-
-                <div style="margin-top: 36px;">
-                    <a href="experience.html" class="btn btn-outline" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-                        <i data-lucide="arrow-left"></i> Back to Experience
-                    </a>
-                </div>
-            </div>
-        </section>
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="experience.html" class="btn btn-outline">
+                <i data-lucide="arrow-left"></i> Back to Experience
+            </a>
+        </div>
     </main>
 
-    <footer>
-        <div class="footer-content">
-            <p>&copy; 2026 Baasim Fayaz Khan. All rights reserved.</p>
-        </div>
-    </footer>
-
     <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
-    <script src="main-v5.js?v=5.6"></script>
-    <script src="khan-inject-v45.js?v=5.2"></script>
+    <script src="main-v5.js?v=5.8"></script>
+    <script src="khan-inject-v45.js?v=5.4"></script>
 </body>
 </html>

@@ -3,403 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Baasim Fayaz Khan's role as Operations & Coordination Lead at Proteios Education — a modern youth development initiative in Kashmir focused on critical thinking, leadership, and mentorship.">
-    <meta name="keywords" content="Basim Khan, Proteios Education, Operations Lead, Kashmir, Youth Development, Leadership, Education">
-    <meta name="author" content="Basim Khan (Khan Basim)">
-    <meta name="robots" content="index, follow">
-
+    <meta name="description" content="Baasim Fayaz Khan's professional role as Operations & Coordination Lead at Proteios Education.">
     <title>Proteios Education | Baasim Fayaz Khan</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style-v45.css?v=5.6">
+    <link rel="stylesheet" href="style-v45.css?v=5.8">
     <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
     <style>
-        /* ── Organization Detail Page Styles ── */
-        .org-hero {
-            padding-top: 130px;
-            padding-bottom: 50px;
-            text-align: center;
-        }
-        .org-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            background: rgba(74, 222, 128, 0.12);
-            color: #4ade80;
-            border: 1px solid rgba(74, 222, 128, 0.2);
-            margin-bottom: 20px;
-        }
-        .org-title {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 12px;
-        }
-        .org-subtitle {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 18px auto;
-            line-height: 1.65;
-        }
-        .org-meta {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 24px;
-            flex-wrap: wrap;
-            margin-bottom: 40px;
-        }
-        .org-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 0.8rem;
-        }
-        .org-meta-item svg { width: 14px; height: 14px; }
-
-        /* ── Impact Stats Strip ── */
-        .impact-strip {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 16px;
-            max-width: 850px;
-            margin: 0 auto 50px;
-        }
-        .impact-card {
-            background: rgba(255, 255, 255, 0.025);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 24px 16px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        .impact-card:hover {
-            border-color: rgba(74, 222, 128, 0.2);
-            transform: translateY(-2px);
-            background: rgba(74, 222, 128, 0.03);
-        }
-        .impact-icon {
-            width: 40px; height: 40px;
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 12px;
-            background: rgba(74, 222, 128, 0.08);
-            color: #4ade80;
-        }
-        .impact-icon svg { width: 20px; height: 20px; }
-        .impact-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-        .impact-label {
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
-
-        /* ── Details Card ── */
-        .org-details {
-            max-width: 800px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.025);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 40px;
-            text-align: left;
-        }
-        .org-details h3 {
-            color: var(--text-primary);
-            font-size: 1.3rem;
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .org-details h3 svg { width: 20px; height: 20px; color: #4ade80; }
-        .org-details p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.7;
-            margin-bottom: 20px;
-        }
-        .org-details ul {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 24px 0;
-        }
-        .org-details ul li {
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-            padding-left: 24px;
-            position: relative;
-            font-size: 0.93rem;
-            line-height: 1.6;
-        }
-        .org-details ul li::before {
-            content: "→";
-            position: absolute;
-            left: 0;
-            color: #4ade80;
-        }
-
-        /* ── Focus Area Cards ── */
-        .focus-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 14px;
-            margin: 20px 0 28px;
-        }
-        .focus-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px 16px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        .focus-card:hover {
-            border-color: rgba(74, 222, 128, 0.2);
-            background: rgba(74, 222, 128, 0.025);
-        }
-        .focus-card h4 {
-            color: var(--text-primary);
-            font-size: 0.88rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        .focus-card p {
-            color: var(--text-secondary);
-            font-size: 0.78rem;
-            line-height: 1.5;
-            margin: 0;
-        }
-
-        /* ── Team Moments ── */
-        .team-moments-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 18px;
-            margin-top: 18px;
-        }
-        .team-card {
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            overflow: hidden;
-            background: rgba(9, 14, 34, 0.7);
-            transition: all 0.3s ease;
-        }
-        .team-card:hover {
-            border-color: rgba(74, 222, 128, 0.15);
-            transform: translateY(-2px);
-        }
-        .team-card img {
-            width: 100%;
-            display: block;
-            object-fit: cover;
-        }
-        .team-card p {
-            margin: 0;
-            padding: 12px 14px 14px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            line-height: 1.5;
-        }
-
-        /* ── Official Links ── */
-        .org-links {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 24px;
-        }
-        .org-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            font-size: 0.82rem;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        .org-link:hover {
-            border-color: rgba(74, 222, 128, 0.3);
-            color: var(--text-primary);
-            background: rgba(74, 222, 128, 0.05);
-        }
-        .org-link svg { width: 14px; height: 14px; }
-
-        /* ── Divider ── */
-        .section-divider {
-            width: 60px;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-            margin: 32px 0;
-        }
-
-        @media (max-width: 768px) {
-            .org-details { padding: 28px 20px; }
-            .impact-strip { grid-template-columns: repeat(2, 1fr); }
-            .focus-grid { grid-template-columns: 1fr; }
-            .team-moments-grid { grid-template-columns: 1fr; }
-        }
+        .detail-hero { padding: 120px 20px 60px; text-align: center; }
+        .detail-logo { width: 120px; height: auto; margin-bottom: 24px; border-radius: 16px; }
+        .detail-title { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; color: var(--text-primary); margin-bottom: 12px; }
+        .detail-subtitle { font-size: 1.1rem; color: var(--accent-1); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; }
+        .content-card { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 24px; padding: 40px; margin-bottom: 40px; }
+        .content-card h2 { font-size: 1.8rem; margin-bottom: 20px; color: var(--text-primary); display: flex; align-items: center; gap: 12px; }
+        .content-card p { color: var(--text-secondary); line-height: 1.8; margin-bottom: 20px; }
+        .feature-list { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .feature-item { display: flex; gap: 12px; color: var(--text-secondary); }
+        .feature-item svg { color: var(--accent-1); flex-shrink: 0; }
+        @media (max-width: 768px) { .content-card { padding: 25px; } .detail-hero { padding-top: 100px; } }
     </style>
 </head>
 <body>
     <div class="bg-mesh"></div>
-    <div class="cursor-dot"></div>
-    <div class="cursor-outline"></div>
-
     <nav class="navbar glass">
         <div class="nav-container">
             <div class="nav-links">
                 <a href="about.html">About</a>
-                <a href="experience.html" class="active">Experience</a>
+                <a href="experience.html">Experience</a>
                 <a href="skills.html">Skills</a>
                 <a href="projects.html">Projects</a>
+                <a href="team-moments.html">Team Moments</a>
                 <a href="contact.html">Contact</a>
             </div>
+            <button class="mobile-menu-btn" aria-label="Toggle Menu">
+                <i data-lucide="menu"></i>
+            </button>
         </div>
     </nav>
 
-    <main style="min-height: 80vh;">
-        <section class="org-hero section-padding fade-in">
-            <span class="org-badge">
-                <i data-lucide="zap" style="width:13px;height:13px"></i> Currently Working Here
-            </span>
-            <h1 class="org-title">Proteios Education</h1>
-            <p class="org-subtitle">Modern education beyond academics — building critical thinking, leadership, and youth empowerment across Kashmir.</p>
+    <main class="detail-page section-padding">
+        <div class="detail-hero fade-in">
+            <img src="assets/logo3.jpeg" alt="Proteios Logo" class="detail-logo">
+            <h1 class="detail-title">Proteios Education</h1>
+            <p class="detail-subtitle">Operations & Coordination Lead</p>
+        </div>
 
-            <div class="org-meta">
-                <span class="org-meta-item">
-                    <i data-lucide="map-pin"></i> Headquarters: Kashmir
-                </span>
-                <span class="org-meta-item">
-                    <i data-lucide="calendar"></i> Operation: Early 2026
-                </span>
-                <span class="org-meta-item">
-                    <i data-lucide="award"></i> 15+ Core Programs
-                </span>
-                <span class="org-meta-item">
-                    <i data-lucide="users"></i> 200+ Sessions
-                </span>
-            </div>
-
-            <div class="org-details">
-                <!-- Baasim's Role -->
-                <h3><i data-lucide="briefcase"></i> Operations & Coordination Lead</h3>
-                <p>
-                    At Proteios Education, my primary responsibility is directing operational workflows and ensuring strategic coordination across all departments. I manage end-to-end execution of educational programs, seminars, and content pipelines — ensuring that every initiative aligns with our mission to empower the youth of Kashmir.
-                </p>
-
-                <h3><i data-lucide="target"></i> Key Responsibilities</h3>
-                <ul>
-                    <li>Managing full lifecycle execution of projects, seminars, and workshops from planning to delivery.</li>
-                    <li>Coordinating workflows between content, design, media, and outreach teams.</li>
-                    <li>Ensuring total accountability and timely delivery across all departments.</li>
-                    <li>Supporting leadership with strategic planning and high-level operational decisions.</li>
-                    <li>Implementing AI-driven systems for operational efficiency and content production.</li>
-                </ul>
-
-                <div class="section-divider"></div>
-
-                <!-- About the Organization -->
-                <h3><i data-lucide="info"></i> About Proteios Education</h3>
-                <p>
-                    Proteios Education is a modern education and youth development initiative operating in Kashmir, India. The organization works at the intersection of <strong>education, mentorship, career guidance, creativity, and real-world exposure</strong> — helping students go beyond traditional academics to develop the skills and mindset needed for the future.
-                </p>
-
-                <h3><i data-lucide="compass"></i> Core Focus Areas</h3>
-                <div class="focus-grid">
-                    <div class="focus-card">
-                        <h4><i data-lucide="brain" style="width:16px;height:16px"></i> Critical Thinking</h4>
-                        <p>Building analytical and problem-solving skills through structured mentorship</p>
-                    </div>
-                    <div class="focus-card">
-                        <h4><i data-lucide="target" style="width:16px;height:16px"></i> Career Clarity</h4>
-                        <p>Guidance and mentorship for students to discover their professional path</p>
-                    </div>
-                    <div class="focus-card">
-                        <h4><i data-lucide="mic" style="width:16px;height:16px"></i> Public Speaking</h4>
-                        <p>Communication training and confidence-building workshops</p>
-                    </div>
-                    <div class="focus-card">
-                        <h4><i data-lucide="rocket" style="width:16px;height:16px"></i> Youth Empowerment</h4>
-                        <p>Modern learning systems designed for the next generation of leaders</p>
-                    </div>
+        <div class="content-card fade-in">
+            <h2><i data-lucide="briefcase"></i> Professional Role</h2>
+            <p>
+                As the <strong>Operations & Coordination Lead</strong> at Proteios Education, Baasim Fayaz Khan provides essential support to the organizational framework of educational initiatives. His role ensures that key events and workshops are documented and effectively presented, bridging the gap between vision and operational visibility for the youth of Kashmir.
+            </p>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <i data-lucide="camera"></i>
+                    <span>Professional photography and visual documentation of team events.</span>
                 </div>
-
-                <h3><i data-lucide="rocket"></i> Key Initiatives</h3>
-                <ul>
-                    <li>Seminars, Workshops, and Educational Podcasts</li>
-                    <li>One-on-One Mentorship Sessions & Student Discussions</li>
-                    <li>Documentaries & Awareness Programs</li>
-                    <li>AI-Powered Learning Tools & Khan AI Assistant</li>
-                </ul>
-
-                <div class="section-divider"></div>
-
-                <!-- Team Moments -->
-                <h3><i data-lucide="camera"></i> Team Moments</h3>
-                <p>Snapshots from active collaboration sessions, leadership interactions, and on-ground team culture at Proteios Education.</p>
-                <div class="team-moments-grid">
-                    <div class="team-card">
-                        <img src="assets/Team Moments.jpeg?v=5.2" alt="Proteios Team Moment" loading="lazy">
-                        <p>Core team interaction highlighting mentorship and youth leadership participation.</p>
-                    </div>
-                    <div class="team-card">
-                        <img src="assets/Team Moment2.jpeg?v=5.2" alt="Proteios Team Group Session" loading="lazy">
-                        <p>Extended team gathering featuring collaborative planning and cross-functional engagement.</p>
-                    </div>
+                <div class="feature-item">
+                    <i data-lucide="calendar"></i>
+                    <span>Strategizing educational seminars and bootcamps.</span>
                 </div>
-
-                <div class="section-divider"></div>
-
-                <h3><i data-lucide="link"></i> Connect with Proteios</h3>
-                <div class="org-links">
-                    <a href="https://www.instagram.com/proteioseducation?igsh=YnBueWQzbXZ5ZTg0" target="_blank" rel="noopener" class="org-link">
-                        <i data-lucide="instagram"></i> @proteioseducation
-                    </a>
-                    <a href="https://www.facebook.com/share/1AyxdNPBtT/" target="_blank" rel="noopener" class="org-link">
-                        <i data-lucide="facebook"></i> Proteios Education
-                    </a>
-                    <a href="mailto:proteioseducation@gmail.com" class="org-link">
-                        <i data-lucide="mail"></i> proteioseducation@gmail.com
-                    </a>
-                </div>
-
-                <div style="margin-top: 36px;">
-                    <a href="experience.html" class="btn btn-outline" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-                        <i data-lucide="arrow-left"></i> Back to Experience
-                    </a>
+                <div class="feature-item">
+                    <i data-lucide="zap"></i>
+                    <span>Integrating AI-driven workflows into institutional processes.</span>
                 </div>
             </div>
-        </section>
+        </div>
+
+        <div class="content-card fade-in">
+            <h2><i data-lucide="camera"></i> Team Highlights & Podcasts</h2>
+            <p>
+                Baasim has captured several key moments for the <strong>Proteios Podcast Series</strong>, hosted by <strong>Yonus Beigh (@WhyBeigh)</strong>. These sessions featured prominent global leaders, including:
+            </p>
+            <div class="feature-list" style="margin-bottom: 25px;">
+                <div class="feature-item">
+                    <i data-lucide="mic"></i>
+                    <span><strong>Shafat Qazi:</strong> BQE Software Founder & Film Producer.</span>
+                </div>
+                <div class="feature-item">
+                    <i data-lucide="mic"></i>
+                    <span><strong>Khalid Wani:</strong> Director at Western Digital & Tech Leader.</span>
+                </div>
+            </div>
+            <p>
+                From facilitating introductions with leaders like <strong>Shifat Qazi</strong> and <strong>Murtakib Mir</strong> to managing operational workflows, Baasim ensures the Proteios team expansion remains strategically aligned.
+            </p>
+            <div style="margin-top: 20px;">
+                <a href="team-moments.html" class="btn btn-secondary">
+                    Explore Podcast Moments <i data-lucide="arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="experience.html" class="btn btn-outline">
+                <i data-lucide="arrow-left"></i> Back to Experience
+            </a>
+        </div>
     </main>
 
-    <footer>
-        <div class="footer-content">
-            <p>&copy; 2026 Baasim Fayaz Khan. All rights reserved.</p>
-        </div>
-    </footer>
-
     <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
-    <script src="main-v5.js?v=5.6"></script>
-    <script src="khan-inject-v45.js?v=5.2"></script>
+    <script src="main-v5.js?v=5.8"></script>
+    <script src="khan-inject-v45.js?v=5.4"></script>
 </body>
 </html>

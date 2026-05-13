@@ -17,7 +17,14 @@ document.addEventListener('DOMContentLoaded', () => {
        2. CINEMATIC PRELOADER & VIDEO INIT
        ═══════════════════════════════════════════════════════ */
     const initExperience = () => {
-        if (!heroVideo) return;
+        if (!heroVideo) {
+            // If no hero video (sub-pages), fade out preloader quickly
+            setTimeout(() => {
+                preloader?.classList.add('fade-out');
+                navbar?.classList.add('show');
+            }, 1000);
+            return;
+        }
 
         heroVideo.muted = true;
         heroVideo.loop = true;
@@ -32,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     preloader.classList.add('fade-out');
                     navbar?.classList.add('show');
                 }
-            }, 1000);
+            }, 1500);
         };
 
         if (heroVideo.readyState >= 3) {
@@ -41,23 +48,25 @@ document.addEventListener('DOMContentLoaded', () => {
             heroVideo.addEventListener('canplaythrough', onReady, { once: true });
         }
 
-        setTimeout(() => {
-            if (!experienceActivated) {
-                const hint = document.getElementById('unmute-hint');
-                if (hint) hint.style.opacity = '1';
-            }
-        }, 3000);
-
+        // Safety timeout
         setTimeout(() => {
             if (preloader && !preloader.classList.contains('fade-out')) {
                 preloader.classList.add('fade-out');
                 navbar?.classList.add('show');
             }
         }, 5000);
+
+        // Audio hint
+        setTimeout(() => {
+            if (!experienceActivated && heroVideo) {
+                const hint = document.getElementById('unmute-hint');
+                if (hint) hint.style.opacity = '1';
+            }
+        }, 3000);
     };
 
     /* ═══════════════════════════════════════════════════════
-       3. THE ACTIVATION BRIDGE
+       3. THE ACTIVATION BRIDGE (AUDIO UNMUTE)
        ═══════════════════════════════════════════════════════ */
     const activateAudio = () => {
         if (experienceActivated || !heroVideo) return;
@@ -90,78 +99,90 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('touchstart', activateAudio, { once: true, passive: true });
     document.addEventListener('keydown', activateAudio, { once: true });
 
-    if (heroVideo) {
-        // Native loop is usually better, but we ensure play() is called if it stops
-        heroVideo.addEventListener('ended', () => {
-            heroVideo.currentTime = 0;
-            heroVideo.play().catch(e => console.error("Loop failed:", e));
-        });
-    }
+    /* ═══════════════════════════════════════════════════════
+       4. TYPEWRITER EFFECT
+       ═══════════════════════════════════════════════════════ */
+    const initTypewriter = () => {
+        const textElement = document.getElementById('typewriter');
+        if (!textElement) return;
+
+        const words = ["Operations Lead", "Creative Strategist", "AI Architect", "Visionary Leader"];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typeSpeed = 100;
+
+        const type = () => {
+            const current = words[wordIndex];
+            if (isDeleting) {
+                textElement.textContent = current.substring(0, charIndex - 1);
+                charIndex--;
+                typeSpeed = 50;
+            } else {
+                textElement.textContent = current.substring(0, charIndex + 1);
+                charIndex++;
+                typeSpeed = 100;
+            }
+
+            if (!isDeleting && charIndex === current.length) {
+                isDeleting = true;
+                typeSpeed = 2000;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(type, typeSpeed);
+        };
+
+        type();
+    };
 
     /* ═══════════════════════════════════════════════════════
-       5. NAVIGATION HIGHLIGHTING (The Dash Notation)
+       5. REVEAL ANIMATIONS (OBSERVER)
+       ═══════════════════════════════════════════════════════ */
+    const observeFaders = () => {
+        const faders = document.querySelectorAll('.fade-in');
+        const appearOptions = {
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const appearOnScroll = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add('appear');
+                observer.unobserve(entry.target);
+            });
+        }, appearOptions);
+
+        faders.forEach(fader => appearOnScroll.observe(fader));
+    };
+
+    /* ═══════════════════════════════════════════════════════
+       6. SMOOTH ROUTING ENGINE (SPA)
        ═══════════════════════════════════════════════════════ */
     const updateNavHighlight = (targetUrl) => {
         const navLinks = document.querySelectorAll('.nav-links a');
         if (!navLinks.length) return;
 
-        // Extract filename from URL (e.g., 'about.html')
-        let currentFile = targetUrl.split('/').pop().split('?')[0].split('#')[0] || 'index.html';
-        if (currentFile === '' || currentFile === '/') currentFile = 'index.html';
+        let currentFile = targetUrl.split('/').pop().split('?')[0].split('#')[0];
+        if (!currentFile || currentFile === '' || currentFile === '/') currentFile = 'index.html';
 
         navLinks.forEach(link => {
             const linkHref = link.getAttribute('href');
             link.classList.remove('active');
-            
-            // Exact match or handle index fallback
             if (linkHref === currentFile) {
-                link.classList.add('active');
-            } else if (currentFile === 'index.html' && (linkHref === '/' || linkHref === '')) {
                 link.classList.add('active');
             }
         });
     };
 
-    /* ═══════════════════════════════════════════════════════
-       6. INTERSECTION OBSERVER (Fade-in Animations)
-       ═══════════════════════════════════════════════════════ */
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('appear');
-        });
-    }, { threshold: 0.1 });
-
-    const observeFaders = () => {
-        document.querySelectorAll('.fade-in, .section-header, .stat-card, .project-card, .company-card, .skill-category').forEach(el => {
-            el.classList.add('fade-in');
-            observer.observe(el);
-        });
-    };
-
-    /* ═══════════════════════════════════════════════════════
-       6. SMOOTH NAVIGATION (View Transitions API)
-       ═══════════════════════════════════════════════════════ */
-    const handleNavClick = async (e) => {
-        const link = e.target.closest('a');
-        if (!link) return;
-        
-        const url = link.getAttribute('href');
-        if (!url || url.startsWith('http') || url.startsWith('#') || url.includes('mailto:')) return;
-
-        e.preventDefault();
-
-        if (document.startViewTransition) {
-            document.startViewTransition(async () => {
-                await performRouting(url);
-            });
-        } else {
-            await performRouting(url);
-        }
-    };
-
     const performRouting = async (url) => {
         try {
             const response = await fetch(url);
+            if (!response.ok) throw new Error('Network response was not ok');
             const html = await response.text();
             const parser = new DOMParser();
             const newDoc = parser.parseFromString(html, 'text/html');
@@ -169,16 +190,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentMain = document.querySelector('main');
 
             if (newMain && currentMain) {
-                const isHeroTarget = url === 'index.html' || url === '/' || url === '';
-                
-                // 1. Toggle Hero Mode
+                const isHeroTarget = url.endsWith('index.html') || url === '/' || url === '';
                 if (isHeroTarget) {
                     document.body.classList.add('hero-mode');
                 } else {
                     document.body.classList.remove('hero-mode');
                 }
 
-                // 2. Extract and Inject styles
                 const newStyles = newDoc.querySelectorAll('head style');
                 document.querySelectorAll('head style[data-page-style]').forEach(s => s.remove());
                 newStyles.forEach(s => {
@@ -187,27 +205,32 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.head.appendChild(clone);
                 });
 
-                // 3. Swap content
                 currentMain.innerHTML = newMain.innerHTML;
+                
+                const newNav = newDoc.querySelector('.nav-links');
+                const currentNav = document.querySelector('.nav-links');
+                if (newNav && currentNav) {
+                    currentNav.innerHTML = newNav.innerHTML;
+                }
+
                 document.title = newDoc.title;
                 window.history.pushState({}, '', url);
-                
-                // 4. Update Nav Highlighting
                 updateNavHighlight(url);
 
-                // 5. Re-init Engines
                 if (window.lucide) window.lucide.createIcons();
                 observeFaders();
                 
                 if (isHeroTarget) {
                     initTypewriter();
-                    if (heroVideo) heroVideo.play();
-                } else {
-                    if (heroVideo) heroVideo.pause();
+                    const newVideo = document.getElementById('hero-video');
+                    if (newVideo) newVideo.play().catch(() => {});
                 }
 
                 window.scrollTo({ top: 0, behavior: 'instant' });
                 updateCursor();
+                initMobileMenu();
+            } else {
+                window.location.href = url;
             }
         } catch (err) {
             console.error('Navigation failed:', err);
@@ -215,67 +238,108 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    const handleNavClick = async (e) => {
+        const link = e.target.closest('a');
+        if (!link) return;
+
+        const url = link.getAttribute('href');
+        if (!url || url.startsWith('http') || url.startsWith('#') || url.includes('mailto:')) return;
+
+        e.preventDefault();
+        await performRouting(url);
+    };
+
     window.navigateTo = performRouting;
     document.addEventListener('click', handleNavClick);
 
     /* ═══════════════════════════════════════════════════════
-       7. GLOBAL CURSOR HANDLER
+       7. MOBILE MENU TOGGLE
        ═══════════════════════════════════════════════════════ */
-    const updateCursor = () => {
-        const interactive = document.querySelectorAll('a, button, .btn, .project-card, .skill-category, .stat-card, .contact-item, .company-card');
-        interactive.forEach(el => {
-            el.style.cursor = 'pointer';
+    const initMobileMenu = () => {
+        const menuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (!menuBtn || !navLinks) return;
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navLinks.classList.toggle('active');
+            const icon = menuBtn.querySelector('i');
+            if (icon) {
+                const isOpened = navLinks.classList.contains('active');
+                icon.setAttribute('data-lucide', isOpened ? 'x' : 'menu');
+                if (window.lucide) window.lucide.createIcons();
+            }
+        });
+
+        // Close menu when clicking links
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                const icon = menuBtn.querySelector('i');
+                if (icon) {
+                    icon.setAttribute('data-lucide', 'menu');
+                    if (window.lucide) window.lucide.createIcons();
+                }
+            });
+        });
+
+        // Close when clicking outside
+        document.addEventListener('click', (e) => {
+            if (navLinks.classList.contains('active') && !navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
+                navLinks.classList.remove('active');
+                const icon = menuBtn.querySelector('i');
+                if (icon) {
+                    icon.setAttribute('data-lucide', 'menu');
+                    if (window.lucide) window.lucide.createIcons();
+                }
+            }
         });
     };
 
-    updateCursor();
-    const cursorObserver = new MutationObserver(updateCursor);
-    cursorObserver.observe(document.body, { childList: true, subtree: true });
-
     /* ═══════════════════════════════════════════════════════
-       8. TYPEWRITER EFFECT
+       8. GLOBAL CURSOR HANDLER
        ═══════════════════════════════════════════════════════ */
-    const initTypewriter = () => {
-        const typewriter = document.getElementById('typewriter');
-        if (!typewriter) return;
-        
-        typewriter.textContent = ""; 
-        const phrases = [
-            "Operations & Coordination Lead",
-            "Strategic Execution Expert",
-            "AI Systems Architect",
-            "Youth Leadership Advocate"
-        ];
-        let i = 0, j = 0, isDeleting = false;
+    const updateCursor = () => {
+        const interactive = document.querySelectorAll('a, button, .btn, .project-card, .skill-category, .stat-card, .contact-item, .company-card');
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
 
-        const type = () => {
-            const current = phrases[i];
-            const el = document.getElementById('typewriter');
-            if (!el) return;
-            el.textContent = isDeleting 
-                ? current.substring(0, j--) 
-                : current.substring(0, j++);
-
-            if (!isDeleting && j === current.length + 1) {
-                isDeleting = true;
-                setTimeout(type, 2000);
-            } else if (isDeleting && j === 0) {
-                isDeleting = false;
-                i = (i + 1) % phrases.length;
-                setTimeout(type, 500);
-            } else {
-                setTimeout(type, isDeleting ? 30 : 60);
+        const moveCursor = (e) => {
+            if (cursorDot) {
+                cursorDot.style.left = e.clientX + 'px';
+                cursorDot.style.top = e.clientY + 'px';
+            }
+            if (cursorOutline) {
+                cursorOutline.animate({
+                    left: `${e.clientX}px`,
+                    top: `${e.clientY}px`
+                }, { duration: 500, fill: "forwards" });
             }
         };
-        type();
+
+        window.addEventListener('mousemove', moveCursor);
+
+        interactive.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorOutline?.classList.add('cursor-hover');
+                cursorDot?.classList.add('cursor-hover');
+            });
+            el.addEventListener('mouseleave', () => {
+                cursorOutline?.classList.remove('cursor-hover');
+                cursorDot?.classList.remove('cursor-hover');
+            });
+        });
     };
 
     /* ═══════════════════════════════════════════════════════
-       10. INITIALIZE
+       9. INITIALIZATION
        ═══════════════════════════════════════════════════════ */
     initExperience();
     initTypewriter();
     observeFaders();
+    initMobileMenu();
+    updateCursor();
     updateNavHighlight(window.location.pathname);
     if (window.lucide) window.lucide.createIcons();
 });
