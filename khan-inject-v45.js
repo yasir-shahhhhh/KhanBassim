@@ -21,6 +21,10 @@
             
             <div id="typing-indicator" style="display:none;">
                 <div class="typing-dots"><span></span><span></span><span></span></div>
+                <div id="thinking-state" style="display:none; align-items: center; gap: 10px; margin-left: 10px;">
+                    <span style="font-size: 0.8rem; font-weight: 600; color: var(--accent-1); letter-spacing: 0.05em; text-transform: uppercase;">Thinking</span>
+                    <div class="thinking-loader"></div>
+                </div>
             </div>
 
             <div id="chat-footer">

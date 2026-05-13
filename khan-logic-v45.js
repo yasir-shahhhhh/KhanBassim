@@ -1,4 +1,4 @@
-﻿
+
 const Cookie = {
     set(name, value, days = 365) {
         const d = new Date(); d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
@@ -1643,18 +1643,6 @@ function initializeKhanLogic() {
     function scrollChatToBottom() { chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: 'smooth' }); }
 
     // ├óΓÇ¥Γé¼├óΓÇ¥Γé¼ Thinking state ├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼
-    function setThinkingState(mode, detail) {
-        if (!typingIndicator) return;
-        typingIndicator.style.display = 'flex';
-        typingIndicator.classList.remove('typing-deep');
-        const label = typingIndicator.querySelector('span');
-        if (!label) return;
-        if (mode === 'deep') {
-            typingIndicator.classList.add('typing-deep');
-            label.textContent = detail || 'Deep thinking in progress...'; return;
-        }
-        label.textContent = detail || 'Khan is thinking';
-    }
     function attachMessageActions(msgDiv, finalAnswer) {
         const copyBtn = msgDiv.querySelector('.cma-copy');
         if (copyBtn) copyBtn.addEventListener('click', () => copyToClipboard(copyBtn, finalAnswer));
@@ -1680,6 +1668,25 @@ function initializeKhanLogic() {
             if (i % 2 === 0) { scrollChatToBottom(); await new Promise(r => setTimeout(r, 12)); }
         }
     }
+    function toggleTypingIndicator(show, isThinking = false) {
+        if (!typingIndicator) return;
+        if (!show) {
+            typingIndicator.style.display = 'none';
+            return;
+        }
+        typingIndicator.style.display = 'flex';
+        const thinkState = document.getElementById('thinking-state');
+        const typingDots = typingIndicator.querySelector('.typing-dots');
+        if (thinkState && typingDots) {
+            if (isThinking && window.deepThinkEnabled) {
+                thinkState.style.display = 'flex';
+                typingDots.style.display = 'none';
+            } else {
+                thinkState.style.display = 'none';
+                typingDots.style.display = 'flex';
+            }
+        }
+    }
 
     // ├óΓÇ¥Γé¼├óΓÇ¥Γé¼ Add message ├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼
     window._chatAddMessage = async function (role, content, options = {}) {
@@ -1696,9 +1703,27 @@ function initializeKhanLogic() {
 
         if (isAssistant) {
             msgDiv.className = 'cm-ai chat-message' + (options.isLive ? ' live-data' : '');
-            const thoughtHtml = (parsed.thought && deepThinkEnabled)
-                ? `<details class="cm-thought"><summary><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg> Thought</summary><div class="cm-thought-body">${renderMarkdown(parsed.thought)}</div></details>`
-                : '';
+            
+            let thoughtHtml = '';
+            if (parsed.thought && window.deepThinkEnabled) {
+                // Calculate simulated thinking time (approx 1s per 10 words, min 1s, max 15s)
+                const wordCount = parsed.thought.split(/\s+/).length;
+                const thinkTime = Math.min(Math.max(Math.ceil(wordCount / 10), 1), 15);
+                
+                thoughtHtml = `
+                    <div class="cm-thought">
+                        <div class="cm-thought-header">
+                            <span class="cm-thought-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 5V3m0 18v-2M5 12H3m18 0h-2M7.05 7.05L5.64 5.64m12.72 12.72l-1.41-1.41M7.05 16.95l-1.41 1.41M18.36 5.64l-1.41 1.41"/></svg>
+                            </span>
+                            <span class="cm-thought-title">Thought for ${thinkTime} seconds</span>
+                            <span class="cm-thought-chevron">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                            </span>
+                        </div>
+                        <div class="cm-thought-body">${renderMarkdown(parsed.thought)}</div>
+                    </div>`;
+            }
 
             const liveBadge = options.isLive ? `
                 <div class="live-call-badge">
@@ -1720,7 +1745,19 @@ function initializeKhanLogic() {
                     </div>`;
 
             chatMessages.appendChild(msgDiv);
+            
+            // Add toggle listener for thought block
+            const thoughtBlock = msgDiv.querySelector('.cm-thought');
+            if (thoughtBlock) {
+                const header = thoughtBlock.querySelector('.cm-thought-header');
+                header.addEventListener('click', () => {
+                    thoughtBlock.classList.toggle('open');
+                    scrollChatToBottom();
+                });
+            }
+
             attachMessageActions(msgDiv, finalAnswer);
+
 
             if (!chatOpen) {
                 hasNotification = true;
@@ -1849,6 +1886,7 @@ function initializeKhanLogic() {
 
         // Ground Breaking: Real Thought Process UI (Only if deep think is enabled)
         try {
+            toggleTypingIndicator(true, true);
             const hints = [];
             if (deepThinkEnabled) hints.push('DEEP REASONING MODE: You MUST use <think>...</think> tags to show your step-by-step engineering logic before answering. Be extremely technical and detailed in your internal thoughts.');
             if (uploadedFileContext) hints.push(`Uploaded file context: ${uploadedFileContext.slice(0, 2400)}`);
@@ -1864,7 +1902,7 @@ function initializeKhanLogic() {
                 const msg = await requestVisionCompletion(userMessage, currentImageDataUrl, 512, 0.2);
                 conversationHistory.push({ role: 'assistant', content: msg });
                 await saveMessageToConv('assistant', msg);
-                typingIndicator.style.display = 'none';
+                toggleTypingIndicator(false);
                 await addMessage('assistant', msg, { stream: true });
                 return;
             }
@@ -1885,7 +1923,7 @@ function initializeKhanLogic() {
                 throw new Error(errData?.error?.message || errData?.message || `Service returned ${response.status}`);
             }
 
-            typingIndicator.style.display = 'none';
+            toggleTypingIndicator(false);
             const data = await response.json();
             const fullContent = data?.choices?.[0]?.message?.content || '';
 
@@ -1896,13 +1934,13 @@ function initializeKhanLogic() {
             }
         } catch (error) {
             console.error('Error:', error);
-            typingIndicator.style.display = 'none';
+            toggleTypingIndicator(false);
             const msg = currentHasImage
                 ? 'I could not analyze that image right now. Please try again.'
                 : (error.message.includes('Groq') ? '├ó┼í┬á├»┬╕┬Å ' + error.message : 'I am temporarily unable to connect. Please retry in a few seconds.');
             await addMessage('assistant', msg, { stream: false });
         } finally {
-            typingIndicator.style.display = 'none';
+            toggleTypingIndicator(false);
         }
     }
 
