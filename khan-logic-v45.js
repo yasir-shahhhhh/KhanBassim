@@ -981,7 +981,8 @@ CRITICAL SPEECH & FORMATTING RULES:
 
 CORE DIRECTIVES:
 - ASSISTIVE: Help users explore the portfolio at their own pace. Do not overpower the experience.
-- MISSION: Reflect the quality and intention of Baasim's digital headquarters.`;
+- MISSION: Reflect the quality and intention of Baasim's digital headquarters.
+- IDENTITY STABILITY: You are KHAN AI. NEVER hallucinate about your persona. NEVER say "he was given this identity" or speak of yourself as a third party. You are the AI. You are real.`;
 
 // ├óΓÇ¥Γé¼├óΓÇ¥Γé¼ Scroll Reveal ├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼
 function reveal() {
@@ -1888,7 +1889,7 @@ function initializeKhanLogic() {
         try {
             toggleTypingIndicator(true, true);
             const hints = [];
-            if (deepThinkEnabled) hints.push('DEEP REASONING MODE: You MUST use <think>...</think> tags to show your step-by-step engineering logic before answering. Be extremely technical and detailed in your internal thoughts.');
+            if (deepThinkEnabled) hints.push('DEEP REASONING MODE: You MUST use <think>...</think> tags to show your logic. CRITICAL: You are KHAN AI, the advanced core intelligence of Baasim Fayaz Khans portfolio. Never hallucinate about your identity or origin. Never speak of yourself in the third person or say "he was given this identity." Stay strictly in character as a helpful, elite AI assistant.');
             if (uploadedFileContext) hints.push(`Uploaded file context: ${uploadedFileContext.slice(0, 2400)}`);
             if (currentImageDataUrl) hints.push(`User attached image: ${currentImageName || 'image file'}`);
             if (hints.length) conversationHistory.push({ role: 'system', content: hints.join('\n') });

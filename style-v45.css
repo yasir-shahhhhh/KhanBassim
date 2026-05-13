@@ -1487,14 +1487,15 @@ a, button, [onclick], .btn, .company-card, .project-card, .contact-item {
    15. KHAN AI - PREMIUM THINKING BLOCK
    ═══════════════════════════════════════════════════════ */
 .cm-thought {
-    margin-bottom: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.03);
+    margin-bottom: 18px;
+    border: 2px solid rgba(122, 141, 255, 0.4); /* HEAVY BORDER */
+    border-radius: 18px;
+    background: rgba(10, 16, 38, 0.8);
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
 .cm-thought:hover {
@@ -1545,17 +1546,24 @@ a, button, [onclick], .btn, .company-card, .project-card, .contact-item {
 }
 
 .cm-thought-body {
-    padding: 0 16px 16px 46px; /* Offset to align with header text */
+    padding: 0 18px 18px 18px;
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace; /* DISTINCT FONT */
+    font-size: 0.85rem;
     line-height: 1.7;
     display: none;
     animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    background: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(122, 141, 255, 0.1);
 }
 
 @keyframes slideDown {
     from { opacity: 0; transform: translateY(-5px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+.cm-thought.open .cm-thought-header {
+    background: rgba(122, 141, 255, 0.15);
 }
 
 .cm-thought.open .cm-thought-body {
