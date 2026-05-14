@@ -2651,7 +2651,17 @@ function initializeKhanLogic() {
                         ]
                     });
                     const finalMsgs = [{ role: 'user', content: 'System: ' + sysPrompt }, { role: 'assistant', content: 'Understood.' }, ...visionMsgs];
-                    body = { model: 'llama-3.2-90b-vision-preview', messages: finalMsgs, max_tokens: 200 };
+                    const visionModels = ['meta-llama/llama-4-scout-17b-16e-instruct', 'meta-llama/llama-4-maverick-17b-128e-instruct', 'llama-3.2-90b-vision-preview'];
+                    let visionErr = null;
+                    for (const vm of visionModels) {
+                        try {
+                            body = { model: vm, messages: finalMsgs, max_tokens: 200 };
+                            const test = await fetch(GROQ_CHAT_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + GROQ_API_KEY }, body: JSON.stringify(body) });
+                            if (test.ok) { const data = await test.json(); const ai = data?.choices?.[0]?.message?.content || ''; if (ai) { glConvHistory.push({ role:'user', content:userText }); glConvHistory.push({ role:'assistant', content:ai }); return ai; } }
+                            else { visionErr = `Vision request failed (${test.status})`; }
+                        } catch (e) { visionErr = e?.message || 'Vision request failed'; }
+                    }
+                    throw new Error(visionErr || 'Vision request failed (400).');
                 } else {
                     glConvHistory.push({ role: 'user', content: userText });
                     body = { model: 'llama-3.3-70b-versatile', messages: glConvHistory, max_tokens: 200 };

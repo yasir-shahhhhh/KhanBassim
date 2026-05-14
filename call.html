@@ -344,7 +344,22 @@ Avoid jargon. Talk like a sophisticated human friend.`;
                             ]
                         }
                     ];
-                    body = { model: 'llama-3.2-90b-vision-preview', messages: visionMsgs, max_tokens: 200 };
+                    const visionModels = ['meta-llama/llama-4-scout-17b-16e-instruct','meta-llama/llama-4-maverick-17b-128e-instruct','llama-3.2-90b-vision-preview'];
+                    let ok = false;
+                    for (const vm of visionModels) {
+                        body = { model: vm, messages: visionMsgs, max_tokens: 200 };
+                        const probe = await fetch(GROQ_API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CONFIG_KEY}` }, body: JSON.stringify(body) });
+                        if (probe.ok) {
+                            const data = await probe.json();
+                            const ai = data?.choices?.[0]?.message?.content || 'I can see your camera feed.';
+                            glConvHistory.push({ role: 'user', content: text || '[camera frame]' });
+                            glConvHistory.push({ role: 'assistant', content: ai });
+                            speak(ai);
+                            ok = true;
+                            break;
+                        }
+                    }
+                    if (ok) return;
                 } else {
                     body = {
                         model: 'llama-3.3-70b-versatile', 
