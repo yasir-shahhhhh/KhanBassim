@@ -1097,6 +1097,21 @@ footer {
     .nav-links a.active { color: #2f6cf6; }
     .nav-links a.active::after { display: none; }
 
+    .nav-links.active + .mobile-menu-btn {
+        position: fixed;
+        top: 18px;
+        left: 18px;
+        right: auto;
+        z-index: 1300;
+        color: #d9deea;
+        background: transparent;
+        border-color: transparent;
+    }
+
+    .nav-links.active + .mobile-menu-btn i {
+        transform: scale(1.15);
+    }
+
     #hero {
         padding: 120px 20px 80px;
         text-align: center;
@@ -1585,3 +1600,5 @@ a, button, [onclick], .btn, .company-card, .project-card, .contact-item {
     50% { left: 0%; }
     100% { left: 100%; }
 }
+
+body.menu-open { overflow: hidden; }

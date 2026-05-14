@@ -264,6 +264,8 @@ document.addEventListener('DOMContentLoaded', () => {
         menuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             navLinks.classList.toggle('active');
+            document.body.classList.toggle('menu-open', navLinks.classList.contains('active'));
+            menuBtn.setAttribute('aria-expanded', String(navLinks.classList.contains('active')));
             const icon = menuBtn.querySelector('i');
             if (icon) {
                 const isOpened = navLinks.classList.contains('active');
@@ -276,6 +278,8 @@ document.addEventListener('DOMContentLoaded', () => {
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
+                document.body.classList.remove('menu-open');
+                menuBtn.setAttribute('aria-expanded', 'false');
                 const icon = menuBtn.querySelector('i');
                 if (icon) {
                     icon.setAttribute('data-lucide', 'menu');
@@ -288,6 +292,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('click', (e) => {
             if (navLinks.classList.contains('active') && !navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
                 navLinks.classList.remove('active');
+                document.body.classList.remove('menu-open');
+                menuBtn.setAttribute('aria-expanded', 'false');
                 const icon = menuBtn.querySelector('i');
                 if (icon) {
                     icon.setAttribute('data-lucide', 'menu');
