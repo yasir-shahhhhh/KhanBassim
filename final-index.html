@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<!-- Build Sync: 2026-05-12T00:43:00 -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <script>
+        const CURRENT_SYSTEM_VER = '2.3.3';
+        const SITE_VERSION = '5.9.4';
+        if (localStorage.getItem('bfk_site_version') !== SITE_VERSION) {
+            localStorage.setItem('bfk_site_version', SITE_VERSION);
+            window.location.reload(true);
+        }
+    </script>
+    <title>Baasim Fayaz Khan | Official Portfolio v4.6</title>
+    <script>
+        // SMART CACHE BUSTER & MAINTENANCE MODE
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('clear') === 'true') {
+                localStorage.clear();
+                sessionStorage.clear();
+                if (window.indexedDB) {
+                    indexedDB.databases().then(dbs => {
+                        dbs.forEach(db => indexedDB.deleteDatabase(db.name));
+                    });
+                }
+                if (window.caches) {
+                    caches.keys().then(keys => {
+                        keys.forEach(key => caches.delete(key));
+                    });
+                }
+                alert('All cache and memory wiped successfully! Loading the absolute latest version...');
+                window.location.href = window.location.pathname;
+            }
+        })();
+    </script>
+    <meta name="description" content="Basim Khan (Khan Basim) is an Operations & Coordination Lead at Proteios Education. Explore the official portfolio of Basim Fayaz Khan, featuring his work, leadership, and AI initiatives in Kashmir.">
+    <meta name="keywords" content="Basim Khan, Khan Basim, Baasim Fayaz Khan, Basim Fayaz Khan, Khan Baasim, Proteios Education, Kashmir, Operations Lead, Youth Development, Leadership, Portfolio, Khan AI">
+    <meta name="author" content="Basim Khan (Khan Basim)">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://myintroductionn.netlify.app/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://myintroductionn.netlify.app/">
+    <meta property="og:site_name" content="Basim Khan (Khan Basim) Official">
+    <meta property="og:title" content="Basim Khan (Khan Basim) | Operations Lead">
+    <meta property="og:description" content="Strategic execution and leadership portfolio of Basim Khan (Khan Basim). Lead at Proteios Education in Kashmir.">
+    <meta property="og:image" content="https://myintroductionn.netlify.app/assets/logo3.jpeg?v=5.0">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://myintroductionn.netlify.app/">
+    <meta property="twitter:title" content="Basim Khan (Khan Basim) | Operations Lead">
+    <meta property="twitter:description" content="Strategic execution and leadership portfolio of Basim Khan (Khan Basim). Lead at Proteios Education in Kashmir.">
+    <meta property="twitter:image" content="https://myintroductionn.netlify.app/assets/logo3.jpeg?v=5.0">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Basim Khan",
+      "alternateName": ["Khan Basim", "Baasim Fayaz Khan", "Basim Fayaz Khan"],
+      "url": "https://myintroductionn.netlify.app/",
+      "image": "https://myintroductionn.netlify.app/assets/logo3.jpeg?v=5.0",
+      "jobTitle": "Operations & Coordination Lead",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Proteios Education"
+      },
+      "description": "Operations & Coordination Lead at Proteios Education, focused on youth development, strategic leadership, and AI systems in Kashmir.",
+      "sameAs": [
+        "https://www.linkedin.com/in/baasim-fayaz-khan-b20970258/",
+        "https://www.instagram.com/proteioseducation?igsh=YnBueWQzbXZ5ZTg0"
+      ]
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style-v45.css?v=5.9.4">
+    
+    <style>
+        :root { --accent: #b66bff; }
+        body, html { margin: 0; padding: 0; overflow-x: hidden; background: #02030b; }
+        
+        #preloader {
+            position: fixed; inset: 0; z-index: 9999;
+            background: #02030b;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+        }
+        .loader-ring {
+            width: 60px; height: 60px;
+            border: 2px solid rgba(182, 107, 255, 0.1);
+            border-top: 2px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        .loader-text {
+            margin-top: 20px; color: rgba(255,255,255,0.4);
+            font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+            font-family: 'Inter', sans-serif;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        #preloader.fade-out { opacity: 0; visibility: hidden; }
+
+        #hero { 
+            position: relative; height: 100vh; width: 100%; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            z-index: 10; overflow: hidden;
+        }
+        #hero-video { 
+            position: absolute; inset: 0; width: 100%; height: 100%; 
+            object-fit: cover; z-index: 0; 
+            filter: saturate(1.1) brightness(0.45); 
+            transition: transform 8s ease-out;
+        }
+        #hero:hover #hero-video { transform: scale(1.05); }
+        
+        #hero-video-overlay { 
+            position: absolute; inset: 0; z-index: 1;
+            background: radial-gradient(circle at center, transparent 0%, rgba(2, 3, 11, 0.4) 100%);
+        }
+        
+        #hero-content { 
+            text-align: center; z-index: 2; padding: 40px; 
+            animation: heroEnter 1.2s cubic-bezier(0.2, 0, 0.2, 1) both;
+        }
+        
+        @keyframes heroEnter {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); filter: blur(10px); }
+            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
+        #hero-title { 
+            font-size: clamp(3rem, 8vw, 6rem); font-weight: 800; 
+            line-height: 0.9; margin-bottom: 20px; 
+            color: #ffffff;
+            letter-spacing: -0.04em;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        #hero-sub { 
+            font-size: clamp(1rem, 2.5vw, 1.4rem); 
+            color: rgba(255,255,255,0.7); font-weight: 400; 
+            height: 30px; margin-bottom: 50px; 
+            letter-spacing: 0.05em;
+        }
+        .typewriter-cursor { color: var(--accent); animation: blink 1s step-end infinite; }
+        
+        .navbar { opacity: 0; transform: translateY(-20px); transition: all 0.8s ease 1s; }
+        .navbar.show { opacity: 1; transform: translateY(0); }
+
+        .hero-buttons .btn {
+            padding: 16px 40px; font-size: 0.95rem;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .hero-buttons .btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(182, 107, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            #hero-content { padding: 20px; }
+            #hero-title { font-size: 3.5rem; }
+        }
+
+        /* HERO MODE - Cinematic State */
+        body.hero-mode .navbar { display: none !important; }
+        body.hero-mode #chat-button { display: none !important; }
+    </style>
+</head>
+<body class="hero-mode">
+    <div class="preloader" id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-title">BAASIM</div>
+            <div class="preloader-bar">
+                <div class="preloader-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-mesh"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <nav class="navbar glass">
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href='/about'>About</a>
+                <a href='/experience'>Experience</a>
+                <a href='/skills'>Skills</a>
+                <a href='/projects'>Projects</a>
+                <a href='/team-moments'>Team Moments</a>
+                <a href='/contact'>Contact</a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle Menu">
+                <span class="hamburger-box"><span class="hamburger-inner"></span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobileNav">
+        <div class="mobile-nav-header">
+            <button class="mobile-nav-close" id="closeNav" aria-label="Close Menu">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="mobile-nav-content">
+            <nav class="mobile-nav-links">
+                <a class='mobile-nav-item' href='/'>Home</a>
+                <a class='mobile-nav-item' href='/about'>About Me</a>
+                <a class='mobile-nav-item' href='/experience'>Experience</a>
+                <a class='mobile-nav-item' href='/skills'>Skills</a>
+                <a class='mobile-nav-item' href='/projects'>Projects</a>
+                <a class='mobile-nav-item' href='/team-moments'>Team Moments</a>
+                <a class='mobile-nav-item' href='/contact'>Contact</a>
+            </nav>
+        </div>
+        <div class="mobile-nav-footer">
+            <div class="mobile-nav-social">
+                <a href="https://www.linkedin.com/in/baasim-fayaz-khan-b20970258/" target="_blank"><i data-lucide="linkedin"></i></a>
+                <a href="https://github.com/yasir-shahhhhh" target="_blank"><i data-lucide="github"></i></a>
+                <a href="https://www.instagram.com/proteioseducation" target="_blank"><i data-lucide="instagram"></i></a>
+            </div>
+            <p class="mobile-nav-copyright">© 2026 Kashmiri Innovation</p>
+        </div>
+    </div>
+
+    <main>
+        <section class="hero-section" id="hero">
+            <video id="hero-video" class="hero-video" autoplay muted loop playsinline poster="assets/thumbnail1.jpeg">
+                <source src="assets/HeroSectionbackground.mp4" type="video/mp4">
+            </video>
+            <div id="hero-video-overlay"></div>
+            <div id="hero-content">
+                <h1 id="hero-title">Baasim Fayaz Khan</h1>
+                <div id="hero-sub"><span id="typewriter"></span><span class="typewriter-cursor">|</span></div>
+                <div class="hero-buttons" style="display: flex; flex-direction: column; gap: 20px; align-items: center; margin-top: 30px;">
+                    <a class='btn btn-primary' href='/about' id='explore-btn'>
+                        Explore Work <i data-lucide="arrow-right"></i>
+                    </a>
+                    <div id="unmute-hint" style="opacity: 0; transition: opacity 0.5s; font-size: 0.75rem; color: rgba(255,255,255,0.4); display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="volume-2" style="width: 14px; height: 14px;"></i> Tap anywhere for sound
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Baasim Fayaz Khan. Strategic Execution & Leadership.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
+    <script src="main-v5.js?v=5.9.4"></script>
+    <script src="khan-inject-v45.js?v=5.9.4"></script>
+</body>
+</html>
+

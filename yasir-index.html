@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventor Yasir | Building the Future</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- OpenGraph / Social Media Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/">
+    <meta property="og:title" content="Inventor Yasir | Building the Future">
+    <meta property="og:description"
+        content="14-year-old innovator from Kashmir building AI robots and intelligent systems.">
+    <meta property="og:image" content="/my%20pic.png">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Inventor Yasir | Building the Future">
+    <meta property="twitter:description"
+        content="14-year-old innovator from Kashmir building AI robots and intelligent systems.">
+    <meta property="twitter:image" content="/my%20pic.png">
+
+    <link rel="stylesheet" href="style.css?v=1.3">
+
+    <style>
+        /* Ensure specific behavior for standalone hero */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #050510;
+        }
+
+        #hero {
+            position: fixed;
+            inset: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ══ HERO (Standalone Welcome Screen) ════════════════════════ -->
+    <div id="hero" role="banner">
+        <!-- Aurora gradient background -->
+        <div class="hero-aurora" aria-hidden="true">
+            <div class="ha-orb ha-orb-1"></div>
+            <div class="ha-orb ha-orb-2"></div>
+            <div class="ha-orb ha-orb-3"></div>
+            <div class="ha-orb ha-orb-4"></div>
+            <div class="ha-orb ha-orb-5"></div>
+        </div>
+        <div class="hero-grid-overlay" aria-hidden="true"></div>
+        <!-- Floating tech labels -->
+        <div class="hero-float-labels" aria-hidden="true">
+            <span class="hfl hfl-1">Robotics</span>
+            <span class="hfl hfl-2">AI</span>
+            <span class="hfl hfl-3">Embedded</span>
+            <span class="hfl hfl-4">Kashmir</span>
+        </div>
+
+        <div id="hero-content">
+            <p id="hero-label">INVENTOR · ROBOTICS · AI</p>
+            <h1 id="hero-title">Welcome to<br>Inventor Yasir's World</h1>
+            <h2 id="hero-sub">
+                <span class="typewriter-text"></span><span class="typewriter-cursor">|</span>
+            </h2>
+            <button id="explore-btn" type="button" onclick="window.location.href='me.html'">Explore My World
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <polyline points="19 12 12 19 5 12" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <footer
+        style="position: fixed; bottom: 0; left: 0; right: 0; padding: 20px; z-index: 10; display: flex; justify-content: center; gap: 24px; font-size: 0.75rem; color: rgba(255,255,255,0.4);">
+        <a href='/privacy' onmouseout='this.style.color=\''' onmouseover='this.style.color=\'#fff\'' style='color: inherit; text-decoration: none; transition: color 0.2s;'>Privacy Policy</a>
+        <a href='/terms' onmouseout='this.style.color=\''' onmouseover='this.style.color=\'#fff\'' style='color: inherit; text-decoration: none; transition: color 0.2s;'>Terms of Service</a>
+    </footer>
+
+    <script>
+        // ── Typewriter Effect ──────────────────────────────────────────────
+        const typeWords = ["Building the Future", "Artificial Intelligence", "Autonomous Robotics", "Embedded Systems", "From Kashmir, for the World"];
+        let typeIdx = 0;
+        function typeWriter() {
+            const el = document.querySelector('.typewriter-text');
+            if (!el) return;
+            const word = typeWords[typeIdx];
+            let j = 0, deleting = false;
+            function tick() {
+                el.textContent = word.substring(0, j);
+                if (!deleting && j < word.length) { j++; setTimeout(tick, 95); }
+                else if (deleting && j > 0) { j--; setTimeout(tick, 50); }
+                else { deleting = !deleting; if (!deleting) { typeIdx = (typeIdx + 1) % typeWords.length; setTimeout(typeWriter, 400); return; } setTimeout(tick, 1800); }
+            }
+            tick();
+        }
+        typeWriter();
+
+        // Register Service Worker for PWA (Requires HTTP/HTTPS server)
+        if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('Service Worker registered', reg))
+                    .catch(err => console.error('Service Worker registration failed', err));
+            });
+        }
+
+        // Security: Disable Inspect Element shortcuts only (allow right-click for UI)
+        document.onkeydown = function (e) {
+            if (e.keyCode == 123) return false; // F12
+            if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false;
+            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; // Ctrl+U
+        };
+    </script>
+</body>
+</html>
