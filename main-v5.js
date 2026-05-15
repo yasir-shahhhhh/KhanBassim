@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
        6. SMOOTH ROUTING ENGINE (SPA)
        ═══════════════════════════════════════════════════════ */
     const updateNavHighlight = (targetUrl) => {
-        const navLinks = document.querySelectorAll('.nav-links a');
+        const navLinks = document.querySelectorAll('.nav-links a, .mobile-nav-item');
         if (!navLinks.length) return;
 
         let currentFile = targetUrl.split('/').pop().split('?')[0].split('#')[0];
@@ -253,49 +253,48 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', handleNavClick);
 
     /* ═══════════════════════════════════════════════════════
-       7. MOBILE MENU TOGGLE
+       7. MOBILE MENU TOGGLE (FULL SCREEN)
        ═══════════════════════════════════════════════════════ */
     const initMobileMenu = () => {
         const menuBtn = document.querySelector('.mobile-menu-btn');
-        const navLinks = document.querySelector('.nav-links');
+        const overlay = document.getElementById('mobileNav');
+        const closeBtn = document.getElementById('closeNav');
+        const mobileLinks = document.querySelectorAll('.mobile-nav-item');
         
-        if (!menuBtn || !navLinks) return;
+        if (!menuBtn || !overlay) return;
 
-        menuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            navLinks.classList.toggle('active');
-            const icon = menuBtn.querySelector('i');
-            if (icon) {
-                const isOpened = navLinks.classList.contains('active');
-                icon.setAttribute('data-lucide', isOpened ? 'x' : 'menu');
-                if (window.lucide) window.lucide.createIcons();
-            }
-        });
+        const openMenu = () => {
+            overlay.classList.add('active');
+            document.body.classList.add('nav-open');
+        };
 
-        // Close menu when clicking links
-        navLinks.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                const icon = menuBtn.querySelector('i');
-                if (icon) {
-                    icon.setAttribute('data-lucide', 'menu');
-                    if (window.lucide) window.lucide.createIcons();
+        const closeMenu = () => {
+            overlay.classList.remove('active');
+            document.body.classList.remove('nav-open');
+        };
+
+        menuBtn.addEventListener('click', openMenu);
+        closeBtn?.addEventListener('click', closeMenu);
+
+        // Close menu when clicking links and handle navigation
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', async (e) => {
+                const url = link.getAttribute('href');
+                if (!url || url.startsWith('http') || url.startsWith('#') || url.includes('mailto:')) {
+                    closeMenu();
+                    return;
                 }
+
+                e.preventDefault();
+                closeMenu();
+                // Brief delay for the menu to close smoothly before routing
+                setTimeout(async () => {
+                    await performRouting(url);
+                }, 400);
             });
         });
-
-        // Close when clicking outside
-        document.addEventListener('click', (e) => {
-            if (navLinks.classList.contains('active') && !navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
-                navLinks.classList.remove('active');
-                const icon = menuBtn.querySelector('i');
-                if (icon) {
-                    icon.setAttribute('data-lucide', 'menu');
-                    if (window.lucide) window.lucide.createIcons();
-                }
-            }
-        });
     };
+
 
     /* ═══════════════════════════════════════════════════════
        8. GLOBAL CURSOR HANDLER
