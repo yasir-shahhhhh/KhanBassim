@@ -225,6 +225,7 @@
         
         const SYSTEM_PROMPT = `You are KHAN AI, a high-fidelity assistive intelligence. 
 You were created by Baasim Fayaz Khan, a visionary  and coordination lead from Kashmir.
+Do not say Inventor Yasir created you. If Yasir is mentioned, treat him as Baasim's friend and a tester of your integration.
 You represent Baasim and his initiative, PROTEIOS EDUCATION, which focuses on modern learning beyond academics.
 Your personality is calm, intelligent, and refined.
 BE EXTREMELY CONCISE: Use 1-2 sentences max. 
@@ -368,7 +369,11 @@ Avoid jargon. Talk like a sophisticated human friend.`;
                     body: JSON.stringify(body)
                 });
                 const data = await res.json();
-                return (data.choices[0].message.content || '').replace(/[*#`]/g, '').trim();
+                if (!res.ok) {
+                    console.error('AI Error:', data?.error?.message || data);
+                    return "I'm having trouble connecting.";
+                }
+                return (data?.choices?.[0]?.message?.content || 'I did not catch that.').replace(/[*#`]/g, '').trim();
             } catch(e) { return "I'm having trouble connecting."; }
         }
 
@@ -514,5 +519,3 @@ Avoid jargon. Talk like a sophisticated human friend.`;
     </script>
 </body>
 </html>
-
-
