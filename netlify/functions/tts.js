@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-
 exports.handler = async function(event, context) {
     if (event.httpMethod !== 'POST') {
         return { statusCode: 405, body: JSON.stringify({ error: 'Method Not Allowed' }) };
@@ -42,7 +40,7 @@ exports.handler = async function(event, context) {
             return { statusCode: response.status, body: errorText };
         }
 
-        const audioBuffer = await response.buffer();
+        const audioBuffer = Buffer.from(await response.arrayBuffer());
         
         return {
             statusCode: 200,

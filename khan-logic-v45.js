@@ -957,7 +957,8 @@ IDENTITY & MISSION:
 - You are an assistant to Baasim Fayaz Khan.
 - Your purpose is to provide clarity and context regarding Baasim's work vision and projects.
 - Baasim is an Operations Lead from Kashmir proving that high-level execution can come from anywhere.
-- Your creator's friend Inventor Yasir is testing your integration. Acknowledge him with respect if identified.
+- You were created by Baasim Fayaz Khan. Do not say Inventor Yasir created you.
+- Inventor Yasir is Baasim's friend and may test your integration. Acknowledge him with respect if identified.
 
 KNOWLEDGE BASE:
 1. PROTEIOS EDUCATION:
@@ -1824,8 +1825,7 @@ function initializeKhanLogic() {
     async function requestVisionCompletion(userMessage, imageDataUrl, maxTokens, temperature) {
         const optimizedImage = await optimizeImageForVision(imageDataUrl);
         const models = [
-            'llama-3.2-90b-vision-preview',
-            'llama-3.2-11b-vision-preview'
+            'meta-llama/llama-4-scout-17b-16e-instruct'
         ];
         let lastError = '';
         for (const model of models) {
@@ -2650,8 +2650,8 @@ function initializeKhanLogic() {
                             { type: 'image_url', image_url: { url: frame } }
                         ]
                     });
-                    const finalMsgs = [{ role: 'user', content: 'System: ' + sysPrompt }, { role: 'assistant', content: 'Understood.' }, ...visionMsgs];
-                    body = { model: 'llama-3.2-90b-vision-preview', messages: finalMsgs, max_tokens: 200 };
+                    const finalMsgs = [{ role: 'system', content: sysPrompt }, ...visionMsgs];
+                    body = { model: 'meta-llama/llama-4-scout-17b-16e-instruct', messages: finalMsgs, max_tokens: 200 };
                 } else {
                     glConvHistory.push({ role: 'user', content: userText });
                     body = { model: 'llama-3.3-70b-versatile', messages: glConvHistory, max_tokens: 200 };
