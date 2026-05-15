@@ -332,17 +332,28 @@ Avoid jargon. Talk like a sophisticated human friend.`;
 
                 if (frame) {
                     // Vision model with camera frame
-                    const visionMsgs = [
-                        { role: 'user', content: 'System: ' + SYSTEM_PROMPT + '\nVoice mode: Be concise — 1-2 sentences max.' },
-                        { role: 'assistant', content: 'Understood.' },
-                        ...glConvHistory.map(m => ({ role: m.role, content: m.content })),
-                        {
+                    const historyCopy = glConvHistory.map(m => ({ role: m.role, content: m.content }));
+                    
+                    // Replace the last user message (which is the current transcript) with the vision array format
+                    if (historyCopy.length > 0 && historyCopy[historyCopy.length - 1].role === 'user') {
+                        historyCopy[historyCopy.length - 1].content = [
+                            { type: 'text', text: text || 'What do you see?' },
+                            { type: 'image_url', image_url: { url: frame } }
+                        ];
+                    } else {
+                        historyCopy.push({
                             role: 'user',
                             content: [
                                 { type: 'text', text: text || 'What do you see?' },
                                 { type: 'image_url', image_url: { url: frame } }
                             ]
-                        }
+                        });
+                    }
+
+                    const visionMsgs = [
+                        { role: 'user', content: 'System: ' + SYSTEM_PROMPT + '\nVoice mode: Be concise — 1-2 sentences max.' },
+                        { role: 'assistant', content: 'Understood.' },
+                        ...historyCopy
                     ];
                     body = { model: 'llama-3.2-90b-vision-preview', messages: visionMsgs, max_tokens: 200 };
                 } else {
