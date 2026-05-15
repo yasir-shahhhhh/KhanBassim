@@ -350,11 +350,10 @@ Avoid jargon. Talk like a sophisticated human friend.`;
                     }
 
                     const visionMsgs = [
-                        { role: 'user', content: 'System: ' + SYSTEM_PROMPT + '\nVoice mode: Be concise — 1-2 sentences max.' },
-                        { role: 'assistant', content: 'Understood.' },
+                        { role: 'system', content: SYSTEM_PROMPT + '\nVoice mode: Be concise — 1-2 sentences max.' },
                         ...historyCopy
                     ];
-                    body = { model: 'llama-3.2-90b-vision-preview', messages: visionMsgs, max_tokens: 200 };
+                    body = { model: 'meta-llama/llama-4-scout-17b-16e-instruct', messages: visionMsgs, max_tokens: 200 };
                 } else {
                     body = {
                         model: 'llama-3.3-70b-versatile', 
