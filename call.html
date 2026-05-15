@@ -221,8 +221,7 @@
     </div>
 
     <script>
-        const CONFIG_KEY = CONFIG.GROQ_API_KEY;
-        const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+        const GROQ_API_URL = '/.netlify/functions/chat';
         
         const SYSTEM_PROMPT = `You are KHAN AI, a high-fidelity assistive intelligence. 
 You were created by Baasim Fayaz Khan, a visionary  and coordination lead from Kashmir.
@@ -366,7 +365,7 @@ Avoid jargon. Talk like a sophisticated human friend.`;
 
                 const res = await fetch(GROQ_API_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${CONFIG_KEY}` },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(body)
                 });
                 const data = await res.json();
