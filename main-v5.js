@@ -255,25 +255,38 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ═══════════════════════════════════════════════════════
        7. MOBILE MENU TOGGLE (FULL SCREEN)
        ═══════════════════════════════════════════════════════ */
+    let _mobileMenuInit = false;
     const initMobileMenu = () => {
+        if (_mobileMenuInit) return;
+        
         const menuBtn = document.querySelector('.mobile-menu-btn');
         const overlay = document.getElementById('mobileNav');
         const closeBtn = document.getElementById('closeNav');
         const mobileLinks = document.querySelectorAll('.mobile-nav-item');
         
         if (!menuBtn || !overlay) return;
+        _mobileMenuInit = true;
 
-        const openMenu = () => {
-            overlay.classList.add('active');
-            document.body.classList.add('nav-open');
+        const toggleMenu = () => {
+            const isOpen = overlay.classList.contains('active');
+            if (isOpen) {
+                overlay.classList.remove('active');
+                document.body.classList.remove('nav-open');
+                menuBtn.classList.remove('is-active');
+            } else {
+                overlay.classList.add('active');
+                document.body.classList.add('nav-open');
+                menuBtn.classList.add('is-active');
+            }
         };
 
         const closeMenu = () => {
             overlay.classList.remove('active');
             document.body.classList.remove('nav-open');
+            menuBtn.classList.remove('is-active');
         };
 
-        menuBtn.addEventListener('click', openMenu);
+        menuBtn.addEventListener('click', toggleMenu);
         closeBtn?.addEventListener('click', closeMenu);
 
         // Close menu when clicking links and handle navigation
@@ -299,27 +312,34 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ═══════════════════════════════════════════════════════
        8. GLOBAL CURSOR HANDLER
        ═══════════════════════════════════════════════════════ */
+    let _cursorInit = false;
     const updateCursor = () => {
         const interactive = document.querySelectorAll('a, button, .btn, .project-card, .skill-category, .stat-card, .contact-item, .company-card');
         const cursorDot = document.querySelector('.cursor-dot');
         const cursorOutline = document.querySelector('.cursor-outline');
 
-        const moveCursor = (e) => {
-            if (cursorDot) {
-                cursorDot.style.left = e.clientX + 'px';
-                cursorDot.style.top = e.clientY + 'px';
-            }
-            if (cursorOutline) {
-                cursorOutline.animate({
-                    left: `${e.clientX}px`,
-                    top: `${e.clientY}px`
-                }, { duration: 500, fill: "forwards" });
-            }
-        };
+        if (!_cursorInit) {
+            window.addEventListener('mousemove', (e) => {
+                if (cursorDot) {
+                    cursorDot.style.left = e.clientX + 'px';
+                    cursorDot.style.top = e.clientY + 'px';
+                }
+                if (cursorOutline) {
+                    cursorOutline.animate({
+                        left: `${e.clientX}px`,
+                        top: `${e.clientY}px`
+                    }, { duration: 500, fill: "forwards" });
+                }
+            });
+            _cursorInit = true;
+        }
 
-        window.addEventListener('mousemove', moveCursor);
-
+        // Clean up previous listeners if possible, or simpler: just attach to newly found elements.
+        // For simplicity and safety against leaks, we only attach to elements that don't have our flag.
         interactive.forEach(el => {
+            if (el.dataset.cursorAttached) return;
+            el.dataset.cursorAttached = 'true';
+            
             el.addEventListener('mouseenter', () => {
                 cursorOutline?.classList.add('cursor-hover');
                 cursorDot?.classList.add('cursor-hover');
@@ -330,6 +350,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     };
+
+
 
     /* ═══════════════════════════════════════════════════════
        9. INITIALIZATION
