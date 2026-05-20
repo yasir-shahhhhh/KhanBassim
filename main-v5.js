@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const textElement = document.getElementById('typewriter');
         if (!textElement) return;
 
-        const words = ["Operations Lead", "Creative Strategist", "AI Architect", "Visionary Leader"];
+        const words = ["Chief Operating Officer (COO)", "Creative Strategist", "AI Architect", "Visionary Leader"];
         let wordIndex = 0;
         let charIndex = 0;
         let isDeleting = false;
