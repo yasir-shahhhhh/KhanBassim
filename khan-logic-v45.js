@@ -483,7 +483,6 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     const popup = document.getElementById('cookies-popup');
     const authMod = document.getElementById('auth-modal');
-    if (!popup || !authMod) return;
 
     const cookiesAccepted = Cookie.get('khan_cookies');
 
@@ -530,7 +529,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const hasVisitedAsGuest = localStorage.getItem('khan_guest_visited') || Cookie.get('khan_guest_perm');
 
     if (!cookiesAccepted && !isHeroPage) {
-        setTimeout(() => { popup.classList.add('show'); }, 800);
+        setTimeout(() => { popup?.classList.add('show'); }, 800);
     } else if (cookiesAccepted) {
         if (sessionRestored) {
             // Session restored successfully
@@ -1607,9 +1606,12 @@ function initializeKhanLogic() {
         // Check auth if new user
         if (!chatOpen && Auth.isGuest() && !sessionStorage.getItem('khan_guest_visited')) {
             const authMod = document.getElementById('auth-modal');
-            if (authMod) authMod.classList.add('show');
+            if (authMod) {
+                authMod.classList.add('show');
+                sessionStorage.setItem('khan_guest_visited', '1');
+                return; // Wait for auth or guest choice
+            }
             sessionStorage.setItem('khan_guest_visited', '1');
-            return; // Wait for auth or guest choice
         }
         if (!chatOpen && !window._explicitChatOpen) {
             // Prevent auto-opening if not explicitly triggered
@@ -1836,7 +1838,7 @@ function initializeKhanLogic() {
             try {
                 const response = await fetch(GROQ_CHAT_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         model,
                         messages: buildGroqMessages(true, userMessage, optimizedImage),
@@ -2663,7 +2665,7 @@ function initializeKhanLogic() {
 
                 const response = await fetch(GROQ_CHAT_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + GROQ_API_KEY },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(body)
                 });
 

@@ -10,9 +10,9 @@ const ASSETS = [
     '/contact.html',
     '/proteios.html',
     '/inamigos.html',
-    '/style-v45.css?v=5.9.4',
-    '/main-v5.js?v=5.9.4',
-    '/khan-inject-v45.js?v=5.9.4',
+    '/style-v45.css?v=5.9.6',
+    '/main-v5.js?v=5.9.6',
+    '/khan-inject-v45.js?v=5.9.6',
     '/assets/profile-v5.jpeg',
     '/assets/logo3.jpeg',
     '/assets/thumbnail1.jpeg'
