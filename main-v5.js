@@ -253,28 +253,120 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', handleNavClick);
 
     /* ═══════════════════════════════════════════════════════
-       7. MOBILE MENU TOGGLE (FULL SCREEN)
+       7. MOBILE MENU TOGGLE (GALAXY DRAWER)
        ═══════════════════════════════════════════════════════ */
     let _mobileMenuInit = false;
+    
+    const initGalaxyMenuCanvas = (canvas, overlay) => {
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let active = false;
+        let animationFrameId = null;
+
+        const resize = () => {
+            canvas.width = overlay.clientWidth;
+            canvas.height = overlay.clientHeight;
+        };
+
+        const initParticles = () => {
+            particles = [];
+            const count = 60;
+            const centerX = canvas.width * 0.8;
+            const centerY = canvas.height * 0.35;
+            
+            for (let i = 0; i < count; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 180 + 10;
+                particles.push({
+                    angle: angle,
+                    distance: distance,
+                    speed: (Math.random() * 0.003 + 0.001) * (180 / (distance + 1)), 
+                    size: Math.random() * 1.8 + 0.4,
+                    color: Math.random() > 0.65 ? 'rgba(182, 107, 255, 0.35)' : 'rgba(54, 214, 255, 0.25)',
+                    pulse: Math.random() * 0.01 + 0.005
+                });
+            }
+        };
+
+        const draw = () => {
+            if (!overlay.classList.contains('active')) {
+                active = false;
+                cancelAnimationFrame(animationFrameId);
+                return;
+            }
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const centerX = canvas.width * 0.85;
+            const centerY = canvas.height * 0.25;
+
+            // Draw swirling galaxy spiral arms in drawer background
+            particles.forEach(p => {
+                p.angle += p.speed;
+                const x = centerX + Math.cos(p.angle) * p.distance;
+                const y = centerY + Math.sin(p.angle) * p.distance;
+                
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(x, y, p.size + Math.sin(Date.now() * p.pulse) * 0.4, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            animationFrameId = requestAnimationFrame(draw);
+        };
+
+        const observer = new MutationObserver(() => {
+            const nowActive = overlay.classList.contains('active');
+            if (nowActive && !active) {
+                active = true;
+                resize();
+                initParticles();
+                draw();
+            } else if (!nowActive && active) {
+                active = false;
+                cancelAnimationFrame(animationFrameId);
+            }
+        });
+
+        observer.observe(overlay, { attributes: true, attributeFilter: ['class'] });
+        window.addEventListener('resize', resize);
+        resize();
+    };
+
     const initMobileMenu = () => {
         if (_mobileMenuInit) return;
         
         const menuBtn = document.querySelector('.mobile-menu-btn');
         const overlay = document.getElementById('mobileNav');
-        const closeBtn = document.getElementById('closeNav');
         const mobileLinks = document.querySelectorAll('.mobile-nav-item');
         
         if (!menuBtn || !overlay) return;
         _mobileMenuInit = true;
 
+        // Dynamically inject mobile-nav-backdrop if not exists
+        let backdrop = document.querySelector('.mobile-nav-backdrop');
+        if (!backdrop) {
+            backdrop = document.createElement('div');
+            backdrop.className = 'mobile-nav-backdrop';
+            overlay.parentNode.insertBefore(backdrop, overlay);
+        }
+
+        // Dynamically inject local canvas for starry galaxy arm background
+        let canvas = overlay.querySelector('.mobile-nav-canvas');
+        if (!canvas) {
+            canvas = document.createElement('canvas');
+            canvas.className = 'mobile-nav-canvas';
+            overlay.appendChild(canvas);
+            initGalaxyMenuCanvas(canvas, overlay);
+        }
+
         const toggleMenu = () => {
             const isOpen = overlay.classList.contains('active');
             if (isOpen) {
-                overlay.classList.remove('active');
-                document.body.classList.remove('nav-open');
-                menuBtn.classList.remove('is-active');
+                closeMenu();
             } else {
                 overlay.classList.add('active');
+                backdrop.classList.add('active');
                 document.body.classList.add('nav-open');
                 menuBtn.classList.add('is-active');
             }
@@ -282,12 +374,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const closeMenu = () => {
             overlay.classList.remove('active');
+            backdrop.classList.remove('active');
             document.body.classList.remove('nav-open');
             menuBtn.classList.remove('is-active');
         };
 
         menuBtn.addEventListener('click', toggleMenu);
-        closeBtn?.addEventListener('click', closeMenu);
+        backdrop.addEventListener('click', closeMenu);
 
         // Close menu when clicking links and handle navigation
         mobileLinks.forEach(link => {
@@ -300,13 +393,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 e.preventDefault();
                 closeMenu();
-                // Brief delay for the menu to close smoothly before routing
+                // Brief delay for the drawer to slide out before SPA transition
                 setTimeout(async () => {
                     await performRouting(url);
                 }, 400);
             });
         });
     };
+
 
 
     /* ═══════════════════════════════════════════════════════
@@ -350,8 +444,142 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     };
+    
+    /* ═══════════════════════════════════════════════════════
+       8.5. COSMIC INTERACTIVE BACKGROUND & MOUSE TRAIL
+       ═══════════════════════════════════════════════════════ */
+    const initCosmicCanvas = () => {
+        let canvas = document.getElementById('cosmic-canvas');
+        if (!canvas) {
+            canvas = document.createElement('canvas');
+            canvas.id = 'cosmic-canvas';
+            document.body.appendChild(canvas);
+        }
 
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        let particles = [];
+        let mouse = { x: null, y: null };
+        let active = true;
 
+        const resize = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initStars();
+        };
+
+        const initStars = () => {
+            stars = [];
+            const count = Math.floor((canvas.width * canvas.height) / 12000);
+            for (let i = 0; i < count; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 1.5,
+                    opacity: Math.random() * 0.8 + 0.2,
+                    speed: Math.random() * 0.05 + 0.01,
+                    twinkleSpeed: Math.random() * 0.02 + 0.005,
+                    direction: Math.random() > 0.5 ? 1 : -1
+                });
+            }
+        };
+
+        window.addEventListener('resize', resize);
+        
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            
+            // Spawn stardust particles
+            if (Math.random() < 0.35) {
+                particles.push({
+                    x: mouse.x,
+                    y: mouse.y,
+                    vx: (Math.random() - 0.5) * 1.0,
+                    vy: (Math.random() - 0.5) * 1.0 - Math.random() * 0.4,
+                    size: Math.random() * 2.2 + 0.4,
+                    color: `hsla(${Math.random() * 60 + 260}, 100%, 80%, ${Math.random() * 0.35 + 0.55})`,
+                    alpha: 1,
+                    life: Math.random() * 0.02 + 0.015
+                });
+            }
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                mouse.x = e.touches[0].clientX;
+                mouse.y = e.touches[0].clientY;
+                if (Math.random() < 0.35) {
+                    particles.push({
+                        x: mouse.x,
+                        y: mouse.y,
+                        vx: (Math.random() - 0.5) * 1.0,
+                        vy: (Math.random() - 0.5) * 1.0 - Math.random() * 0.4,
+                        size: Math.random() * 2.2 + 0.4,
+                        color: `hsla(${Math.random() * 60 + 260}, 100%, 80%, ${Math.random() * 0.35 + 0.55})`,
+                        alpha: 1,
+                        life: Math.random() * 0.02 + 0.015
+                    });
+                }
+            }
+        }, { passive: true });
+
+        const draw = () => {
+            if (!active) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw drifting stars
+            ctx.fillStyle = '#ffffff';
+            stars.forEach(star => {
+                star.opacity += star.twinkleSpeed * star.direction;
+                if (star.opacity >= 1) {
+                    star.opacity = 1;
+                    star.direction = -1;
+                } else if (star.opacity <= 0.1) {
+                    star.opacity = 0.1;
+                    star.direction = 1;
+                }
+                
+                star.y -= star.speed;
+                if (star.y < 0) {
+                    star.y = canvas.height;
+                    star.x = Math.random() * canvas.width;
+                }
+
+                ctx.globalAlpha = star.opacity;
+                ctx.fillRect(star.x, star.y, star.size, star.size);
+            });
+
+            // Draw cursor stardust particles
+            particles.forEach((p, idx) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.alpha -= p.life;
+
+                if (p.alpha <= 0) {
+                    particles.splice(idx, 1);
+                    return;
+                }
+
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            ctx.globalAlpha = 1;
+            requestAnimationFrame(draw);
+        };
+
+        resize();
+        draw();
+
+        document.addEventListener('visibilitychange', () => {
+            active = !document.hidden;
+            if (active) draw();
+        });
+    };
 
     /* ═══════════════════════════════════════════════════════
        9. INITIALIZATION
@@ -360,6 +588,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initTypewriter();
     observeFaders();
     initMobileMenu();
+    initCosmicCanvas();
     updateCursor();
     updateNavHighlight(window.location.pathname);
     if (window.lucide) window.lucide.createIcons();
