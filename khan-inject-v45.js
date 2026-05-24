@@ -30,14 +30,16 @@
             <div id="chat-footer">
                 <div id="upload-status-bar" style="display:none;">
                     <div id="file-preview-container">
-                        <div class="file-preview-thumbnail"></div>
-                        <div class="file-preview-details">
-                            <span id="upload-status">File</span>
-                            <span id="upload-type">Attached</span>
+                        <div class="upload-status-head">
+                            <div class="file-preview-details">
+                                <span id="upload-status">File</span>
+                                <span id="upload-type">Attached</span>
+                            </div>
+                            <button id="upload-clear-btn" class="preview-close-btn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                            </button>
                         </div>
-                        <button id="upload-clear-btn" class="preview-close-btn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                        </button>
+                        <div id="upload-preview-list"></div>
                     </div>
                 </div>
 
@@ -86,7 +88,7 @@
         <img id="kim-img" src="" alt="Viewed Image">
     </div>
 
-    <input type="file" id="chat-file-input" style="display:none;" accept="image/*,.pdf,.txt,.csv,.json,.md,.js,.py,.html,.css">
+    <input type="file" id="chat-file-input" style="display:none;" accept="image/*,.pdf,.txt,.csv,.json,.md,.js,.py,.html,.css" multiple>
     <div id="chat-drop-zone" class="drop-zone">Drop file to attach</div>
 
     <div id="golive-overlay">
@@ -179,10 +181,32 @@
     .cm-user-bubble {
         background: #fff; color: #000; padding: 14px 22px; border-radius: 24px 24px 4px 24px;
         font-size: 0.95rem; line-height: 1.5; font-weight: 500; box-shadow: 0 10px 30px rgba(255,255,255,0.05);
+        max-width: 100%; overflow: hidden;
     }
     .cm-ai-bubble { background: transparent; color: #eee; padding: 0; border: none; font-size: 0.95rem; line-height: 1.6; }
     .cm-ai-text { word-break: break-word; color: #e0e0e0; }
     .cm-ai-text p { margin-bottom: 12px; }
+    #chat-messages img { max-width: 100%; height: auto; }
+    .cm-msg-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+        gap: 10px;
+        margin-top: 12px;
+        max-width: min(100%, 320px);
+    }
+    .cm-msg-img {
+        min-width: 0;
+    }
+    .cm-msg-img img {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        max-height: 220px;
+        object-fit: cover;
+        border-radius: 16px;
+        cursor: pointer;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+    }
     
     #chat-footer {
         padding: 16px 24px 24px;
@@ -247,6 +271,112 @@
     }
 
     #chat-disclaimer { font-size: 0.65rem; color: #333; text-align: center; margin-top: 14px; }
+    #upload-status-bar { margin-bottom: 12px; }
+    #file-preview-container {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px;
+        border-radius: 20px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+    .upload-status-head {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .file-preview-details {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    #upload-status {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.2;
+        word-break: break-word;
+    }
+    #upload-type {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #7f7f86;
+    }
+    .preview-close-btn {
+        margin-left: auto;
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.04);
+        color: #d4d4d8;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+    .preview-close-btn:hover {
+        background: rgba(255,255,255,0.1);
+        color: #fff;
+    }
+    #upload-preview-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+        gap: 10px;
+    }
+    .upload-preview-tile {
+        position: relative;
+        aspect-ratio: 1 / 1;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+    .upload-preview-tile.image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    .upload-preview-file {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        background: radial-gradient(circle at top, rgba(122,141,255,0.18), rgba(255,255,255,0.03));
+    }
+    .upload-preview-file svg,
+    .upload-preview-file i {
+        width: 24px;
+        height: 24px;
+    }
+    .upload-preview-name {
+        position: absolute;
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+        padding: 6px 8px;
+        border-radius: 12px;
+        background: rgba(0,0,0,0.68);
+        color: #fff;
+        font-size: 0.68rem;
+        font-weight: 600;
+        line-height: 1.25;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        backdrop-filter: blur(8px);
+    }
 
     /* Image Modal Glitch Fix */
     #khan-image-modal { 
@@ -280,6 +410,8 @@
         #chat-header { padding: 18px 20px; }
         #chat-button { bottom: 20px; right: 20px; }
         #chat-messages { padding: 20px; }
+        .cm-msg-gallery { max-width: 100%; }
+        #upload-preview-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
 
     /* PREMIUM MESSAGE ACTIONS */

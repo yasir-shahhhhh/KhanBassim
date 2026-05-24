@@ -1123,7 +1123,10 @@ function initializeKhanLogic() {
 
     let hasNotification = false;
     window.deepThinkEnabled = false;
-    let uploadedFileContext = "", uploadedImageDataUrl = "", uploadedImageName = "";
+    let uploadedFileContext = "";
+    let uploadedImageDataUrls = [];
+    let uploadedImageNames = [];
+    let uploadedAttachments = [];
     let conversationHistory = [{ role: 'system', content: SYSTEM_PROMPT }];
     let currentFacingMode = 'user';
 
@@ -1775,11 +1778,21 @@ function initializeKhanLogic() {
             msgDiv.className = 'cm-user chat-message';
             let inner = `<div class="cm-user-bubble">`;
             if (finalAnswer) inner += `<div>${escapeHtml(finalAnswer)}</div>`;
-            if (options.imageUrl) {
-                inner += `<div class="cm-msg-img"><img src="${options.imageUrl}" alt="Uploaded image" onclick="window.open('${options.imageUrl}', '_blank')"/></div>`;
+            const imageUrls = Array.isArray(options.imageUrls)
+                ? options.imageUrls.filter(Boolean)
+                : (options.imageUrl ? [options.imageUrl] : []);
+            if (imageUrls.length) {
+                inner += `<div class="cm-msg-gallery">`;
+                imageUrls.forEach((imageUrl, index) => {
+                    inner += `<div class="cm-msg-img"><img src="${imageUrl}" alt="Uploaded image ${index + 1}"></div>`;
+                });
+                inner += `</div>`;
             }
             inner += `</div>`;
             msgDiv.innerHTML = inner;
+            msgDiv.querySelectorAll('.cm-msg-img img').forEach(img => {
+                img.addEventListener('click', () => window.open(img.src, '_blank'));
+            });
             chatMessages.appendChild(msgDiv);
         }
 
@@ -1815,20 +1828,115 @@ function initializeKhanLogic() {
         });
     }
 
-    function buildGroqMessages(hasImage, userMessage, imageDataUrl) {
+    function buildGroqMessages(hasImage, userMessage, imageDataUrls = []) {
         const mapped = conversationHistory.map(m => ({ role: m.role, content: m.content }));
         if (!hasImage) return mapped;
+        const imageParts = imageDataUrls
+            .filter(Boolean)
+            .map(url => ({ type: 'image_url', image_url: { url } }));
+        if (!imageParts.length) return mapped;
         for (let i = mapped.length - 1; i >= 0; i--) {
             if (mapped[i].role === 'user') {
-                mapped[i] = { role: 'user', content: [{ type: 'text', text: userMessage || '' }, { type: 'image_url', image_url: { url: imageDataUrl } }] };
+                mapped[i] = {
+                    role: 'user',
+                    content: [{ type: 'text', text: userMessage || '' }, ...imageParts]
+                };
                 break;
             }
         }
         return mapped;
     }
 
-    async function requestVisionCompletion(userMessage, imageDataUrl, maxTokens, temperature) {
-        const optimizedImage = await optimizeImageForVision(imageDataUrl);
+    function resetUploadUi() {
+        const statusBar = document.getElementById('upload-status-bar');
+        const statusText = document.getElementById('upload-status');
+        const statusType = document.getElementById('upload-type');
+        const previewList = document.getElementById('upload-preview-list');
+        if (statusBar) statusBar.style.display = 'none';
+        if (statusText) statusText.textContent = 'File';
+        if (statusType) statusType.textContent = 'Attached';
+        if (previewList) previewList.innerHTML = '';
+    }
+
+    function clearUploadedAttachments() {
+        uploadedFileContext = '';
+        uploadedImageDataUrls = [];
+        uploadedImageNames = [];
+        uploadedAttachments = [];
+        resetUploadUi();
+        if (chatFileInput) chatFileInput.value = '';
+    }
+
+    function getAttachmentIcon(kind, fileName) {
+        if (kind === 'pdf') return 'file-text';
+        const ext = String(fileName || '').split('.').pop()?.toLowerCase();
+        if (['js', 'py', 'json', 'html', 'css', 'md'].includes(ext)) return 'file-code';
+        return 'file';
+    }
+
+    function renderUploadPreview() {
+        const statusBar = document.getElementById('upload-status-bar');
+        const statusText = document.getElementById('upload-status');
+        const statusType = document.getElementById('upload-type');
+        const previewList = document.getElementById('upload-preview-list');
+        if (!statusBar || !statusText || !statusType || !previewList) return;
+
+        if (!uploadedAttachments.length) {
+            resetUploadUi();
+            return;
+        }
+
+        const imageCount = uploadedAttachments.filter(item => item.kind === 'image').length;
+        const fileCount = uploadedAttachments.length - imageCount;
+        statusText.textContent = uploadedAttachments.length === 1
+            ? uploadedAttachments[0].name
+            : `${uploadedAttachments.length} attachments ready`;
+
+        const summary = [];
+        if (imageCount) summary.push(`${imageCount} image${imageCount === 1 ? '' : 's'}`);
+        if (fileCount) summary.push(`${fileCount} file${fileCount === 1 ? '' : 's'}`);
+        statusType.textContent = summary.join(' + ') || 'Attached';
+
+        previewList.innerHTML = uploadedAttachments.map(item => {
+            const safeName = escapeHtml(item.name || 'Attachment');
+            if (item.kind === 'image' && item.dataUrl) {
+                return `
+                    <div class="upload-preview-tile image">
+                        <img src="${item.dataUrl}" alt="${safeName}">
+                        <div class="upload-preview-name">${safeName}</div>
+                    </div>
+                `;
+            }
+            const icon = getAttachmentIcon(item.kind, item.name);
+            return `
+                <div class="upload-preview-tile">
+                    <div class="upload-preview-file">
+                        <i data-lucide="${icon}"></i>
+                    </div>
+                    <div class="upload-preview-name">${safeName}</div>
+                </div>
+            `;
+        }).join('');
+
+        statusBar.style.display = 'block';
+        if (window.lucide) window.lucide.createIcons();
+    }
+
+    function readFileAsDataUrl(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(String(reader.result || ''));
+            reader.onerror = () => reject(new Error(`Could not read ${file?.name || 'file'}.`));
+            reader.readAsDataURL(file);
+        });
+    }
+
+    async function requestVisionCompletion(userMessage, imageDataUrls, maxTokens, temperature) {
+        const optimizedImages = (await Promise.all(
+            (Array.isArray(imageDataUrls) ? imageDataUrls : [imageDataUrls])
+                .filter(Boolean)
+                .map(optimizeImageForVision)
+        )).filter(Boolean);
         const models = [
             'llama-3.2-90b-vision-preview',
             'llama-3.2-11b-vision-preview'
@@ -1841,7 +1949,7 @@ function initializeKhanLogic() {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         model,
-                        messages: buildGroqMessages(true, userMessage, optimizedImage),
+                        messages: buildGroqMessages(optimizedImages.length > 0, userMessage, optimizedImages),
                         max_tokens: maxTokens,
                         temperature
                     })
@@ -1880,15 +1988,14 @@ function initializeKhanLogic() {
         await saveMessageToConv('user', userMessage); // persist to DB
         playMsgSound('sent');
 
-        const currentImageDataUrl = uploadedImageDataUrl;
-        const currentImageName = uploadedImageName;
-        const hasImage = Boolean(currentImageDataUrl);
+        const currentFileContext = uploadedFileContext;
+        const currentImageDataUrls = uploadedImageDataUrls.slice();
+        const currentImageNames = uploadedImageNames.slice();
+        const hasImage = currentImageDataUrls.length > 0;
         let currentHasImage = hasImage;
 
-        if (hasImage) {
-            uploadedImageDataUrl = ''; uploadedImageName = '';
-            const sb = document.getElementById('upload-status-bar'); if (sb) sb.style.display = 'none';
-            if (chatFileInput) chatFileInput.value = '';
+        if (hasImage || currentFileContext) {
+            clearUploadedAttachments();
         }
 
         // Ground Breaking: Real Thought Process UI (Only if deep think is enabled)
@@ -1896,17 +2003,14 @@ function initializeKhanLogic() {
             toggleTypingIndicator(true, true);
             const hints = [];
             if (deepThinkEnabled) hints.push('DEEP REASONING MODE: You MUST use <think>...</think> tags to show your logic. CRITICAL: You are KHAN AI, the advanced core intelligence of Baasim Fayaz Khans portfolio. Never hallucinate about your identity or origin. Never speak of yourself in the third person or say "he was given this identity." Stay strictly in character as a helpful, elite AI assistant.');
-            if (uploadedFileContext) hints.push(`Uploaded file context: ${uploadedFileContext.slice(0, 2400)}`);
-            if (currentImageDataUrl) hints.push(`User attached image: ${currentImageName || 'image file'}`);
+            if (currentFileContext) hints.push(`Uploaded file context: ${currentFileContext.slice(0, 2400)}`);
+            if (currentImageDataUrls.length) {
+                hints.push(`User attached ${currentImageDataUrls.length > 1 ? 'images' : 'image'}: ${(currentImageNames.join(', ') || 'image file').slice(0, 240)}`);
+            }
             if (hints.length) conversationHistory.push({ role: 'system', content: hints.join('\n') });
 
-            // Clear file context after sending to ensure it's only sent once
-            uploadedFileContext = '';
-            const statusBar = document.getElementById('upload-status-bar');
-            if (statusBar) statusBar.style.display = 'none';
-
             if (hasImage) {
-                const msg = await requestVisionCompletion(userMessage, currentImageDataUrl, 512, 0.2);
+                const msg = await requestVisionCompletion(userMessage, currentImageDataUrls, 512, 0.2);
                 conversationHistory.push({ role: 'assistant', content: msg });
                 await saveMessageToConv('assistant', msg);
                 toggleTypingIndicator(false);
@@ -1954,14 +2058,21 @@ function initializeKhanLogic() {
     // ├óΓÇ¥Γé¼├óΓÇ¥Γé¼ doSend ├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼
     async function doSend() {
         const msg = userInput.value.trim();
-        const currentImg = uploadedImageDataUrl;
-        if (!msg && !currentImg) return;
+        const currentImages = uploadedImageDataUrls.slice();
+        const hasFileContext = Boolean(uploadedFileContext);
+        if (!msg && !currentImages.length && !hasFileContext) return;
+
+        const fallbackMsg = currentImages.length > 1
+            ? 'Please analyze these images in detail.'
+            : (currentImages.length === 1
+                ? 'Please analyze this image in detail.'
+                : (hasFileContext ? 'Please analyze the attached file in detail.' : ''));
+        const outgoingMsg = msg || fallbackMsg;
 
         hapticVibrate(14);
-        addMessage('user', msg, { imageUrl: currentImg });
+        addMessage('user', outgoingMsg, { imageUrls: currentImages });
         userInput.value = '';
-        const finalMsg = msg || (currentImg ? 'Please analyze this image in detail.' : '');
-        await sendMessage(finalMsg);
+        await sendMessage(outgoingMsg);
     }
 
     // ├óΓÇ¥Γé¼├óΓÇ¥Γé¼ Toggle buttons ├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼
@@ -2101,74 +2212,62 @@ function initializeKhanLogic() {
     });
 
     chatFileInput && chatFileInput.addEventListener('change', async (event) => {
-        const file = event.target.files && event.target.files[0];
-        if (!file) return;
+        const files = Array.from(event.target.files || []);
+        if (!files.length) return;
 
-        const statusBar = document.getElementById('upload-status-bar');
-        const statusText = document.getElementById('upload-status');
-        const statusType = document.getElementById('upload-type');
-        const thumbnail = statusBar.querySelector('.file-preview-thumbnail');
-
-        const showPreview = (type, dataUrl = null) => {
-            if (dataUrl && type === 'image') {
-                thumbnail.style.backgroundImage = `url(${dataUrl})`;
-                thumbnail.innerHTML = '';
-                statusType.textContent = 'Image Attached';
-            } else {
-                thumbnail.style.backgroundImage = 'none';
-                const icon = type === 'pdf' ? 'file-text' : 'file';
-                thumbnail.innerHTML = `<i data-lucide="${icon}"></i>`;
-                statusType.textContent = file.name.split('.').pop().toUpperCase() + ' File';
-            }
-            statusText.textContent = file.name;
-            statusBar.style.display = 'block';
-            if (window.lucide) window.lucide.createIcons();
-        };
-
-        if (file.type && file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                uploadedImageDataUrl = String(reader.result || '');
-                uploadedImageName = file.name;
-                showPreview('image', uploadedImageDataUrl);
-                ToastManager.show('Image attached.', 'success');
-            };
-            reader.onerror = () => { ToastManager.show('Could not read image file.', 'error'); };
-            reader.readAsDataURL(file); return;
-        }
+        clearUploadedAttachments();
+        const collectedContexts = [];
+        const nextAttachments = [];
+        const hasPdf = files.some(file => file.name.toLowerCase().endsWith('.pdf'));
+        if (hasPdf) ToastManager.show('Analyzing attachments...', 'info');
 
         try {
-            if (file.name.endsWith('.pdf')) {
-                ToastManager.show('Analyzing PDF...', 'info');
-                const arrayBuffer = await file.arrayBuffer();
-                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
-                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-                let text = '';
-                for (let i = 1; i <= Math.min(pdf.numPages, 10); i++) {
-                    const page = await pdf.getPage(i);
-                    const content = await page.getTextContent();
-                    text += content.items.map(item => item.str).join(' ') + '\n';
+            for (const file of files) {
+                if (file.type && file.type.startsWith('image/')) {
+                    const dataUrl = await readFileAsDataUrl(file);
+                    uploadedImageDataUrls.push(dataUrl);
+                    uploadedImageNames.push(file.name);
+                    nextAttachments.push({ kind: 'image', name: file.name, dataUrl });
+                    continue;
                 }
-                uploadedFileContext = text.slice(0, 15000);
-                showPreview('pdf');
-                ToastManager.show('PDF ready for query.', 'success');
-                return;
+
+                if (file.name.toLowerCase().endsWith('.pdf')) {
+                    const arrayBuffer = await file.arrayBuffer();
+                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+                    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                    let text = '';
+                    for (let i = 1; i <= Math.min(pdf.numPages, 10); i++) {
+                        const page = await pdf.getPage(i);
+                        const content = await page.getTextContent();
+                        text += content.items.map(item => item.str).join(' ') + '\n';
+                    }
+                    collectedContexts.push(`[PDF: ${file.name}]\n${text.slice(0, 15000)}`);
+                    nextAttachments.push({ kind: 'pdf', name: file.name });
+                    continue;
+                }
+
+                const text = await file.text();
+                collectedContexts.push(`[FILE: ${file.name}]\n${text.slice(0, 20000)}`);
+                nextAttachments.push({ kind: 'file', name: file.name });
             }
 
-            const text = await file.text();
-            uploadedFileContext = text.slice(0, 20000);
-            showPreview('file');
-            ToastManager.show('File attached.', 'success');
+            uploadedAttachments = nextAttachments;
+            uploadedFileContext = collectedContexts.join('\n\n').slice(0, 30000);
+            renderUploadPreview();
+
+            const readyMsg = nextAttachments.length === 1
+                ? 'Attachment ready.'
+                : `${nextAttachments.length} attachments ready.`;
+            ToastManager.show(readyMsg, 'success');
         } catch (e) {
+            clearUploadedAttachments();
             console.error('File error:', e);
-            ToastManager.show('Could not read file.', 'error');
+            ToastManager.show('Could not read one or more files.', 'error');
         }
     });
 
     document.getElementById('upload-clear-btn') && document.getElementById('upload-clear-btn').addEventListener('click', () => {
-        uploadedFileContext = ''; uploadedImageDataUrl = ''; uploadedImageName = '';
-        const sb = document.getElementById('upload-status-bar'); if (sb) sb.style.display = 'none';
-        if (chatFileInput) chatFileInput.value = '';
+        clearUploadedAttachments();
     });
 
     // ├óΓÇ¥Γé¼├óΓÇ¥Γé¼ Chat open/close wiring ├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼

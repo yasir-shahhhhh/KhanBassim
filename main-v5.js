@@ -163,20 +163,79 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ═══════════════════════════════════════════════════════
        6. SMOOTH ROUTING ENGINE (SPA)
        ═══════════════════════════════════════════════════════ */
+    const SOCIAL_LINKS = {
+        linkedin: 'https://www.linkedin.com/in/baasim-fayaz-khan-b20970258/',
+        instagram: 'https://www.instagram.com/khan_bassim/'
+    };
+
+    const normalizeNavHref = (href = '') => {
+        const cleanHref = String(href || '').split('?')[0].split('#')[0].trim();
+        if (!cleanHref || cleanHref === '/') return 'index.html';
+        const trimmed = cleanHref.endsWith('/') ? cleanHref.slice(0, -1) : cleanHref;
+        const finalPart = trimmed.split('/').pop();
+        return finalPart || 'index.html';
+    };
+
+    const syncMobileSocialLinks = () => {
+        document.querySelectorAll('.mobile-nav-social a').forEach(link => {
+            const icon = link.querySelector('[data-lucide]');
+            const iconName = icon?.getAttribute('data-lucide');
+            const href = SOCIAL_LINKS[iconName];
+            if (!href) return;
+            link.href = href;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.setAttribute('aria-label', iconName.charAt(0).toUpperCase() + iconName.slice(1));
+        });
+    };
+
+    const syncMobileNavChip = (targetUrl) => {
+        const navContainer = document.querySelector('.nav-container');
+        const menuBtn = navContainer?.querySelector('.mobile-menu-btn');
+        if (!navContainer || !menuBtn) return;
+
+        let tools = navContainer.querySelector('.mobile-nav-header-tools');
+        if (!tools) {
+            tools = document.createElement('div');
+            tools.className = 'mobile-nav-header-tools';
+            tools.innerHTML = `
+                <button class="mobile-nav-header-chip" type="button" aria-label="Open quick navigation">
+                    <span class="mobile-nav-chip-badge">Quick Nav</span>
+                    <span class="mobile-nav-chip-eyebrow">Navigate</span>
+                    <span class="mobile-nav-chip-title">Menu</span>
+                </button>
+            `;
+            menuBtn.insertAdjacentElement('afterend', tools);
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        const chip = tools.querySelector('.mobile-nav-header-chip');
+        const currentFile = normalizeNavHref(targetUrl);
+        const activeLink = Array.from(document.querySelectorAll('.nav-links a, .mobile-nav-item'))
+            .find(link => normalizeNavHref(link.getAttribute('href')) === currentFile);
+        const titleNode = chip.querySelector('.mobile-nav-chip-title');
+        if (titleNode) {
+            titleNode.textContent = activeLink?.textContent?.trim() || 'Menu';
+        }
+        chip.dataset.target = currentFile;
+    };
+
     const updateNavHighlight = (targetUrl) => {
         const navLinks = document.querySelectorAll('.nav-links a, .mobile-nav-item');
         if (!navLinks.length) return;
 
-        let currentFile = targetUrl.split('/').pop().split('?')[0].split('#')[0];
-        if (!currentFile || currentFile === '' || currentFile === '/') currentFile = 'index.html';
+        const currentFile = normalizeNavHref(targetUrl);
 
         navLinks.forEach(link => {
-            const linkHref = link.getAttribute('href');
+            const linkHref = normalizeNavHref(link.getAttribute('href'));
             link.classList.remove('active');
             if (linkHref === currentFile) {
                 link.classList.add('active');
             }
         });
+
+        syncMobileNavChip(targetUrl);
+        syncMobileSocialLinks();
     };
 
     const performRouting = async (url) => {
@@ -338,6 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const menuBtn = document.querySelector('.mobile-menu-btn');
         const overlay = document.getElementById('mobileNav');
+        const closeBtn = document.getElementById('closeNav');
         const mobileLinks = document.querySelectorAll('.mobile-nav-item');
         
         if (!menuBtn || !overlay) return;
@@ -379,8 +439,11 @@ document.addEventListener('DOMContentLoaded', () => {
             menuBtn.classList.remove('is-active');
         };
 
+        const quickNavChip = document.querySelector('.mobile-nav-header-chip');
         menuBtn.addEventListener('click', toggleMenu);
         backdrop.addEventListener('click', closeMenu);
+        closeBtn?.addEventListener('click', closeMenu);
+        quickNavChip?.addEventListener('click', toggleMenu);
 
         // Close menu when clicking links and handle navigation
         mobileLinks.forEach(link => {
@@ -399,6 +462,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 400);
             });
         });
+
+        syncMobileSocialLinks();
     };
 
 
