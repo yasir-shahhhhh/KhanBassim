@@ -2029,3 +2029,22 @@ body.chat-open {
         height: 220px !important; /* Make card images look beautifully proportioned and premium on phone viewports */
     }
 }
+
+/* Smooth SPA Page Transitions */
+main {
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 1;
+    transform: translateY(0);
+    will-change: opacity, transform;
+}
+
+main.page-leaving {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+main.page-entering {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+

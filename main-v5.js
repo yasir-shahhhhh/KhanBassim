@@ -102,9 +102,21 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ═══════════════════════════════════════════════════════
        4. TYPEWRITER EFFECT
        ═══════════════════════════════════════════════════════ */
+    let typewriterTimeoutId = null;
+
     const initTypewriter = () => {
         const textElement = document.getElementById('typewriter');
-        if (!textElement) return;
+        if (!textElement) {
+            if (typewriterTimeoutId) {
+                clearTimeout(typewriterTimeoutId);
+                typewriterTimeoutId = null;
+            }
+            return;
+        }
+
+        if (typewriterTimeoutId) {
+            clearTimeout(typewriterTimeoutId);
+        }
 
         const words = ["Chief Operating Officer (COO)", "Creative Strategist", "AI Architect", "Visionary Leader"];
         let wordIndex = 0;
@@ -113,13 +125,19 @@ document.addEventListener('DOMContentLoaded', () => {
         let typeSpeed = 100;
 
         const type = () => {
+            const currentElement = document.getElementById('typewriter');
+            if (!currentElement) {
+                typewriterTimeoutId = null;
+                return;
+            }
+
             const current = words[wordIndex];
             if (isDeleting) {
-                textElement.textContent = current.substring(0, charIndex - 1);
+                currentElement.textContent = current.substring(0, charIndex - 1);
                 charIndex--;
                 typeSpeed = 50;
             } else {
-                textElement.textContent = current.substring(0, charIndex + 1);
+                currentElement.textContent = current.substring(0, charIndex + 1);
                 charIndex++;
                 typeSpeed = 100;
             }
@@ -133,11 +151,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 typeSpeed = 500;
             }
 
-            setTimeout(type, typeSpeed);
+            typewriterTimeoutId = setTimeout(type, typeSpeed);
         };
 
         type();
     };
+
 
     /* ═══════════════════════════════════════════════════════
        5. REVEAL ANIMATIONS (OBSERVER)
@@ -212,15 +231,30 @@ document.addEventListener('DOMContentLoaded', () => {
         syncMobileSocialLinks();
     };
 
-    const performRouting = async (url) => {
+    let isRouting = false;
+
+    const performRouting = async (url, pushToHistory = true) => {
+        if (isRouting) return;
+        isRouting = true;
+
+        const currentMain = document.querySelector('main');
+        if (currentMain) {
+            currentMain.classList.add('page-leaving');
+        }
+
+        const fetchPromise = fetch(url).then(res => {
+            if (!res.ok) throw new Error('Network response was not ok');
+            return res.text();
+        });
+
+        // Parallelize leaving animation (250ms) and network fetch for lightning speed
+        const delayPromise = new Promise(resolve => setTimeout(resolve, 250));
+
         try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('Network response was not ok');
-            const html = await response.text();
+            const [html] = await Promise.all([fetchPromise, delayPromise]);
             const parser = new DOMParser();
             const newDoc = parser.parseFromString(html, 'text/html');
             const newMain = newDoc.querySelector('main');
-            const currentMain = document.querySelector('main');
 
             if (newMain && currentMain) {
                 const isHeroTarget = url.endsWith('index.html') || url === '/' || url === '';
@@ -238,6 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.head.appendChild(clone);
                 });
 
+                // Swap content while fully transparent
                 currentMain.innerHTML = newMain.innerHTML;
                 
                 const newNav = newDoc.querySelector('.nav-links');
@@ -247,7 +282,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 document.title = newDoc.title;
-                window.history.pushState({}, '', url);
+                
+                if (pushToHistory) {
+                    window.history.pushState({}, '', url);
+                }
                 updateNavHighlight(url);
 
                 if (window.lucide) window.lucide.createIcons();
@@ -259,15 +297,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (newVideo) newVideo.play().catch(() => {});
                 }
 
+                // Prepare smooth entry transition
+                currentMain.classList.remove('page-leaving');
+                currentMain.classList.add('page-entering');
+                
+                // Force layout reflow so the transition fires
+                currentMain.offsetHeight;
+
                 window.scrollTo({ top: 0, behavior: 'instant' });
+                
+                // Transition to active state
+                currentMain.classList.remove('page-entering');
+
                 updateCursor();
                 initMobileMenu();
             } else {
                 window.location.href = url;
             }
+            isRouting = false;
         } catch (err) {
             console.error('Navigation failed:', err);
             window.location.href = url;
+            isRouting = false;
         }
     };
 
@@ -284,6 +335,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.navigateTo = performRouting;
     document.addEventListener('click', handleNavClick);
+
+    // Global listener for browser Back/Forward (popstate)
+    window.addEventListener('popstate', () => {
+        performRouting(window.location.pathname, false);
+    });
+
 
     /* ═══════════════════════════════════════════════════════
        7. MOBILE MENU TOGGLE (GALAXY DRAWER)
