@@ -234,7 +234,7 @@ a {
 }
 
 .mobile-menu-btn {
-    display: flex !important; /* Always visible to allow full navigation */
+    display: none;
     background: none;
     border: none;
     color: var(--text-primary);
@@ -247,7 +247,6 @@ a {
     width: 32px;
     height: 32px;
     
-    display: flex;
     align-items: center;
     justify-content: center;
     
