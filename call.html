@@ -355,7 +355,7 @@ Avoid jargon. Talk like a sophisticated human friend.`;
                         { role: 'assistant', content: 'Understood.' },
                         ...historyCopy
                     ];
-                    body = { model: 'llama-3.2-90b-vision-preview', messages: visionMsgs, max_tokens: 200 };
+                    body = { model: 'meta-llama/llama-4-scout-17b-16e-instruct', messages: visionMsgs, max_tokens: 200 };
                 } else {
                     body = {
                         model: 'llama-3.3-70b-versatile', 

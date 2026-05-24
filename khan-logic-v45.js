@@ -1938,6 +1938,7 @@ function initializeKhanLogic() {
                 .map(optimizeImageForVision)
         )).filter(Boolean);
         const models = [
+            'meta-llama/llama-4-scout-17b-16e-instruct',
             'llama-3.2-90b-vision-preview',
             'llama-3.2-11b-vision-preview'
         ];
@@ -2756,7 +2757,7 @@ function initializeKhanLogic() {
                         ]
                     });
                     const finalMsgs = [{ role: 'user', content: 'System: ' + sysPrompt }, { role: 'assistant', content: 'Understood.' }, ...visionMsgs];
-                    body = { model: 'llama-3.2-90b-vision-preview', messages: finalMsgs, max_tokens: 200 };
+                    body = { model: 'meta-llama/llama-4-scout-17b-16e-instruct', messages: finalMsgs, max_tokens: 200 };
                 } else {
                     glConvHistory.push({ role: 'user', content: userText });
                     body = { model: 'llama-3.3-70b-versatile', messages: glConvHistory, max_tokens: 200 };
