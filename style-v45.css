@@ -235,32 +235,35 @@ a {
 
 .mobile-menu-btn {
     display: flex !important; /* Always visible to allow full navigation */
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: none;
+    border: none;
     color: var(--text-primary);
     cursor: pointer;
     z-index: 1100;
     outline: none;
     margin-left: auto; /* Push to right corner */
+    padding: 0;
     
-    /* Circular premium button */
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
+    width: 32px;
+    height: 32px;
     
     display: flex;
     align-items: center;
     justify-content: center;
     
     transition: all var(--transition-medium);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    box-shadow: none;
 }
 
 .mobile-menu-btn:hover {
-    background: var(--accent-gradient);
-    border-color: var(--accent-1);
-    box-shadow: 0 0 20px var(--accent-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    transform: scale(1.05) rotate(3deg);
+    transform: scale(1.15);
+}
+
+.mobile-menu-btn:hover .hamburger-inner,
+.mobile-menu-btn:hover .hamburger-inner::before,
+.mobile-menu-btn:hover .hamburger-inner::after {
+    background-color: var(--accent-1);
+    box-shadow: 0 0 8px var(--accent-glow);
 }
 
 /* Premium Animated Hamburger to X */
@@ -1070,13 +1073,12 @@ footer {
         display: flex !important;
         align-items: center;
         justify-content: center;
-        width: 40px;
-        height: 40px;
+        width: 28px;
+        height: 28px;
         padding: 0;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        background: none;
+        border: none;
+        box-shadow: none;
         margin-left: auto; /* Push to right corner */
         order: 3;
     }
@@ -1295,13 +1297,12 @@ footer {
         display: flex !important;
         align-items: center;
         justify-content: center;
-        width: 40px;
-        height: 40px;
+        width: 28px;
+        height: 28px;
         padding: 0;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        background: none;
+        border: none;
+        box-shadow: none;
         margin-left: auto; /* Push to right corner */
         order: 3;
     }
