@@ -326,6 +326,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const link = e.target.closest('a');
         if (!link) return;
 
+        // Skip clicks inside the mobile nav drawer — handled separately with close animation
+        if (link.closest('.mobile-nav-overlay')) return;
+
+        // Skip clicks inside the Khan AI chat elements to prevent duplicate routing interference
+        if (
+            link.closest('#chat-interface') || 
+            link.closest('#khan-info-modal') || 
+            link.closest('#khan-image-modal') || 
+            link.closest('#golive-overlay')
+        ) {
+            return;
+        }
+
         const url = link.getAttribute('href');
         if (!url || url.startsWith('http') || url.startsWith('#') || url.includes('mailto:')) return;
 
@@ -481,6 +494,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Close menu when clicking links and handle navigation
         mobileLinks.forEach(link => {
             link.addEventListener('click', async (e) => {
+                e.stopPropagation(); // Prevent bubbling to global handleNavClick
                 const url = link.getAttribute('href');
                 if (!url || url.startsWith('http') || url.startsWith('#') || url.includes('mailto:')) {
                     closeMenu();
@@ -492,7 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Brief delay for the drawer to slide out before SPA transition
                 setTimeout(async () => {
                     await performRouting(url);
-                }, 400);
+                }, 350);
             });
         });
 
