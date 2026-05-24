@@ -14,7 +14,7 @@ exports.handler = async function(event, context) {
             return { statusCode: 500, body: JSON.stringify({ error: 'TTS Configuration Error' }) };
         }
 
-        const { text } = JSON.parse(event.body);
+        const { text, model_id, voice_settings } = JSON.parse(event.body);
         if (!text) {
             return { statusCode: 400, body: JSON.stringify({ error: 'Text is required' }) };
         }
@@ -28,8 +28,8 @@ exports.handler = async function(event, context) {
             },
             body: JSON.stringify({
                 text: text,
-                model_id: "eleven_monolingual_v1",
-                voice_settings: {
+                model_id: model_id || "eleven_monolingual_v1",
+                voice_settings: voice_settings || {
                     stability: 0.5,
                     similarity_boost: 0.75
                 }

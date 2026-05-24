@@ -2224,7 +2224,7 @@ function initializeKhanLogic() {
 
         try {
             for (const file of files) {
-                if (file.type && file.type.startsWith('image/')) {
+                if ((file.type && file.type.startsWith('image/')) || /\.(jpe?g|png|gif|webp|bmp|svg)$/i.test(file.name)) {
                     const dataUrl = await readFileAsDataUrl(file);
                     uploadedImageDataUrls.push(dataUrl);
                     uploadedImageNames.push(file.name);
@@ -2871,8 +2871,43 @@ function initializeKhanLogic() {
             stopCurrentAudio();
             startVisualizer();
 
-            // Exclusively use Microsoft Edge Natural voices / Browser HQ TTS
-            await speakBrowserHQ(text);
+            try {
+                // Attempt ElevenLabs via Netlify Proxy
+                const response = await fetch('/.netlify/functions/tts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text,
+                        model_id: 'eleven_multilingual_v2',
+                        voice_settings: { stability: 0.35, similarity_boost: 0.8, style: 0.5, use_speaker_boost: true }
+                    })
+                });
+
+                if (response.ok) {
+                    const audioBlob = await response.blob();
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    const audio = new Audio(audioUrl);
+                    currentGlAudio = audio;
+                    
+                    await new Promise((resolve, reject) => {
+                        audio.onended = () => {
+                            URL.revokeObjectURL(audioUrl);
+                            if (currentGlAudio === audio) currentGlAudio = null;
+                            resolve();
+                        };
+                        audio.onerror = (err) => {
+                            reject(err);
+                        };
+                        audio.play().catch(reject);
+                    });
+                } else {
+                    throw new Error(`TTS Proxy returned status ${response.status}`);
+                }
+            } catch (e) {
+                console.warn('ElevenLabs failed, using browser fallback:', e);
+                // Exclusively use Microsoft Edge Natural voices / Browser HQ TTS as fallback
+                await speakBrowserHQ(text);
+            }
 
             speaking = false;
             if (isOpen) setStatus(micActive ? 'Listening...' : 'Paused', micActive ? 'listening' : 'paused');

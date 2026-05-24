@@ -197,20 +197,20 @@
     .cm-msg-img {
         min-width: 0;
     }
-    .cm-msg-img img {
-        display: block;
-        max-width: 150px;
-        max-height: 150px;
-        width: auto;
-        height: auto;
-        object-fit: cover;
+    #chat-messages .cm-msg-img img {
+        display: block !important;
+        max-width: 150px !important;
+        max-height: 150px !important;
+        width: auto !important;
+        height: auto !important;
+        object-fit: cover !important;
         border-radius: 12px;
         cursor: pointer;
         border: 1px solid rgba(0, 0, 0, 0.1);
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         transition: transform 0.2s ease;
     }
-    .cm-msg-img img:hover {
+    #chat-messages .cm-msg-img img:hover {
         transform: scale(1.03);
     }
     
