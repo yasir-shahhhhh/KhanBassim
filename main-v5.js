@@ -206,6 +206,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 </button>
             `;
             menuBtn.insertAdjacentElement('afterend', tools);
+            
+            // Fix dynamic click binding to toggle menu drawer
+            const chipBtn = tools.querySelector('.mobile-nav-header-chip');
+            chipBtn?.addEventListener('click', () => {
+                const overlay = document.querySelector('.mobile-nav-overlay');
+                const backdrop = document.querySelector('.mobile-nav-backdrop');
+                const mobMenuBtn = document.querySelector('.mobile-menu-btn');
+                if (overlay && backdrop && mobMenuBtn) {
+                    if (overlay.classList.contains('active')) {
+                        overlay.classList.remove('active');
+                        backdrop.classList.remove('active');
+                        document.body.classList.remove('nav-open');
+                        mobMenuBtn.classList.remove('is-active');
+                    } else {
+                        overlay.classList.add('active');
+                        backdrop.classList.add('active');
+                        document.body.classList.add('nav-open');
+                        mobMenuBtn.classList.add('is-active');
+                    }
+                }
+            });
+
             if (window.lucide) window.lucide.createIcons();
         }
 
