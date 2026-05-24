@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khan AI Voice Mode | Built by Basim Khan (Khan Basim)</title>
+    <meta name="description" content="Experience Khan AI, a high-fidelity voice intelligence created by Basim Khan (Khan Basim). Talk, use vision mode, and interact seamlessly.">
+    <meta name="keywords" content="Khan AI, Basim Khan, Khan Basim, Baasim Fayaz Khan, Voice AI, Proteios Education">
+    <meta name="author" content="Basim Khan (Khan Basim)">
+    <meta property="og:title" content="Khan AI Voice Mode | Built by Basim Khan (Khan Basim)">
+    <meta property="og:description" content="Experience Khan AI, a high-fidelity voice intelligence created by Basim Khan (Khan Basim).">
+    <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
+    <script src="config.js"></script>
+    <style>
+        :root {
+            --bg: #02030b;
+            --text: #ffffff;
+            --accent: #22c55e;
+            --pill-bg: rgba(255, 255, 255, 0.05);
+            --pill-text: rgba(255, 255, 255, 0.7);
+            --gray-mid: #666;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; }
+        
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            height: 100vh; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+        }
+
+        /* Cinematic Background */
+        .bg-mesh {
+            position: fixed; inset: 0; z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(182, 107, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(34, 197, 94, 0.05) 0%, transparent 50%);
+            filter: blur(80px);
+        }
+
+        #gl-container {
+            width: 100%; 
+            max-width: 500px; 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            padding: 60px 24px 40px; 
+            animation: fadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); filter: blur(10px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+
+        #gl-display { display: flex; flex-direction: column; align-items: center; margin-bottom: 30px; }
+        
+        #gl-logo-section { 
+            position: relative; 
+            width: 160px; height: 160px; 
+            margin-bottom: 30px; 
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #gl-logo-section.camera-active {
+            width: 320px; height: 240px;
+            border-radius: 24px;
+        }
+        #gl-main-logo { 
+            width: 100%; height: 100%; object-fit: contain; border-radius: 50%; 
+            background: rgba(255,255,255,0.05); padding: 30px; border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(10px);
+        }
+        #gl-logo-section.camera-active #gl-main-logo { opacity: 0; visibility: hidden; }
+        
+        #gl-logo-glow {
+            position: absolute; inset: -30px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(34, 197, 94, 0.1) 0%, transparent 70%);
+            z-index: -1;
+            transition: opacity 0.5s;
+            animation: pulse 3s infinite ease-in-out;
+        }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(1.15); opacity: 0.6; } }
+
+        #gl-video {
+            position: absolute; inset: 0;
+            display: none; width: 100%; height: 100%;
+            object-fit: cover; border-radius: 24px;
+            background: #000; transform: scaleX(-1);
+            border: 2px solid var(--glass-border);
+        }
+        #gl-logo-section.camera-active #gl-video { display: block; }
+
+        #gl-info { text-align: center; }
+        #gl-name { font-size: 2.5rem; font-weight: 800; color: #fff; margin-bottom: 12px; letter-spacing: -0.04em; }
+        
+        #gl-status-row { display: flex; align-items: center; justify-content: center; gap: 12px; }
+        #gl-vision-pill {
+            display: none; padding: 6px 14px; 
+            background: rgba(34, 197, 94, 0.1); color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 100px; font-weight: 800; font-size: 0.65rem; 
+            letter-spacing: 0.1em; text-transform: uppercase;
+        }
+        #gl-vision-pill.show { display: inline-block; }
+
+        #gl-status-pill {
+            display: inline-block; padding: 6px 16px; background: var(--pill-bg); color: var(--pill-text);
+            border: 1px solid var(--glass-border);
+            border-radius: 100px; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        #gl-content { 
+            flex: 1; width: 100%; overflow-y: auto; margin: 20px 0; padding: 0 10px;
+            display: flex; flex-direction: column; scrollbar-width: none;
+            mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+        }
+        #gl-content::-webkit-scrollbar { display: none; }
+        #gl-transcript-msg { 
+            margin: auto; color: #444; font-size: 1rem; font-style: italic; text-align: center; 
+            max-width: 280px; line-height: 1.6;
+        }
+
+        .gl-msg {
+            margin-bottom: 16px; padding: 14px 20px; border-radius: 22px; max-width: 85%;
+            font-size: 0.95rem; line-height: 1.5; word-wrap: break-word; 
+            animation: msgFade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(10px);
+        }
+        @keyframes msgFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .gl-msg.user { background: rgba(255,255,255,0.06); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
+        .gl-msg.ai { background: #fff; color: #000; align-self: flex-start; border-bottom-left-radius: 4px; font-weight: 500; }
+
+        #gl-bottom-controls {
+            width: 100%; display: flex; align-items: center; justify-content: center; gap: 20px;
+            padding-top: 20px;
+        }
+
+        .gl-round-btn {
+            width: 64px; height: 64px; border-radius: 50%; border: none;
+            display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(255,255,255,0.05); color: #fff;
+            border: 1px solid var(--glass-border);
+        }
+        .gl-round-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-4px); border-color: rgba(255,255,255,0.2); }
+        .gl-round-btn:active { transform: scale(0.92); }
+        .gl-round-btn svg { width: 24px; height: 24px; }
+
+        #gl-mic-btn.active { background: var(--accent); color: #000; border-color: var(--accent); box-shadow: 0 0 30px rgba(34, 197, 94, 0.3); }
+        #gl-camera-btn.active { background: #fff; color: #000; border-color: #fff; }
+        
+        #gl-switch-btn { 
+            width: 50px; height: 50px;
+            display: none;
+        }
+
+        #gl-timer-pill { 
+            background: rgba(255,255,255,0.03); color: #fff; font-weight: 700; font-size: 1.1rem;
+            padding: 10px 20px; border-radius: 100px; border: 1px solid var(--glass-border);
+            font-family: monospace;
+        }
+
+        #gl-close-btn { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+        #gl-close-btn:hover { background: #ef4444; color: #fff; box-shadow: 0 0 30px rgba(239, 68, 68, 0.3); }
+
+        @media (max-width: 480px) {
+            #gl-container { padding: 40px 16px 30px; }
+            #gl-name { font-size: 2rem; }
+            #gl-logo-section.camera-active { width: 100%; height: 280px; border-radius: 0; position: fixed; top: 0; left: 0; z-index: -1; }
+            #gl-logo-section.camera-active #gl-video { border-radius: 0; border: none; }
+            .gl-round-btn { width: 56px; height: 56px; }
+            #gl-bottom-controls { gap: 12px; }
+            #gl-timer-pill { padding: 8px 16px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <div id="gl-container">
+        <div class="bg-mesh"></div>
+        <div id="gl-display">
+            <div id="gl-logo-section">
+                <div id="gl-logo-glow"></div>
+                <img src="assets/Khan AI logo.png" alt="Khan AI Logo" id="gl-main-logo">
+                <video id="gl-video" autoplay playsinline muted></video>
+            </div>
+            <div id="gl-info">
+                <h2 id="gl-name">Khan AI</h2>
+                <div id="gl-status-row">
+                    <div id="gl-vision-pill">Vision Active</div>
+                    <div id="gl-status-pill">Ready</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="gl-content">
+            <div id="gl-transcript-msg">Your conversation will appear here.</div>
+        </div>
+
+        <div id="gl-bottom-controls">
+            <button id="gl-mic-btn" class="gl-round-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+            </button>
+            <button id="gl-camera-btn" class="gl-round-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg>
+            </button>
+            <button id="gl-switch-btn" class="gl-round-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            </button>
+            <div id="gl-timer-pill">00:00</div>
+            <button id="gl-close-btn" class="gl-round-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const GROQ_API_URL = '/.netlify/functions/chat';
+        
+        const SYSTEM_PROMPT = `You are KHAN AI, a high-fidelity assistive intelligence. 
+You were created by Baasim Fayaz Khan, the Chief Operating Officer (COO) and visionary from Kashmir.
+You represent Baasim and his initiative, PROTEIOS EDUCATION, which focuses on modern learning beyond academics.
+Your personality is calm, intelligent, and refined.
+You also know about Proteios advisors: Khalid Wani (ex Western Digital Director & Kyaari Capital founder) and Shafat Qazi (BQE Software founder & USA Top 50 CEO).
+BE EXTREMELY CONCISE: Use 1-2 sentences max. 
+Avoid jargon. Talk like a sophisticated human friend.`;
+
+        let micActive = false, cameraActive = false, cameraStream = null, recognition = null;
+        let glConvHistory = [], speaking = false, callTimer = null, startTime = 0;
+        let cachedVoices = [];
+        let currentFacingMode = 'user';
+
+        function $(id) { return document.getElementById(id); }
+
+        function setStatus(txt, isListening = false) { 
+            const p = $('gl-status-pill');
+            p.textContent = txt;
+            p.style.background = isListening ? 'var(--pill-bg)' : '#f3f4f6';
+            p.style.color = isListening ? 'var(--pill-text)' : '#4b5563';
+        }
+
+        // Preload voices
+        function loadVoices() { cachedVoices = window.speechSynthesis.getVoices(); }
+        if (window.speechSynthesis) { loadVoices(); window.speechSynthesis.onvoiceschanged = loadVoices; }
+
+        function addTranscript(role, text) {
+            const container = $('gl-content');
+            const defaultMsg = $('gl-transcript-msg');
+            if (defaultMsg) defaultMsg.style.display = 'none';
+
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `gl-msg ${role === 'user' ? 'user' : 'ai'}`;
+            msgDiv.textContent = text;
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+
+            glConvHistory.push({ role: role === 'user' ? 'user' : 'assistant', content: text });
+            localStorage.setItem('khan_live_session', JSON.stringify({ messages: glConvHistory }));
+        }
+
+        function startTimer() {
+            startTime = Date.now();
+            callTimer = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
+                const secs = (elapsed % 60).toString().padStart(2, '0');
+                $('gl-timer-pill').textContent = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function setupRecognition() {
+            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SR) return null;
+            const rec = new SR();
+            rec.continuous = false; rec.interimResults = false; rec.lang = 'en-US';
+            rec.onresult = async (event) => {
+                const transcript = event.results[0][0].transcript;
+                if (!transcript.trim()) return;
+                addTranscript('user', transcript);
+
+                // If camera is active, use vision model
+                const reply = await getAIResponse(transcript);
+                addTranscript('ai', reply);
+                await speak(reply);
+                if (micActive) startListening();
+            };
+            rec.onerror = () => { micActive = false; setMicState(false); setStatus('Mic Error'); };
+            return rec;
+        }
+
+        function startListening() {
+            if (!recognition) recognition = setupRecognition();
+            try { 
+                recognition.start(); 
+                micActive = true; 
+                setMicState(true);
+                setStatus('Listening...', true); 
+            } catch(e){}
+        }
+
+        function setMicState(active) {
+            const btn = $('gl-mic-btn');
+            if (btn) btn.classList.toggle('active', active);
+        }
+
+        function captureFrame() {
+            const video = $('gl-video');
+            if (!video || !cameraActive || !video.videoWidth || video.readyState < 2) return null;
+            try {
+                const canvas = document.createElement('canvas');
+                const scale = Math.min(1, 512 / Math.max(video.videoWidth, video.videoHeight));
+                canvas.width = video.videoWidth * scale;
+                canvas.height = video.videoHeight * scale;
+                const ctx = canvas.getContext('2d');
+                if (currentFacingMode === 'user') { ctx.translate(canvas.width, 0); ctx.scale(-1, 1); }
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                return canvas.toDataURL('image/jpeg', 0.6);
+            } catch (e) { return null; }
+        }
+
+        async function getAIResponse(text) {
+            setStatus('Thinking...');
+            try {
+                const frame = cameraActive ? captureFrame() : null;
+                let body;
+
+                if (frame) {
+                    // Vision model with camera frame
+                    const historyCopy = glConvHistory.map(m => ({ role: m.role, content: m.content }));
+                    
+                    // Replace the last user message (which is the current transcript) with the vision array format
+                    if (historyCopy.length > 0 && historyCopy[historyCopy.length - 1].role === 'user') {
+                        historyCopy[historyCopy.length - 1].content = [
+                            { type: 'text', text: text || 'What do you see?' },
+                            { type: 'image_url', image_url: { url: frame } }
+                        ];
+                    } else {
+                        historyCopy.push({
+                            role: 'user',
+                            content: [
+                                { type: 'text', text: text || 'What do you see?' },
+                                { type: 'image_url', image_url: { url: frame } }
+                            ]
+                        });
+                    }
+
+                    const visionMsgs = [
+                        { role: 'user', content: 'System: ' + SYSTEM_PROMPT + '\nVoice mode: Be concise — 1-2 sentences max.' },
+                        { role: 'assistant', content: 'Understood.' },
+                        ...historyCopy
+                    ];
+                    body = { model: 'llama-3.2-90b-vision-preview', messages: visionMsgs, max_tokens: 200 };
+                } else {
+                    body = {
+                        model: 'llama-3.3-70b-versatile', 
+                        messages: [{role:'system', content:SYSTEM_PROMPT}, ...glConvHistory], 
+                        max_tokens: 150 
+                    };
+                }
+
+                const res = await fetch(GROQ_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await res.json();
+                return (data.choices[0].message.content || '').replace(/[*#`]/g, '').trim();
+            } catch(e) { return "I'm having trouble connecting."; }
+        }
+
+        async function speak(text) {
+            speaking = true; setStatus('Speaking...'); 
+            
+            try {
+                // Attempt ElevenLabs via Netlify Proxy
+                const response = await fetch('/.netlify/functions/tts', {
+                    method: 'POST',
+                    body: JSON.stringify({ text })
+                });
+
+                if (response.ok) {
+                    const audioBlob = await response.blob();
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    const audio = new Audio(audioUrl);
+                    
+                    return new Promise(resolve => {
+                        audio.onended = () => { 
+                            speaking = false; 
+                            setStatus('Listening...', true); 
+                            URL.revokeObjectURL(audioUrl);
+                            resolve(); 
+                        };
+                        audio.onerror = () => { throw new Error('Audio playback failed'); };
+                        audio.play();
+                    });
+                } else {
+                    throw new Error('TTS Proxy unavailable');
+                }
+            } catch (e) {
+                console.warn('ElevenLabs failed, using browser fallback:', e);
+                // Browser Fallback
+                return new Promise(resolve => {
+                    const ut = new SpeechSynthesisUtterance(text);
+                    const voices = cachedVoices.length ? cachedVoices : window.speechSynthesis.getVoices();
+                    ut.voice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Male')) || 
+                               voices.find(v => v.lang.startsWith('en') && v.localService === false) || 
+                               voices.find(v => v.lang.startsWith('en')) ||
+                               voices[0];
+                    ut.rate = 1.0;
+                    ut.pitch = 1.0;
+                    ut.onend = () => { speaking = false; setStatus('Listening...', true); resolve(); };
+                    ut.onerror = () => { speaking = false; resolve(); };
+                    window.speechSynthesis.speak(ut);
+                });
+            }
+        }
+
+
+        async function toggleCamera() {
+            const logoSection = $('gl-logo-section');
+            const video = $('gl-video');
+            const btn = $('gl-camera-btn');
+            const visionPill = $('gl-vision-pill');
+            const switchBtn = $('gl-switch-btn');
+
+            if (cameraActive) {
+                // Turn off
+                if (cameraStream) cameraStream.getTracks().forEach(t => t.stop());
+                cameraStream = null;
+                cameraActive = false;
+                logoSection.classList.remove('camera-active');
+                btn.classList.remove('active');
+                visionPill.classList.remove('show');
+                switchBtn.style.display = 'none';
+                video.srcObject = null;
+            } else {
+                // Turn on
+                try {
+                    currentFacingMode = 'user';
+                    cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode } });
+                    video.srcObject = cameraStream;
+                    video.style.transform = 'scaleX(-1)';
+                    cameraActive = true;
+                    logoSection.classList.add('camera-active');
+                    btn.classList.add('active');
+                    visionPill.classList.add('show');
+                    checkCameras();
+                } catch(e) { 
+                    if (window.location.protocol === 'file:') {
+                        alert("Camera access denied.\n\nBrowsers block camera/mic access on 'file://' URLs for security.\n\nPlease open this project using a local web server (e.g., VS Code Live Server or python -m http.server) via 'localhost' to test the camera.");
+                    } else {
+                        alert("Camera access denied."); 
+                    }
+                }
+            }
+        }
+
+        async function switchCamera() {
+            if (!cameraActive) return;
+            currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+            if (cameraStream) cameraStream.getTracks().forEach(t => t.stop());
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode } });
+                const video = $('gl-video');
+                video.srcObject = cameraStream;
+                video.style.transform = currentFacingMode === 'user' ? 'scaleX(-1)' : 'scaleX(1)';
+            } catch (e) { 
+                if (window.location.protocol === 'file:') {
+                    alert("Camera switch failed.\n\nPlease use a local web server (localhost) to test camera features.");
+                } else {
+                    alert("Camera switch failed."); 
+                }
+            }
+        }
+
+        async function checkCameras() {
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const cameras = devices.filter(d => d.kind === 'videoinput');
+                const switchBtn = $('gl-switch-btn');
+                if (switchBtn) switchBtn.style.display = cameras.length > 1 ? 'flex' : 'none';
+            } catch (e) {}
+        }
+
+        $('gl-mic-btn').onclick = () => { 
+            if(micActive) { 
+                micActive = false; 
+                setMicState(false);
+                if(recognition) recognition.stop(); 
+                setStatus('Paused'); 
+            } else { 
+                startListening(); 
+            } 
+        };
+
+        $('gl-camera-btn').onclick = toggleCamera;
+        $('gl-switch-btn').onclick = switchCamera;
+
+        $('gl-close-btn').onclick = () => {
+            const returnPage = sessionStorage.getItem('khan_call_return') || document.referrer || 'index.html';
+            sessionStorage.removeItem('khan_call_return');
+            window.location.href = returnPage;
+        };
+
+        window.onload = () => { 
+            lucide.createIcons(); 
+            startTimer(); 
+            setTimeout(startListening, 1000); 
+        };
+    </script>
+</body>
+</html>
+
+

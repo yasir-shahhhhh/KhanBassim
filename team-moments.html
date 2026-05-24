@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Podcast highlights and strategic team moments at Proteios Education featuring guest leaders like Shafat Qazi and Khalid Wani.">
+    <title>Team Moments | Baasim Fayaz Khan</title>
+    <link rel="stylesheet" href="style-v45.css?v=5.9.6">
+    <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
+    <style>
+        .moment-info { padding: 24px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .moment-info h4 { color: var(--text-primary); font-size: 1.2rem; margin-bottom: 8px; }
+        .moment-info p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 12px; }
+        .moment-guest { color: var(--accent-1); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 8px; display: block; }
+        .guest-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
+        .tag { font-size: 0.65rem; padding: 4px 10px; border-radius: 20px; background: rgba(255,255,255,0.05); color: var(--text-secondary); border: 1px solid rgba(255,255,255,0.1); }
+        .moment-footer { font-size: 0.75rem; color: rgba(255,255,255,0.3); font-style: italic; display: flex; align-items: center; gap: 6px; }
+    </style>
+</head>
+<body>
+    <div class="bg-mesh"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <nav class="navbar glass">
+        <div class="nav-container">
+            <div class="nav-links">
+                <a href="about.html">About Me</a>
+                <a href="experience.html">Experience</a>
+                <a href="skills.html">Skills</a>
+                <a href="projects.html">Project</a>
+                <a href="team-moments.html">Team</a>
+                <a href="team-moments.html">Moments</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle Menu">
+                <span class="hamburger-box"><span class="hamburger-inner"></span></span>
+            </button>
+        </div>
+    </nav>
+
+        <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobileNav">
+        <div class="mobile-nav-header">
+            <button class="mobile-nav-close" id="closeNav" aria-label="Close Menu">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="mobile-nav-content">
+            <nav class="mobile-nav-links">
+                <a href="about.html" class="mobile-nav-item">About Me</a>
+                <a href="experience.html" class="mobile-nav-item">Experience</a>
+                <a href="skills.html" class="mobile-nav-item">Skills</a>
+                <a href="projects.html" class="mobile-nav-item">Projects</a>
+                <a href="team-moments.html" class="mobile-nav-item">Team Moments</a>
+                <a href="contact.html" class="mobile-nav-item">Contact</a>
+            </nav>
+        </div>
+        <div class="mobile-nav-footer">
+            <div class="mobile-nav-social">
+                <a href="https://www.linkedin.com/in/baasim-fayaz-khan-b20970258/" target="_blank"><i data-lucide="linkedin"></i></a>
+                <a href="https://www.instagram.com/khan_bassim/" target="_blank"><i data-lucide="instagram"></i></a>
+            </div>
+            <p class="mobile-nav-copyright">© 2026 Khan Bassim.</p>
+        </div>
+    </div>
+    <main style="padding-top: 100px; min-height: 80vh;">
+        <section class="section-padding">
+            <div class="section-header fade-in">
+                <h2 class="section-title">Team Moments</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="project-grid" style="grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));">
+                <!-- First Moment: Shafat Qazi -->
+                <div class="project-card glass fade-in" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+                    <div style="position: relative; overflow: hidden; height: 320px;">
+                        <img src="assets/Team Moment2.jpeg" alt="Podcast with Shafat Qazi" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="moment-info">
+                        <span class="moment-guest">Guest: Shafat Qazi</span>
+                        <div class="guest-tags">
+                            <span class="tag">Founder, BQE Software</span>
+                            <span class="tag">USA Today Top 50 CEO</span>
+                            <span class="tag">Film Producer</span>
+                            <span class="tag">Kashmiri-American Entrepreneur</span>
+                        </div>
+
+                        <p>A comprehensive podcast session hosted by <strong>Yonus Beigh</strong> featuring the <strong>Whole Proteios Team</strong> with <strong>Shafat Qazi</strong>, the Kashmiri-American technologist who founded BQE Software and co-produced the acclaimed film <em>Songs of Paradise</em>.</p>
+                        <div class="moment-footer">
+                            <i data-lucide="camera" style="width: 14px;"></i> Moments captured by Baasim Fayaz Khan
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Second Moment: Khalid Wani -->
+                <div class="project-card glass fade-in" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+                    <div style="position: relative; overflow: hidden; height: 320px;">
+                        <img src="assets/Team Moments.jpeg" alt="Podcast with Khalid Wani" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="moment-info">
+                        <span class="moment-guest">Guest: Khalid Wani</span>
+                        <div class="guest-tags">
+                            <span class="tag">Ex-MD, Western Digital</span>
+                            <span class="tag">17-Year WD Executive</span>
+                            <span class="tag">Founder, Kyaari Capital</span>
+                            <span class="tag">Chairman, ICC Kashmir</span>
+                        </div>
+
+                        <p>An exclusive session for the <strong>Core Team</strong> to connect with <strong>Khalid Wani</strong>, prominent tech leader and ex-Western Digital Managing Director / Senior Director of 17 years who co-founded Kyaari Capital and chairs the ICC Kashmir Business Council.</p>
+                        <div class="moment-footer">
+                            <i data-lucide="camera" style="width: 14px;"></i> Moments captured by Baasim Fayaz Khan
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 60px;" class="fade-in">
+                <p style="color: var(--text-secondary); max-width: 700px; margin: 0 auto; font-size: 0.95rem; line-height: 1.7;">
+                    Highlighting the collaborative spirit of the <strong>Proteios Education</strong> team. These moments reflect our commitment to bringing global perspectives to the youth of Kashmir.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Baasim Fayaz Khan. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
+    <script src="main-v5.js?v=5.9.6"></script>
+    <script src="khan-inject-v45.js?v=5.9.6"></script>
+</body>
+</html>
+
+
+
+
+
