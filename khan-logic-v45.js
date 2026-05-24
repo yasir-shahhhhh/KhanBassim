@@ -1085,17 +1085,26 @@ function initializeKhanLogic() {
         });
     }
 
-    const KHAN_SYSTEM_VER = '4.3';
+    const KHAN_SYSTEM_VER = '5.0';
     const CONTEXT_LIMIT = 30; // Max messages in one session
 
     // ├óΓÇ¥Γé¼├óΓÇ¥Γé¼ System Update Check ├óΓÇ¥Γé¼├óΓÇ¥Γé¼
     const lastVer = localStorage.getItem('khan_sys_ver');
     if (lastVer !== KHAN_SYSTEM_VER) {
-        // Clear cache/old data on update
-        const keysToKeep = ['khan_user', 'khan_guest_visited']; // Keep essential auth
+        // Clear all local storage elements to reload fresh profiles and states
+        const keysToKeep = [];
         Object.keys(localStorage).forEach(k => { if (!keysToKeep.includes(k)) localStorage.removeItem(k); });
+        
+        // Clear all cookies completely
+        document.cookie.split(";").forEach(c => {
+            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date(0).toUTCString() + ";path=/");
+        });
+        
         localStorage.setItem('khan_sys_ver', KHAN_SYSTEM_VER);
-        console.log(`System updated to ${KHAN_SYSTEM_VER}. Old cache cleared.`);
+        console.log(`System updated to ${KHAN_SYSTEM_VER}. Old cache and cookies cleared.`);
+        
+        // Force reload page to bypass browser caches
+        window.location.reload(true);
     }
 
     function enforceContextLimit() {
@@ -1622,7 +1631,16 @@ function initializeKhanLogic() {
         }
 
         chatOpen = !chatOpen;
-        if (chatOpen) window._explicitChatOpen = true;
+        if (chatOpen) {
+            window._explicitChatOpen = true;
+            window._prevScrollY = window.scrollY; // Save scroll position
+            document.body.classList.add('chat-open');
+            document.body.style.top = `-${window._prevScrollY}px`;
+        } else {
+            document.body.classList.remove('chat-open');
+            document.body.style.top = '';
+            window.scrollTo(0, window._prevScrollY || 0); // Restore scroll position
+        }
         
         chatInterface.style.display = chatOpen ? 'flex' : 'none';
         if (chatButton) chatButton.classList.toggle('chat-open-hidden', chatOpen);

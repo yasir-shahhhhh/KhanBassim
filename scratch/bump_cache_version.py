@@ -12,8 +12,8 @@ for file_name in all_files:
         with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
             content = f.read()
         
-        if '5.9.7' in content:
-            new_content = content.replace('5.9.7', '5.9.8')
+        if '5.9.8' in content:
+            new_content = content.replace('5.9.8', '5.9.9')
             with open(file_path, 'w', encoding='utf-8') as f:
                 f.write(new_content)
             print(f"Bumped version in {file_name}")

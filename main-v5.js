@@ -190,56 +190,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const syncMobileNavChip = (targetUrl) => {
-        const navContainer = document.querySelector('.nav-container');
-        const menuBtn = navContainer?.querySelector('.mobile-menu-btn');
-        if (!navContainer || !menuBtn) return;
-
-        let tools = navContainer.querySelector('.mobile-nav-header-tools');
-        if (!tools) {
-            tools = document.createElement('div');
-            tools.className = 'mobile-nav-header-tools';
-            tools.innerHTML = `
-                <button class="mobile-nav-header-chip" type="button" aria-label="Open quick navigation">
-                    <span class="mobile-nav-chip-badge">Quick Nav</span>
-                    <span class="mobile-nav-chip-eyebrow">Navigate</span>
-                    <span class="mobile-nav-chip-title">Menu</span>
-                </button>
-            `;
-            menuBtn.insertAdjacentElement('afterend', tools);
-            
-            // Fix dynamic click binding to toggle menu drawer
-            const chipBtn = tools.querySelector('.mobile-nav-header-chip');
-            chipBtn?.addEventListener('click', () => {
-                const overlay = document.querySelector('.mobile-nav-overlay');
-                const backdrop = document.querySelector('.mobile-nav-backdrop');
-                const mobMenuBtn = document.querySelector('.mobile-menu-btn');
-                if (overlay && backdrop && mobMenuBtn) {
-                    if (overlay.classList.contains('active')) {
-                        overlay.classList.remove('active');
-                        backdrop.classList.remove('active');
-                        document.body.classList.remove('nav-open');
-                        mobMenuBtn.classList.remove('is-active');
-                    } else {
-                        overlay.classList.add('active');
-                        backdrop.classList.add('active');
-                        document.body.classList.add('nav-open');
-                        mobMenuBtn.classList.add('is-active');
-                    }
-                }
-            });
-
-            if (window.lucide) window.lucide.createIcons();
-        }
-
-        const chip = tools.querySelector('.mobile-nav-header-chip');
-        const currentFile = normalizeNavHref(targetUrl);
-        const activeLink = Array.from(document.querySelectorAll('.nav-links a, .mobile-nav-item'))
-            .find(link => normalizeNavHref(link.getAttribute('href')) === currentFile);
-        const titleNode = chip.querySelector('.mobile-nav-chip-title');
-        if (titleNode) {
-            titleNode.textContent = activeLink?.textContent?.trim() || 'Menu';
-        }
-        chip.dataset.target = currentFile;
+        // Quick navigation chip completely removed as requested
+        return;
     };
 
     const updateNavHighlight = (targetUrl) => {
@@ -433,7 +385,8 @@ document.addEventListener('DOMContentLoaded', () => {
             overlay.parentNode.insertBefore(backdrop, overlay);
         }
 
-        // Dynamically inject local canvas for starry galaxy arm background
+        // Dynamically inject local canvas for starry galaxy arm background (Removed/Deleted as requested)
+        /*
         let canvas = overlay.querySelector('.mobile-nav-canvas');
         if (!canvas) {
             canvas = document.createElement('canvas');
@@ -441,6 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
             overlay.appendChild(canvas);
             initGalaxyMenuCanvas(canvas, overlay);
         }
+        */
 
         const toggleMenu = () => {
             const isOpen = overlay.classList.contains('active');
@@ -675,7 +629,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initTypewriter();
     observeFaders();
     initMobileMenu();
-    initCosmicCanvas();
+    // initCosmicCanvas(); // Completely deleted as requested
     updateCursor();
     updateNavHighlight(window.location.pathname);
     if (window.lucide) window.lucide.createIcons();
