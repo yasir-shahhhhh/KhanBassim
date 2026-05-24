@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
        6. SMOOTH ROUTING ENGINE (SPA)
        ═══════════════════════════════════════════════════════ */
     const SOCIAL_LINKS = {
-        linkedin: 'https://www.linkedin.com/in/baasim-fayaz-khan-b20970258/',
+        linkedin: 'https://www.linkedin.com/in/khan-baasim-41b055408',
         instagram: 'https://www.instagram.com/khan__baasim/'
     };
 
