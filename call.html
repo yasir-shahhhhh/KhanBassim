@@ -355,22 +355,46 @@ Avoid jargon. Talk like a sophisticated human friend.`;
                         { role: 'assistant', content: 'Understood.' },
                         ...historyCopy
                     ];
-                    body = { model: 'meta-llama/llama-4-scout-17b-16e-instruct', messages: visionMsgs, max_tokens: 200 };
+                    
+                    const visionModels = [
+                        'meta-llama/llama-4-scout-17b-16e-instruct',
+                        'llama-3.2-90b-vision-preview',
+                        'llama-3.2-11b-vision-preview'
+                    ];
+
+                    for (const model of visionModels) {
+                        try {
+                            const res = await fetch(GROQ_API_URL, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ model, messages: visionMsgs, max_tokens: 200 })
+                            });
+                            if (res.ok) {
+                                const data = await res.json();
+                                const content = data.choices?.[0]?.message?.content;
+                                if (content) {
+                                    return content.replace(/[*#`]/g, '').trim();
+                                }
+                            }
+                        } catch (err) {
+                            console.error(`Vision model ${model} failed:`, err);
+                        }
+                    }
+                    throw new Error("All vision models failed.");
                 } else {
                     body = {
                         model: 'llama-3.3-70b-versatile', 
                         messages: [{role:'system', content:SYSTEM_PROMPT}, ...glConvHistory], 
                         max_tokens: 150 
                     };
+                    const res = await fetch(GROQ_API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(body)
+                    });
+                    const data = await res.json();
+                    return (data.choices[0].message.content || '').replace(/[*#`]/g, '').trim();
                 }
-
-                const res = await fetch(GROQ_API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
-                });
-                const data = await res.json();
-                return (data.choices[0].message.content || '').replace(/[*#`]/g, '').trim();
             } catch(e) { return "I'm having trouble connecting."; }
         }
 

@@ -2747,6 +2747,7 @@ function initializeKhanLogic() {
 
             try {
                 let body;
+                let reply = '';
                 if (frame) {
                     const visionMsgs = glConvHistory.filter(m => m.role !== 'system').map(m => ({ role: m.role, content: m.content }));
                     visionMsgs.push({
@@ -2757,26 +2758,55 @@ function initializeKhanLogic() {
                         ]
                     });
                     const finalMsgs = [{ role: 'user', content: 'System: ' + sysPrompt }, { role: 'assistant', content: 'Understood.' }, ...visionMsgs];
-                    body = { model: 'meta-llama/llama-4-scout-17b-16e-instruct', messages: finalMsgs, max_tokens: 200 };
+                    
+                    const visionModels = [
+                        'meta-llama/llama-4-scout-17b-16e-instruct',
+                        'llama-3.2-90b-vision-preview',
+                        'llama-3.2-11b-vision-preview'
+                    ];
+
+                    let ok = false;
+                    let lastErr = null;
+                    for (const vm of visionModels) {
+                        try {
+                            body = { model: vm, messages: finalMsgs, max_tokens: 200 };
+                            const response = await fetch(GROQ_CHAT_URL, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(body)
+                            });
+                            if (response.ok) {
+                                const data = await response.json();
+                                reply = (data?.choices?.[0]?.message?.content || 'I did not catch that.').replace(/[*#`]/g, '').trim();
+                                ok = true;
+                                break;
+                            } else {
+                                lastErr = new Error(`Connection error (${response.status})`);
+                            }
+                        } catch (err) {
+                            lastErr = err;
+                        }
+                    }
+                    if (!ok) {
+                        throw lastErr || new Error('All vision models failed.');
+                    }
                 } else {
                     glConvHistory.push({ role: 'user', content: userText });
                     body = { model: 'llama-3.3-70b-versatile', messages: glConvHistory, max_tokens: 200 };
+                    const response = await fetch(GROQ_CHAT_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(body)
+                    });
+                    if (!response.ok) {
+                        if (response.status === 404) throw new Error('API proxy not found. Ensure Netlify functions are deployed.');
+                        if (response.status === 401 || response.status === 403) throw new Error('API Key missing or invalid in Netlify settings.');
+                        throw new Error(`Connection error (${response.status})`);
+                    }
+                    const data = await response.json();
+                    reply = (data?.choices?.[0]?.message?.content || 'I did not catch that.').replace(/[*#`]/g, '').trim();
                 }
 
-                const response = await fetch(GROQ_CHAT_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
-                });
-
-                if (!response.ok) {
-                    if (response.status === 404) throw new Error('API proxy not found. Ensure Netlify functions are deployed.');
-                    if (response.status === 401 || response.status === 403) throw new Error('API Key missing or invalid in Netlify settings.');
-                    throw new Error(`Connection error (${response.status})`);
-                }
-
-                const data = await response.json();
-                const reply = (data?.choices?.[0]?.message?.content || 'I did not catch that.').replace(/[*#`]/g, '').trim();
                 glConvHistory.push({ role: 'assistant', content: reply });
                 return reply;
             } catch (err) {
