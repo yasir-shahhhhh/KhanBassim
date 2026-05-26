@@ -3,9 +3,9 @@
  * Handles: Preloader, Hero Video/Audio Sync, Smooth Routing, and Global UX Polish
  */
 
-// FORCE CACHE & SERVICE WORKER EVICTION SYSTEM (v6.2.5)
+// FORCE CACHE & SERVICE WORKER EVICTION SYSTEM (v6.2.6)
 (function() {
-    const PURGE_KEY = 'baasim-cache-purge-v6.2.5';
+    const PURGE_KEY = 'baasim-cache-purge-v6.2.6';
     if (!localStorage.getItem(PURGE_KEY)) {
         console.warn('Purging all service workers and caches to resolve active user caching issues...');
         
@@ -1025,11 +1025,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 50% { background-position: 100% 50%; }
                 100% { background-position: 0% 50%; }
             }
-            @keyframes badgePulse {
-                0% { box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 0 0 rgba(182, 107, 255, 0.15); border-color: rgba(255, 255, 255, 0.08); }
-                50% { box-shadow: 0 4px 25px rgba(0,0,0,0.4), 0 0 20px 4px rgba(182, 107, 255, 0.3); border-color: rgba(182, 107, 255, 0.3); }
-                100% { box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 0 0 rgba(182, 107, 255, 0.15); border-color: rgba(255, 255, 255, 0.08); }
-            }
         `;
         overlay.appendChild(styleEl);
 
@@ -1037,9 +1032,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <p style="font-size: 3.2rem; font-weight: 900; background: linear-gradient(135deg, #ffffff 10%, #d8b4fe 50%, #818cf8 90%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 60px rgba(139, 92, 246, 0.4); letter-spacing: -0.03em; font-family: var(--font-main); text-align: center; line-height: 1.35; margin: 0; padding: 0 15px; animation: textShimmer 4s ease infinite; background-size: 200% auto;">
                 ${greetingMsg}
             </p>
-            <div style="margin-top: 30px; display: inline-flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 10px 24px; border-radius: 100px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); animation: badgePulse 3s ease-in-out infinite;">
-                <span style="font-size: 0.8rem; font-weight: 700; color: rgba(255, 255, 255, 0.8); letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--font-main);">Click anywhere to enter</span>
-            </div>
         `;
 
         overlay.appendChild(textContainer);
