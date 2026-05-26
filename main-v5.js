@@ -1153,8 +1153,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Dismiss if the user clicks anywhere on the screen (here or there!)
         overlay.addEventListener('click', dismissAndReveal);
 
-        // Or dismiss automatically after exactly 2.2 seconds
-        setTimeout(dismissAndReveal, 2200);
+        // Or dismiss automatically after 5 seconds
+        setTimeout(dismissAndReveal, 5000);
     };
 
     /* ═══════════════════════════════════════════════════════
