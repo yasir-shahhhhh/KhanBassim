@@ -3,9 +3,9 @@
  * Handles: Preloader, Hero Video/Audio Sync, Smooth Routing, and Global UX Polish
  */
 
-// FORCE CACHE & SERVICE WORKER EVICTION SYSTEM (v6.2.4)
+// FORCE CACHE & SERVICE WORKER EVICTION SYSTEM (v6.2.5)
 (function() {
-    const PURGE_KEY = 'baasim-cache-purge-v6.2.4';
+    const PURGE_KEY = 'baasim-cache-purge-v6.2.5';
     if (!localStorage.getItem(PURGE_KEY)) {
         console.warn('Purging all service workers and caches to resolve active user caching issues...');
         
@@ -1003,24 +1003,43 @@ document.addEventListener('DOMContentLoaded', () => {
             else greetingMsg = 'Belated Eid Mubarak from Mr. Khan Bassim';
         }
 
-        // 3. Create elegant floating text container (no card box, no close buttons, no icons/emojis/logos)
+        // 3. Create highly aesthetic, 2026-level cinematic floating text container
         const textContainer = document.createElement('div');
         textContainer.style.cssText = `
             position: relative;
             z-index: 10;
             text-align: center;
             opacity: 0;
-            transform: scale(0.92);
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            max-width: 90%;
-            padding: 20px;
+            transform: scale(0.94);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 800px;
+            padding: 30px;
             pointer-events: none;
         `;
 
+        // Inject scoped keyframe animations for high-end cinematic movements
+        const styleEl = document.createElement('style');
+        styleEl.innerHTML = `
+            @keyframes textShimmer {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
+            @keyframes badgePulse {
+                0% { box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 0 0 rgba(182, 107, 255, 0.15); border-color: rgba(255, 255, 255, 0.08); }
+                50% { box-shadow: 0 4px 25px rgba(0,0,0,0.4), 0 0 20px 4px rgba(182, 107, 255, 0.3); border-color: rgba(182, 107, 255, 0.3); }
+                100% { box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 0 0 rgba(182, 107, 255, 0.15); border-color: rgba(255, 255, 255, 0.08); }
+            }
+        `;
+        overlay.appendChild(styleEl);
+
         textContainer.innerHTML = `
-            <p style="font-size: 2.2rem; font-weight: 800; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.65), 0 0 35px rgba(182, 107, 255, 0.55); letter-spacing: -0.01em; font-family: var(--font-main); text-align: center; line-height: 1.4; margin: 0;">
+            <p style="font-size: 3.2rem; font-weight: 900; background: linear-gradient(135deg, #ffffff 10%, #d8b4fe 50%, #818cf8 90%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 60px rgba(139, 92, 246, 0.4); letter-spacing: -0.03em; font-family: var(--font-main); text-align: center; line-height: 1.35; margin: 0; padding: 0 15px; animation: textShimmer 4s ease infinite; background-size: 200% auto;">
                 ${greetingMsg}
             </p>
+            <div style="margin-top: 30px; display: inline-flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 10px 24px; border-radius: 100px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); animation: badgePulse 3s ease-in-out infinite;">
+                <span style="font-size: 0.8rem; font-weight: 700; color: rgba(255, 255, 255, 0.8); letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--font-main);">Click anywhere to enter</span>
+            </div>
         `;
 
         overlay.appendChild(textContainer);
