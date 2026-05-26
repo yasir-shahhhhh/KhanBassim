@@ -782,6 +782,258 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /* ═══════════════════════════════════════════════════════
+       8.6. EID CELEBRATION SYSTEM
+       ═══════════════════════════════════════════════════════ */
+    const initEidCelebrationSystem = () => {
+        const EID_CONFIG = {
+            'fitr': {
+                eve: new Date('2026-03-20'),
+                day: new Date('2026-03-21'),
+                post1: new Date('2026-03-22'),
+                post2: new Date('2026-03-23')
+            },
+            'adha': {
+                eve: new Date('2026-05-26'),
+                day: new Date('2026-05-27'),
+                post1: new Date('2026-05-28'),
+                post2: new Date('2026-05-29')
+            }
+        };
+
+        const getEidStatus = () => {
+            // URL testing overrides (e.g. ?test-eid=adha-day)
+            const urlParams = new URLSearchParams(window.location.search);
+            const testEid = urlParams.get('test-eid');
+            if (testEid) {
+                const [type, phase] = testEid.split('-');
+                if ((type === 'fitr' || type === 'adha') && (phase === 'eve' || phase === 'day' || phase === 'post')) {
+                    return { type, phase };
+                }
+            }
+
+            const today = new Date();
+            const target = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+            const isSameDay = (d1, d2) => {
+                return d1.getFullYear() === d2.getFullYear() &&
+                       d1.getMonth() === d2.getMonth() &&
+                       d1.getDate() === d2.getDate();
+            };
+
+            for (const [eidType, dates] of Object.entries(EID_CONFIG)) {
+                if (isSameDay(target, dates.eve)) return { type: eidType, phase: 'eve' };
+                if (isSameDay(target, dates.day)) return { type: eidType, phase: 'day' };
+                if (isSameDay(target, dates.post1) || isSameDay(target, dates.post2)) return { type: eidType, phase: 'post' };
+            }
+            return null;
+        };
+
+        const status = getEidStatus();
+        if (!status) return;
+
+        // Session frequency limiter - once per 6 hours (bypassed if URL test-eid parameter is present)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (!urlParams.get('test-eid')) {
+            const lastShown = localStorage.getItem('bfk_eid_celebration_shown');
+            const now = Date.now();
+            if (lastShown && (now - parseInt(lastShown)) < 6 * 60 * 60 * 1000) {
+                return;
+            }
+            localStorage.setItem('bfk_eid_celebration_shown', now.toString());
+        }
+
+        const { type, phase } = status;
+
+        // 1. Create overlay container
+        const overlay = document.createElement('div');
+        overlay.id = 'eid-celebration-overlay';
+        overlay.style.cssText = `
+            position: fixed;
+            inset: 0;
+            z-index: 100000;
+            background: rgba(2, 3, 11, 0.88);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        `;
+
+        // 2. Create Canvas for confetti burst
+        const canvas = document.createElement('canvas');
+        canvas.style.cssText = `
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        `;
+        overlay.appendChild(canvas);
+
+        // 3. Create message card container (initially hidden)
+        const card = document.createElement('div');
+        card.id = 'eid-message-card';
+        card.style.cssText = `
+            position: relative;
+            max-width: 90%;
+            width: 460px;
+            padding: 40px 30px;
+            background: linear-gradient(135deg, rgba(14, 22, 52, 0.92), rgba(6, 9, 26, 0.96));
+            border: 1px solid rgba(151, 178, 255, 0.28);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 35px rgba(182, 107, 255, 0.25);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 10;
+        `;
+
+        // Resolve greetings text based on Eid calendar matching
+        let headingText = '';
+        let greetingMsg = '';
+        if (type === 'fitr') {
+            headingText = 'Eid-ul-Fitr';
+            if (phase === 'eve') greetingMsg = 'Advance Eid Mubarak from Mr. Khan Bassim 🎉';
+            else if (phase === 'day') greetingMsg = 'Eid Mubarak from Mr. Khan Bassim 🌙✨';
+            else greetingMsg = 'Belated Eid Mubarak from Mr. Khan Bassim 🌙';
+        } else {
+            headingText = 'Eid-ul-Adha';
+            if (phase === 'eve') greetingMsg = 'Advance Eid Mubarak from Mr. Khan Bassim 🎉🐐';
+            else if (phase === 'day') greetingMsg = 'Eid Mubarak from Mr. Khan Bassim 🐐✨';
+            else greetingMsg = 'Belated Eid Mubarak from Mr. Khan Bassim 🌙🐐';
+        }
+
+        card.innerHTML = `
+            <div style="font-size: 3rem; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(182, 107, 255, 0.5));">🎉</div>
+            <h2 style="font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 12px; line-height: 1.3; letter-spacing: -0.01em; font-family: var(--font-main);">
+                ${headingText}
+            </h2>
+            <p style="font-size: 1.15rem; color: #d6dfff; font-weight: 500; margin-bottom: 30px; line-height: 1.6; font-family: var(--font-main);">
+                ${greetingMsg}
+            </p>
+            <button id="eid-close-btn" class="btn btn-primary" style="padding: 12px 36px; font-size: 0.9rem; border-radius: 100px; width: auto; margin: 0 auto; box-shadow: 0 8px 24px rgba(182, 107, 255, 0.4);">
+                Celebrate <i data-lucide="sparkles" style="width: 15px; height: 15px;"></i>
+            </button>
+        `;
+        overlay.appendChild(card);
+        document.body.appendChild(overlay);
+
+        // Lock background scroll when celebration overlay is active
+        document.body.classList.add('chat-open');
+
+        // Fade in overlay immediately
+        requestAnimationFrame(() => {
+            overlay.style.opacity = '1';
+        });
+
+        // Confetti Canvas Particle Logic
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const colors = ['#7a8dff', '#b66bff', '#36d6ff', '#ffeb3b', '#ff5722', '#4caf50'];
+        const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+        const resize = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Burst Poppers from bottom corners shooting inwards
+        const spawnPopper = (x, y, angle) => {
+            const count = isMobile ? 55 : 110; // Lower density on mobile for supreme performance
+            for (let i = 0; i < count; i++) {
+                const speed = Math.random() * 14 + 7;
+                const finalAngle = angle + (Math.random() - 0.5) * 0.45;
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(finalAngle) * speed,
+                    vy: Math.sin(finalAngle) * speed,
+                    size: Math.random() * 8 + 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    shape: Math.random() > 0.45 ? 'square' : 'circle',
+                    rotation: Math.random() * Math.PI * 2,
+                    rotationSpeed: (Math.random() - 0.5) * 0.15,
+                    alpha: 1,
+                    decay: Math.random() * 0.012 + 0.006
+                });
+            }
+        };
+
+        // Simultaneous burst trigger
+        spawnPopper(0, window.innerHeight, -Math.PI / 4); // Bottom-left shoots up-right
+        spawnPopper(window.innerWidth, window.innerHeight, -3 * Math.PI / 4); // Bottom-right shoots up-left
+
+        let animFrameId;
+        const animate = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach((p, idx) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.22; // Gravity
+                p.vx *= 0.98; // Drag
+                p.vy *= 0.98;
+                p.rotation += p.rotationSpeed;
+                p.alpha -= p.decay;
+
+                if (p.alpha <= 0 || p.y > canvas.height) {
+                    particles.splice(idx, 1);
+                    return;
+                }
+
+                ctx.save();
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = p.color;
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation);
+
+                if (p.shape === 'circle') {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                }
+                ctx.restore();
+            });
+
+            if (particles.length > 0) {
+                animFrameId = requestAnimationFrame(animate);
+            }
+        };
+        animate();
+
+        // Show centered festive card after a delay of 1.1s (between 0.8s and 1.5s)
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+            if (window.lucide) window.lucide.createIcons();
+        }, 1100);
+
+        // Dismiss Eid Celebration System
+        const dismiss = () => {
+            overlay.style.opacity = '0';
+            card.style.transform = 'translateY(-20px)';
+            document.body.classList.remove('chat-open'); // Restore scrolling
+            cancelAnimationFrame(animFrameId);
+            window.removeEventListener('resize', resize);
+            setTimeout(() => {
+                overlay.remove();
+            }, 800);
+        };
+
+        card.querySelector('#eid-close-btn').addEventListener('click', dismiss);
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) dismiss();
+        });
+    };
+
+    /* ═══════════════════════════════════════════════════════
        9. INITIALIZATION
        ═══════════════════════════════════════════════════════ */
     initExperience();
@@ -791,6 +1043,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // initCosmicCanvas(); // Completely deleted as requested
     updateCursor();
     initCard3DTilt();
+    initEidCelebrationSystem();
     updateNavHighlight(window.location.pathname);
     if (window.lucide) window.lucide.createIcons();
 });
