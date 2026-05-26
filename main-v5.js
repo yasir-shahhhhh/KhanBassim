@@ -3,6 +3,48 @@
  * Handles: Preloader, Hero Video/Audio Sync, Smooth Routing, and Global UX Polish
  */
 
+// FORCE CACHE & SERVICE WORKER EVICTION SYSTEM (v6.2.4)
+(function() {
+    const PURGE_KEY = 'baasim-cache-purge-v6.2.4';
+    if (!localStorage.getItem(PURGE_KEY)) {
+        console.warn('Purging all service workers and caches to resolve active user caching issues...');
+        
+        // 1. Unregister all service workers
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+                for (let registration of registrations) {
+                    registration.unregister()
+                        .then(success => console.log('Service Worker unregistered:', success))
+                        .catch(err => console.error('Failed to unregister Service Worker:', err));
+                }
+            }).catch(err => console.error('Error fetching registrations:', err));
+        }
+
+        // 2. Clear all cache storage caches
+        if ('caches' in window) {
+            caches.keys().then(keys => {
+                return Promise.all(keys.map(key => {
+                    return caches.delete(key)
+                        .then(success => console.log('Cache storage cleared:', key, success))
+                        .catch(err => console.error('Failed to clear cache storage:', key, err));
+                }));
+            }).catch(err => console.error('Error fetching cache keys:', err));
+        }
+
+        // 3. Mark as purged so we do not loop
+        try {
+            localStorage.setItem(PURGE_KEY, 'true');
+        } catch (e) {
+            console.error('Failed to set purge key in localStorage:', e);
+        }
+
+        // 4. Force hard reload (bypass browser cache) after a tiny delay
+        setTimeout(() => {
+            window.location.reload(true);
+        }, 150);
+    }
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
     
     /* ═══════════════════════════════════════════════════════
