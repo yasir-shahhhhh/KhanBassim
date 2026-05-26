@@ -200,9 +200,9 @@ a {
     top: 24px;
     left: 50%;
     transform: translateX(-50%);
-    width: 95%;
-    max-width: 1200px;
-    padding: 10px 24px;
+    width: auto;
+    max-width: 96%;
+    padding: 16px 40px;
     background: rgba(7, 11, 28, 0.82);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
@@ -225,11 +225,9 @@ a {
 
 .nav-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    max-width: 1400px;
-    margin: 0 auto;
-    width: 100%;
+    width: auto;
     position: relative;
 }
 
@@ -324,12 +322,11 @@ a {
 }
 
 .nav-links {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
     display: flex;
-    gap: var(--spacing-md);
+    gap: clamp(1rem, 2.5vw, 2rem);
     align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
 }
 
 .mobile-nav-header-tools {
@@ -438,7 +435,7 @@ a {
 .nav-links a.active::after {
     content: '';
     position: absolute;
-    bottom: -6px;
+    bottom: -4px;
     left: 0;
     width: 100%;
     height: 2px;
