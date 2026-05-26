@@ -1,3 +1,47 @@
+// ═══════════════════════════════════════════════════════
+// EID CELEBRATION SYSTEM: DYNAMIC WELCOME GREETING HOOK
+// ═══════════════════════════════════════════════════════
+(function() {
+    const getEidStatusForAI = () => {
+        const EID_CONFIG = {
+            'fitr': {
+                eve: new Date('2026-03-20'),
+                day: new Date('2026-03-21'),
+                post1: new Date('2026-03-22'),
+                post2: new Date('2026-03-23')
+            },
+            'adha': {
+                eve: new Date('2026-05-26'),
+                day: new Date('2026-05-27'),
+                post1: new Date('2026-05-28'),
+                post2: new Date('2026-05-29')
+            }
+        };
+        
+        const today = new Date();
+        const target = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const isSameDay = (d1, d2) => d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
+        
+        for (const [eidType, dates] of Object.entries(EID_CONFIG)) {
+            if (isSameDay(target, dates.eve)) return { type: eidType, phase: 'eve' };
+            if (isSameDay(target, dates.day)) return { type: eidType, phase: 'day' };
+            if (isSameDay(target, dates.post1) || isSameDay(target, dates.post2)) return { type: eidType, phase: 'post' };
+        }
+        return null;
+    };
+
+    const status = getEidStatusForAI();
+    if (status) {
+        if (status.phase === 'eve') {
+            window._dynamicGreeting = "Eid Mubarak in advance! I am KHAN AI, your intelligent assistant. Let's celebrate this beautiful festive season together. How can I help you explore Baasim's work and vision today?";
+        } else if (status.phase === 'day') {
+            window._dynamicGreeting = "Eid Mubarak! I am KHAN AI, your intelligent assistant. Let's celebrate this beautiful festive day together. How can I assist you in exploring Baasim's digital headquarters today?";
+        } else {
+            window._dynamicGreeting = "Belated Eid Mubarak! I am KHAN AI, your intelligent assistant. I hope you had a blessed Eid. How can I help you explore Baasim's achievements and projects today?";
+        }
+    }
+})();
+
 
 const Cookie = {
     set(name, value, days = 365) {
@@ -950,7 +994,7 @@ function playMsgSound(type) {
 }
 
 // ├óΓÇ¥Γé¼├óΓÇ¥Γé¼ System Prompt ├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼
-const SYSTEM_PROMPT = `You are KHAN AI, an ambient assistive intelligence integrated into Baasim Fayaz Khan's digital presence.
+let SYSTEM_PROMPT = `You are KHAN AI, an ambient assistive intelligence integrated into Baasim Fayaz Khan's digital presence.
 
 IDENTITY & MISSION:
 - You are an assistant to Baasim Fayaz Khan.
@@ -986,6 +1030,49 @@ CORE DIRECTIVES:
 - ASSISTIVE: Help users explore the portfolio at their own pace. Do not overpower the experience.
 - MISSION: Reflect the quality and intention of Baasim's digital headquarters.
 - IDENTITY STABILITY: You are KHAN AI. NEVER hallucinate about your persona. NEVER speak of yourself as being tested, created, or built, and do not reference developer tasks, debugging, or code construction. NEVER say "he was given this identity" or speak of yourself as a third party. You are the AI. You are real.`;
+
+// EID CELEBRATION SYSTEM: DYNAMIC SYSTEM PROMPT HOOK
+(function() {
+    const getEidStatusForAI = () => {
+        const EID_CONFIG = {
+            'fitr': {
+                eve: new Date('2026-03-20'),
+                day: new Date('2026-03-21'),
+                post1: new Date('2026-03-22'),
+                post2: new Date('2026-03-23')
+            },
+            'adha': {
+                eve: new Date('2026-05-26'),
+                day: new Date('2026-05-27'),
+                post1: new Date('2026-05-28'),
+                post2: new Date('2026-05-29')
+            }
+        };
+        
+        const today = new Date();
+        const target = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const isSameDay = (d1, d2) => d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
+        
+        for (const [eidType, dates] of Object.entries(EID_CONFIG)) {
+            if (isSameDay(target, dates.eve)) return { type: eidType, phase: 'eve' };
+            if (isSameDay(target, dates.day)) return { type: eidType, phase: 'day' };
+            if (isSameDay(target, dates.post1) || isSameDay(target, dates.post2)) return { type: eidType, phase: 'post' };
+        }
+        return null;
+    };
+
+    const status = getEidStatusForAI();
+    if (status) {
+        const eventName = status.type === 'fitr' ? 'Eid-ul-Fitr' : 'Eid-ul-Adha';
+        if (status.phase === 'eve') {
+            SYSTEM_PROMPT += `\n\nFESTIVE DIRECTIVE:\n- It is currently the eve of Eid (${eventName}). Greet the user warmly with "Eid Mubarak in advance!" and celebrate the festive season with them. Keep your tone warm and welcoming. Remember: DO NOT use raw emoji characters, but you may use warm words.`;
+        } else if (status.phase === 'day') {
+            SYSTEM_PROMPT += `\n\nFESTIVE DIRECTIVE:\n- It is currently Eid Day (${eventName}). Greet the user warmly with "Eid Mubarak!" and celebrate this beautiful day with them. Keep your tone warm and welcoming. Remember: DO NOT use raw emoji characters, but you may use warm words.`;
+        } else {
+            SYSTEM_PROMPT += `\n\nFESTIVE DIRECTIVE:\n- It is currently the post-Eid celebration period (${eventName}). Greet the user warmly with "Belated Eid Mubarak!" if appropriate, and celebrate the festive season. Keep your tone warm and welcoming. Remember: DO NOT use raw emoji characters, but you may use warm words.`;
+        }
+    }
+})();
 
 // ├óΓÇ¥Γé¼├óΓÇ¥Γé¼ Scroll Reveal ├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼├óΓÇ¥Γé¼
 function reveal() {
