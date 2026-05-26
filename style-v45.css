@@ -1268,6 +1268,15 @@ footer {
    ═══════════════════════════════════════════════════════ */
 
 @media (max-width: 768px) {
+    :root {
+        --spacing-lg: 2rem !important;
+        --spacing-xl: 3.5rem !important; /* Shrink from 8rem to remove giant empty gaps */
+    }
+
+    .section-padding {
+        padding: 3.5rem 5% !important; /* Compact premium breathing room on mobile */
+    }
+
     .navbar {
         top: 24px;
         bottom: auto;
@@ -1322,16 +1331,27 @@ footer {
         display: inline-flex;
     }
 
-    /* Add padding to main to prevent content overlap with top nav */
+    /* Eliminate all main padding in hero-mode to center landing content perfectly */
+    body.hero-mode main {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    /* Add padding to main to prevent content overlap with top nav on subpages */
     main {
-        padding-top: 96px !important;
+        padding-top: 80px !important;
         padding-bottom: 40px !important;
     }
 
-
     #hero {
-        padding: 120px 20px 80px;
-        text-align: center;
+        height: 100vh !important;
+        height: 100svh !important; /* Premium mobile viewport height to prevent scrolling */
+        padding: 40px 20px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
     }
 
     .hero-title {
