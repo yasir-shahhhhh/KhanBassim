@@ -833,6 +833,45 @@ document.addEventListener('DOMContentLoaded', () => {
         // Prevent duplicate overlays
         if (document.getElementById('eid-celebration-overlay')) return;
 
+        // Play Celestial Acoustic Chime (using Web Audio API)
+        const playCelebrationSound = () => {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                
+                const playNote = (freq, delay, duration, volume) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+                    
+                    gain.gain.setValueAtTime(0, ctx.currentTime + delay);
+                    gain.gain.linearRampToValueAtTime(volume, ctx.currentTime + delay + 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + delay + duration);
+                    
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    
+                    osc.start(ctx.currentTime + delay);
+                    osc.stop(ctx.currentTime + delay + duration);
+                };
+
+                // Premium celestial arpeggio chime (C major 9 chord with bright high frequencies)
+                playNote(523.25, 0.0, 1.2, 0.12);   // C5
+                playNote(659.25, 0.12, 1.2, 0.10);  // E5
+                playNote(783.99, 0.24, 1.2, 0.08);  // G5
+                playNote(987.77, 0.36, 1.5, 0.06);  // B5
+                playNote(1046.50, 0.48, 1.8, 0.04); // C6
+                playNote(1318.51, 0.60, 2.0, 0.02); // E6
+            } catch (e) {
+                console.warn("Acoustic chime failed:", e);
+            }
+        };
+
+        playCelebrationSound();
+
         const EID_CONFIG = {
             'fitr': {
                 eve: new Date('2026-03-20'),
@@ -879,17 +918,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const status = getEidStatus();
         if (!status) return;
 
-        // Session frequency limiter - once per 6 hours (bypassed if URL test-eid parameter is present)
+        // Caching/throttling completely bypassed as requested. Anyone who opens the website will experience the celebration again and again.
         const urlParams = new URLSearchParams(window.location.search);
-        if (!urlParams.get('test-eid')) {
-            const lastShown = localStorage.getItem('bfk_eid_celebration_shown');
-            const now = Date.now();
-            if (lastShown && (now - parseInt(lastShown)) < 6 * 60 * 60 * 1000) {
-                return;
-            }
-            localStorage.setItem('bfk_eid_celebration_shown', now.toString());
-        }
-
         const { type, phase } = status;
 
         // 1. Create overlay container
@@ -920,18 +950,18 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         overlay.appendChild(canvas);
 
-        // 3. Create message card container (initially hidden)
+        // 3. Create message card container (initially hidden, premium double border styling)
         const card = document.createElement('div');
         card.id = 'eid-message-card';
         card.style.cssText = `
             position: relative;
             max-width: 90%;
             width: 460px;
-            padding: 40px 30px;
-            background: linear-gradient(135deg, rgba(14, 22, 52, 0.92), rgba(6, 9, 26, 0.96));
-            border: 1px solid rgba(151, 178, 255, 0.28);
-            border-radius: 24px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 35px rgba(182, 107, 255, 0.25);
+            padding: 45px 35px;
+            background: linear-gradient(135deg, rgba(16, 20, 48, 0.94), rgba(7, 10, 29, 0.98));
+            border: 1.5px solid rgba(255, 215, 0, 0.35);
+            border-radius: 28px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 45px rgba(182, 107, 255, 0.3), inset 0 0 25px rgba(255, 215, 0, 0.04);
             text-align: center;
             opacity: 0;
             transform: translateY(20px);
@@ -939,31 +969,43 @@ document.addEventListener('DOMContentLoaded', () => {
             z-index: 10;
         `;
 
+        // Sleek vector SVG icon templates instead of colored standard emojis
+        const moonSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #b66bff; display: inline-block; vertical-align: middle; margin: 0 4px;"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
+        const sparklesSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #ffeb3b; display: inline-block; vertical-align: middle; margin: 0 4px;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>';
+        const popperSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #36d6ff; display: inline-block; vertical-align: middle; margin: 0 4px;"><path d="M5.8 11.3 2 22l10.7-3.8"/><path d="m19 5-3 3"/><path d="m19 10-6-6"/></svg>';
+        const goatSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #ffeb3b; display: inline-block; vertical-align: middle; margin: 0 4px;"><path d="M16 18c0 .6-.4 1-1 1h-1v-2c0-.6.4-1 1-1h1v2z"/><path d="M19 14h-3.5a2.5 2.5 0 0 0-2.5 2.5v1.5a1 1 0 0 1-1 1H11a1 1 0 0 1-1-1v-3.5A2.5 2.5 0 0 0 7.5 12H5a1 1 0 0 0-1 1v5c0 1 1 2 2 2h1a2 2 0 0 0 2-2v-3.5a.5.5 0 0 1 .5-.5h.5c.3 0 .5.2.5.5V18c0 1.7 1.3 3 3 3h2c1.7 0 3-1.3 3-3v-1.5z"/></svg>';
+
+        const bigMoonSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: #b66bff; filter: drop-shadow(0 0 8px rgba(182, 107, 255, 0.6)); margin: 0 auto 15px;"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4"/></svg>';
+        const bigGoatSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: #ffeb3b; filter: drop-shadow(0 0 8px rgba(255, 235, 59, 0.5)); margin: 0 auto 15px;"><path d="M16 18c0 .6-.4 1-1 1h-1v-2c0-.6.4-1 1-1h1v2z"/><path d="M19 14h-3.5a2.5 2.5 0 0 0-2.5 2.5v1.5a1 1 0 0 1-1 1H11a1 1 0 0 1-1-1v-3.5A2.5 2.5 0 0 0 7.5 12H5a1 1 0 0 0-1 1v5c0 1 1 2 2 2h1a2 2 0 0 0 2-2v-3.5a.5.5 0 0 1 .5-.5h.5c.3 0 .5.2.5.5V18c0 1.7 1.3 3 3 3h2c1.7 0 3-1.3 3-3v-1.5a.5.5 0 0 1 .5-.5h.5a.5.5 0 0 1 .5.5v1a2 2 0 0 0 2 2h1a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1z"/><path d="M8 8.5c-.8 0-1.5-.7-1.5-1.5a3.5 3.5 0 0 1 6.5-1.7"/><path d="M12.5 5.3a3.5 3.5 0 0 1 6.5 1.7c0 .8-.7 1.5-1.5 1.5"/><path d="M10 11.5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1z" fill="currentColor"/></svg>';
+
         // Resolve greetings text based on Eid calendar matching
         let headingText = '';
         let greetingMsg = '';
+        let topIconSvg = '';
         if (type === 'fitr') {
             headingText = 'Eid-ul-Fitr';
-            if (phase === 'eve') greetingMsg = 'Eid Mubarak in advance from Mr. Khan Bassim \u{1F389}';
-            else if (phase === 'day') greetingMsg = 'Eid Mubarak from Mr. Khan Bassim \u{1F319}\u{2728}';
-            else greetingMsg = 'Belated Eid Mubarak from Mr. Khan Bassim \u{1F319}';
+            topIconSvg = bigMoonSvg;
+            if (phase === 'eve') greetingMsg = `Eid Mubarak in advance from Mr. Khan Bassim ${popperSvg}`;
+            else if (phase === 'day') greetingMsg = `Eid Mubarak from Mr. Khan Bassim ${moonSvg}${sparklesSvg}`;
+            else greetingMsg = `Belated Eid Mubarak from Mr. Khan Bassim ${moonSvg}`;
         } else {
             headingText = 'Eid-ul-Adha';
-            if (phase === 'eve') greetingMsg = 'Eid Mubarak in advance from Mr. Khan Bassim \u{1F389}\u{1F410}';
-            else if (phase === 'day') greetingMsg = 'Eid Mubarak from Mr. Khan Bassim \u{1F410}\u{2728}';
-            else greetingMsg = 'Belated Eid Mubarak from Mr. Khan Bassim \u{1F319}\u{1F410}';
+            topIconSvg = bigGoatSvg;
+            if (phase === 'eve') greetingMsg = `Eid Mubarak in advance from Mr. Khan Bassim ${popperSvg}${goatSvg}`;
+            else if (phase === 'day') greetingMsg = `Eid Mubarak from Mr. Khan Bassim ${goatSvg}${sparklesSvg}`;
+            else greetingMsg = `Belated Eid Mubarak from Mr. Khan Bassim ${moonSvg}${goatSvg}`;
         }
 
         card.innerHTML = `
-            <div style="font-size: 3rem; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(182, 107, 255, 0.5));">\u{1F389}</div>
+            <div style="margin-bottom: 5px;">${topIconSvg}</div>
             <h2 style="font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 12px; line-height: 1.3; letter-spacing: -0.01em; font-family: var(--font-main);">
-                \u{1F319} ${headingText} \u{1F319}
+                ${headingText}
             </h2>
-            <p style="font-size: 1.15rem; color: #d6dfff; font-weight: 500; margin-bottom: 30px; line-height: 1.6; font-family: var(--font-main);">
+            <p style="font-size: 1.15rem; color: #d6dfff; font-weight: 500; margin-bottom: 30px; line-height: 1.6; font-family: var(--font-main); display: flex; align-items: center; justify-content: center; flex-wrap: wrap;">
                 ${greetingMsg}
             </p>
-            <button id="eid-close-btn" class="btn btn-primary" style="padding: 12px 36px; font-size: 0.9rem; border-radius: 100px; width: auto; margin: 0 auto; box-shadow: 0 8px 24px rgba(182, 107, 255, 0.4);">
-                Celebrate <i data-lucide="sparkles" style="width: 15px; height: 15px;"></i>
+            <button id="eid-close-btn" class="btn btn-primary" style="padding: 12px 36px; font-size: 0.9rem; border-radius: 100px; width: auto; margin: 0 auto; box-shadow: 0 8px 24px rgba(182, 107, 255, 0.4); display: flex; align-items: center; gap: 8px; justify-content: center; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">
+                Celebrate <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
             </button>
         `;
         overlay.appendChild(card);
