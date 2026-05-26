@@ -466,14 +466,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         */
 
+        let scrollPosition = 0;
+
         const toggleMenu = () => {
             const isOpen = overlay.classList.contains('active');
             if (isOpen) {
                 closeMenu();
             } else {
+                scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
                 overlay.classList.add('active');
                 backdrop.classList.add('active');
                 document.body.classList.add('nav-open');
+                document.documentElement.classList.add('nav-open');
+                document.body.style.top = `-${scrollPosition}px`;
                 menuBtn.classList.add('is-active');
             }
         };
@@ -482,6 +487,9 @@ document.addEventListener('DOMContentLoaded', () => {
             overlay.classList.remove('active');
             backdrop.classList.remove('active');
             document.body.classList.remove('nav-open');
+            document.documentElement.classList.remove('nav-open');
+            document.body.style.top = '';
+            window.scrollTo(0, scrollPosition);
             menuBtn.classList.remove('is-active');
         };
 
