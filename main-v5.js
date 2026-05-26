@@ -258,10 +258,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (newMain && currentMain) {
                 const isHeroTarget = url.endsWith('index.html') || url === '/' || url === '';
+                const wasHero = document.body.classList.contains('hero-mode');
+
                 if (isHeroTarget) {
                     document.body.classList.add('hero-mode');
                 } else {
                     document.body.classList.remove('hero-mode');
+                }
+
+                // If transitioning from a hero landing page to a sub-page, trigger Eid celebration!
+                if (wasHero && !isHeroTarget) {
+                    setTimeout(() => {
+                        initEidCelebrationSystem();
+                    }, 400);
+                }
+
+                // Always ensure the navbar is revealed on page navigation
+                const topBar = document.querySelector('.navbar');
+                if (topBar) {
+                    topBar.classList.remove('nav-hidden');
                 }
 
                 const newStyles = newDoc.querySelectorAll('head style');
@@ -782,9 +797,42 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /* ═══════════════════════════════════════════════════════
+       8.7. SMART SCROLL NAVBAR
+       ═══════════════════════════════════════════════════════ */
+    const initSmartScrollNavbar = () => {
+        const topBar = document.querySelector('.navbar');
+        if (!topBar) return;
+
+        let lastScrollY = window.scrollY;
+        const scrollThreshold = 10;
+
+        window.addEventListener('scroll', () => {
+            if (document.body.classList.contains('nav-open') || document.body.classList.contains('chat-open')) {
+                return;
+            }
+
+            const currentScrollY = window.scrollY;
+            if (currentScrollY < 0) return;
+
+            const diff = Math.abs(currentScrollY - lastScrollY);
+            if (diff > scrollThreshold) {
+                if (currentScrollY > lastScrollY && currentScrollY > 80) {
+                    topBar.classList.add('nav-hidden');
+                } else if (currentScrollY < lastScrollY) {
+                    topBar.classList.remove('nav-hidden');
+                }
+                lastScrollY = currentScrollY;
+            }
+        }, { passive: true });
+    };
+
+    /* ═══════════════════════════════════════════════════════
        8.6. EID CELEBRATION SYSTEM
        ═══════════════════════════════════════════════════════ */
     const initEidCelebrationSystem = () => {
+        // Prevent duplicate overlays
+        if (document.getElementById('eid-celebration-overlay')) return;
+
         const EID_CONFIG = {
             'fitr': {
                 eve: new Date('2026-03-20'),
@@ -896,20 +944,20 @@ document.addEventListener('DOMContentLoaded', () => {
         let greetingMsg = '';
         if (type === 'fitr') {
             headingText = 'Eid-ul-Fitr';
-            if (phase === 'eve') greetingMsg = 'Advance Eid Mubarak from Mr. Khan Bassim 🎉';
-            else if (phase === 'day') greetingMsg = 'Eid Mubarak from Mr. Khan Bassim 🌙✨';
-            else greetingMsg = 'Belated Eid Mubarak from Mr. Khan Bassim 🌙';
+            if (phase === 'eve') greetingMsg = 'Eid Mubarak in advance from Mr. Khan Bassim \u{1F389}';
+            else if (phase === 'day') greetingMsg = 'Eid Mubarak from Mr. Khan Bassim \u{1F319}\u{2728}';
+            else greetingMsg = 'Belated Eid Mubarak from Mr. Khan Bassim \u{1F319}';
         } else {
             headingText = 'Eid-ul-Adha';
-            if (phase === 'eve') greetingMsg = 'Advance Eid Mubarak from Mr. Khan Bassim 🎉🐐';
-            else if (phase === 'day') greetingMsg = 'Eid Mubarak from Mr. Khan Bassim 🐐✨';
-            else greetingMsg = 'Belated Eid Mubarak from Mr. Khan Bassim 🌙🐐';
+            if (phase === 'eve') greetingMsg = 'Eid Mubarak in advance from Mr. Khan Bassim \u{1F389}\u{1F410}';
+            else if (phase === 'day') greetingMsg = 'Eid Mubarak from Mr. Khan Bassim \u{1F410}\u{2728}';
+            else greetingMsg = 'Belated Eid Mubarak from Mr. Khan Bassim \u{1F319}\u{1F410}';
         }
 
         card.innerHTML = `
-            <div style="font-size: 3rem; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(182, 107, 255, 0.5));">🎉</div>
+            <div style="font-size: 3rem; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(182, 107, 255, 0.5));">\u{1F389}</div>
             <h2 style="font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 12px; line-height: 1.3; letter-spacing: -0.01em; font-family: var(--font-main);">
-                ${headingText}
+                \u{1F319} ${headingText} \u{1F319}
             </h2>
             <p style="font-size: 1.15rem; color: #d6dfff; font-weight: 500; margin-bottom: 30px; line-height: 1.6; font-family: var(--font-main);">
                 ${greetingMsg}
@@ -1043,7 +1091,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // initCosmicCanvas(); // Completely deleted as requested
     updateCursor();
     initCard3DTilt();
-    initEidCelebrationSystem();
+    initSmartScrollNavbar();
+    if (!document.body.classList.contains('hero-mode')) {
+        initEidCelebrationSystem();
+    }
     updateNavHighlight(window.location.pathname);
     if (window.lucide) window.lucide.createIcons();
 });

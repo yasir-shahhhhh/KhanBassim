@@ -223,6 +223,12 @@ a {
     box-shadow: 0 0 20px var(--accent-glow);
 }
 
+.navbar.nav-hidden {
+    transform: translateX(-50%) translateY(-100px) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
 .nav-container {
     display: flex;
     justify-content: center; /* Perfectly center navigation items in the middle of the glass pill container */
