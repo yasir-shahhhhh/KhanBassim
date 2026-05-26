@@ -1,4 +1,4 @@
-const CACHE_NAME = 'baasim-portfolio-v6.1.4';
+const CACHE_NAME = 'baasim-portfolio-v6.1.5';
 const ASSETS = [
     '/',
     '/index.html',
@@ -10,9 +10,9 @@ const ASSETS = [
     '/contact.html',
     '/proteios.html',
     '/inamigos.html',
-    '/style-v45.css?v=6.1.4',
-    '/main-v5.js?v=6.1.4',
-    '/khan-inject-v45.js?v=6.1.4',
+    '/style-v45.css?v=6.1.5',
+    '/main-v5.js?v=6.1.5',
+    '/khan-inject-v45.js?v=6.1.5',
     '/assets/profile-v5.jpeg',
     '/assets/logo3.jpeg',
     '/assets/thumbnail1.jpeg'

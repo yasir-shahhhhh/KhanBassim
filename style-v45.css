@@ -1858,7 +1858,7 @@ a, button, [onclick], .btn, .company-card, .project-card, .contact-item {
     padding: 100px 30px 40px;
     transform: translateX(100%);
     opacity: 0;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
+    transition: transform 0.75s cubic-bezier(0.175, 0.885, 0.32, 1.16), opacity 0.5s;
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
@@ -2019,6 +2019,24 @@ body.chat-open {
 }
 
 @media (max-width: 768px) {
+    /* Subtle 3D Jiggly Elastic Background Pushback on mobile nav open */
+    body {
+        perspective: 1200px;
+    }
+
+    main {
+        transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.18), opacity 0.7s, filter 0.7s !important;
+        transform-style: preserve-3d;
+        backface-visibility: hidden;
+    }
+
+    body.nav-open main {
+        transform: scale(0.94) rotateY(-7deg) rotateX(1deg) translate3d(-15px, 0, -40px) !important;
+        opacity: 0.55 !important;
+        filter: blur(2px) grayscale(15%);
+        pointer-events: none;
+    }
+
     /* Complete scroll-locking on mobile to prevent background scrolling behind fullscreen chat */
     body.chat-open {
         position: fixed !important;

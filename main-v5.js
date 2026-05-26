@@ -311,6 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 updateCursor();
                 initMobileMenu();
+                initCard3DTilt();
             } else {
                 window.location.href = url;
             }
@@ -524,6 +525,85 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /* ═══════════════════════════════════════════════════════
+       7.5. INTERACTIVE 3D TILT EFFECT (REFINED WHITE-COLLAR STYLE)
+       ═══════════════════════════════════════════════════════ */
+    const initCard3DTilt = () => {
+        // Skip on mobile or devices with touch capabilities only to optimize speed
+        if (window.matchMedia("(max-width: 1024px)").matches) return;
+
+        const cards = document.querySelectorAll('.project-card, .skill-category, .stat-card, .cert-card');
+        
+        cards.forEach(card => {
+            // Apply preserve-3d contexts
+            card.style.transformStyle = 'preserve-3d';
+            card.style.perspective = '1000px';
+            
+            // Build dynamic high-fidelity glare overlay
+            let glare = card.querySelector('.card-glare');
+            if (!glare) {
+                glare = document.createElement('div');
+                glare.className = 'card-glare';
+                glare.style.position = 'absolute';
+                glare.style.inset = '0';
+                glare.style.pointerEvents = 'none';
+                glare.style.zIndex = '5';
+                glare.style.borderRadius = 'inherit';
+                glare.style.opacity = '0';
+                glare.style.transition = 'opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+                card.appendChild(glare);
+            }
+
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const w = rect.width;
+                const h = rect.height;
+                
+                // Pure executive bounds: strict maximum 5 degrees tilt for pure white-collar professionalism
+                const rotateY = ((x / w) - 0.5) * 10; // -5deg to +5deg
+                const rotateX = (0.5 - (y / h)) * 10; // -5deg to +5deg
+                
+                card.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg) translateZ(6px)`;
+                card.style.boxShadow = `0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(182, 107, 255, 0.12)`;
+                
+                // Shift moving glare radial highlight
+                glare.style.opacity = '1';
+                glare.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255, 255, 255, 0.1), transparent 60%)`;
+                
+                // Lift title or image layers slightly to amplify 3D depth elegantly
+                const title = card.querySelector('h3, h4');
+                if (title) {
+                    title.style.transform = 'translateZ(12px)';
+                    title.style.transition = 'transform 0.1s ease';
+                }
+                const img = card.querySelector('img');
+                if (img) {
+                    img.style.transform = 'translateZ(8px) scale(1.02)';
+                    img.style.transition = 'transform 0.1s ease';
+                }
+            });
+
+            card.addEventListener('mouseleave', () => {
+                // Smoothly slide back to flat layout
+                card.style.transform = 'rotateY(0deg) rotateX(0deg) translateZ(0)';
+                card.style.boxShadow = '';
+                glare.style.opacity = '0';
+                
+                const title = card.querySelector('h3, h4');
+                if (title) title.style.transform = 'translateZ(0)';
+                
+                const img = card.querySelector('img');
+                if (img) img.style.transform = 'translateZ(0) scale(1)';
+            });
+            
+            // Ultra fluid transition response
+            card.style.transition = 'transform 0.55s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.5s ease';
+        });
+    };
+
+    /* ═══════════════════════════════════════════════════════
        8. GLOBAL CURSOR HANDLER
        ═══════════════════════════════════════════════════════ */
     let _cursorInit = false;
@@ -710,6 +790,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileMenu();
     // initCosmicCanvas(); // Completely deleted as requested
     updateCursor();
+    initCard3DTilt();
     updateNavHighlight(window.location.pathname);
     if (window.lucide) window.lucide.createIcons();
 });
