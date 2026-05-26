@@ -870,8 +870,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        playCelebrationSound();
-
         const EID_CONFIG = {
             'fitr': {
                 eve: new Date('2026-03-20'),
@@ -888,7 +886,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const getEidStatus = () => {
-            // URL testing overrides (e.g. ?test-eid=adha-day)
             const urlParams = new URLSearchParams(window.location.search);
             const testEid = urlParams.get('test-eid');
             if (testEid) {
@@ -918,25 +915,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const status = getEidStatus();
         if (!status) return;
 
-        // Caching/throttling completely bypassed as requested. Anyone who opens the website will experience the celebration again and again.
-        const urlParams = new URLSearchParams(window.location.search);
         const { type, phase } = status;
 
-        // 1. Create overlay container
+        // Play the acoustic bells immediately on visual popper start
+        playCelebrationSound();
+
+        // 1. Create overlay container with heavy blur
         const overlay = document.createElement('div');
         overlay.id = 'eid-celebration-overlay';
         overlay.style.cssText = `
             position: fixed;
             inset: 0;
             z-index: 100000;
-            background: rgba(2, 3, 11, 0.88);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            background: rgba(2, 3, 11, 0.72);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             display: flex;
             align-items: center;
             justify-content: center;
             opacity: 0;
-            transition: opacity 0.8s ease;
+            cursor: pointer;
+            transition: opacity 0.6s ease, backdrop-filter 0.6s ease, -webkit-backdrop-filter 0.6s ease;
         `;
 
         // 2. Create Canvas for confetti burst
@@ -950,65 +949,52 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         overlay.appendChild(canvas);
 
-        // 3. Create message card container (initially hidden, premium double border styling)
-        const card = document.createElement('div');
-        card.id = 'eid-message-card';
-        card.style.cssText = `
-            position: relative;
-            max-width: 90%;
-            width: 460px;
-            padding: 45px 35px;
-            background: linear-gradient(135deg, rgba(16, 20, 48, 0.94), rgba(7, 10, 29, 0.98));
-            border: 1.5px solid rgba(255, 215, 0, 0.35);
-            border-radius: 28px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 45px rgba(182, 107, 255, 0.3), inset 0 0 25px rgba(255, 215, 0, 0.04);
-            text-align: center;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 10;
-        `;
+        // Sleek vector SVG icon templates
+        const moonSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #b66bff; display: inline-block; vertical-align: middle; margin: 0 6px;"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
+        const sparklesSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #ffeb3b; display: inline-block; vertical-align: middle; margin: 0 6px;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>';
+        const popperSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #36d6ff; display: inline-block; vertical-align: middle; margin: 0 6px;"><path d="M5.8 11.3 2 22l10.7-3.8"/><path d="m19 5-3 3"/><path d="m19 10-6-6"/></svg>';
+        const goatSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #ffeb3b; display: inline-block; vertical-align: middle; margin: 0 6px;"><path d="M16 18c0 .6-.4 1-1 1h-1v-2c0-.6.4-1 1-1h1v2z"/><path d="M19 14h-3.5a2.5 2.5 0 0 0-2.5 2.5v1.5a1 1 0 0 1-1 1H11a1 1 0 0 1-1-1v-3.5A2.5 2.5 0 0 0 7.5 12H5a1 1 0 0 0-1 1v5c0 1 1 2 2 2h1a2 2 0 0 0 2-2v-3.5a.5.5 0 0 1 .5-.5h.5c.3 0 .5.2.5.5V18c0 1.7 1.3 3 3 3h2c1.7 0 3-1.3 3-3v-1.5z"/></svg>';
 
-        // Sleek vector SVG icon templates instead of colored standard emojis
-        const moonSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #b66bff; display: inline-block; vertical-align: middle; margin: 0 4px;"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
-        const sparklesSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #ffeb3b; display: inline-block; vertical-align: middle; margin: 0 4px;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>';
-        const popperSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #36d6ff; display: inline-block; vertical-align: middle; margin: 0 4px;"><path d="M5.8 11.3 2 22l10.7-3.8"/><path d="m19 5-3 3"/><path d="m19 10-6-6"/></svg>';
-        const goatSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #ffeb3b; display: inline-block; vertical-align: middle; margin: 0 4px;"><path d="M16 18c0 .6-.4 1-1 1h-1v-2c0-.6.4-1 1-1h1v2z"/><path d="M19 14h-3.5a2.5 2.5 0 0 0-2.5 2.5v1.5a1 1 0 0 1-1 1H11a1 1 0 0 1-1-1v-3.5A2.5 2.5 0 0 0 7.5 12H5a1 1 0 0 0-1 1v5c0 1 1 2 2 2h1a2 2 0 0 0 2-2v-3.5a.5.5 0 0 1 .5-.5h.5c.3 0 .5.2.5.5V18c0 1.7 1.3 3 3 3h2c1.7 0 3-1.3 3-3v-1.5z"/></svg>';
-
-        const bigMoonSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: #b66bff; filter: drop-shadow(0 0 8px rgba(182, 107, 255, 0.6)); margin: 0 auto 15px;"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4"/></svg>';
-        const bigGoatSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: #ffeb3b; filter: drop-shadow(0 0 8px rgba(255, 235, 59, 0.5)); margin: 0 auto 15px;"><path d="M16 18c0 .6-.4 1-1 1h-1v-2c0-.6.4-1 1-1h1v2z"/><path d="M19 14h-3.5a2.5 2.5 0 0 0-2.5 2.5v1.5a1 1 0 0 1-1 1H11a1 1 0 0 1-1-1v-3.5A2.5 2.5 0 0 0 7.5 12H5a1 1 0 0 0-1 1v5c0 1 1 2 2 2h1a2 2 0 0 0 2-2v-3.5a.5.5 0 0 1 .5-.5h.5c.3 0 .5.2.5.5V18c0 1.7 1.3 3 3 3h2c1.7 0 3-1.3 3-3v-1.5a.5.5 0 0 1 .5-.5h.5a.5.5 0 0 1 .5.5v1a2 2 0 0 0 2 2h1a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1z"/><path d="M8 8.5c-.8 0-1.5-.7-1.5-1.5a3.5 3.5 0 0 1 6.5-1.7"/><path d="M12.5 5.3a3.5 3.5 0 0 1 6.5 1.7c0 .8-.7 1.5-1.5 1.5"/><path d="M10 11.5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1z" fill="currentColor"/></svg>';
+        const bigMoonSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: #b66bff; filter: drop-shadow(0 0 12px rgba(182, 107, 255, 0.7)); margin: 0 auto 20px;"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/><path d="M19 3v4M21 5h-4"/></svg>';
+        const bigGoatSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: #ffeb3b; filter: drop-shadow(0 0 12px rgba(255, 235, 59, 0.6)); margin: 0 auto 20px;"><path d="M16 18c0 .6-.4 1-1 1h-1v-2c0-.6.4-1 1-1h1v2z"/><path d="M19 14h-3.5a2.5 2.5 0 0 0-2.5 2.5v1.5a1 1 0 0 1-1 1H11a1 1 0 0 1-1-1v-3.5A2.5 2.5 0 0 0 7.5 12H5a1 1 0 0 0-1 1v5c0 1 1 2 2 2h1a2 2 0 0 0 2-2v-3.5a.5.5 0 0 1 .5-.5h.5c.3 0 .5.2.5.5V18c0 1.7 1.3 3 3 3h2c1.7 0 3-1.3 3-3v-1.5a.5.5 0 0 1 .5-.5h.5a.5.5 0 0 1 .5.5v1a2 2 0 0 0 2 2h1a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1z"/><path d="M8 8.5c-.8 0-1.5-.7-1.5-1.5a3.5 3.5 0 0 1 6.5-1.7"/><path d="M12.5 5.3a3.5 3.5 0 0 1 6.5 1.7c0 .8-.7 1.5-1.5 1.5"/><path d="M10 11.5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1z" fill="currentColor"/></svg>';
 
         // Resolve greetings text based on Eid calendar matching
-        let headingText = '';
         let greetingMsg = '';
         let topIconSvg = '';
         if (type === 'fitr') {
-            headingText = 'Eid-ul-Fitr';
             topIconSvg = bigMoonSvg;
             if (phase === 'eve') greetingMsg = `Eid Mubarak in advance from Mr. Khan Bassim ${popperSvg}`;
             else if (phase === 'day') greetingMsg = `Eid Mubarak from Mr. Khan Bassim ${moonSvg}${sparklesSvg}`;
             else greetingMsg = `Belated Eid Mubarak from Mr. Khan Bassim ${moonSvg}`;
         } else {
-            headingText = 'Eid-ul-Adha';
             topIconSvg = bigGoatSvg;
             if (phase === 'eve') greetingMsg = `Eid Mubarak in advance from Mr. Khan Bassim ${popperSvg}${goatSvg}`;
             else if (phase === 'day') greetingMsg = `Eid Mubarak from Mr. Khan Bassim ${goatSvg}${sparklesSvg}`;
             else greetingMsg = `Belated Eid Mubarak from Mr. Khan Bassim ${moonSvg}${goatSvg}`;
         }
 
-        card.innerHTML = `
-            <div style="margin-bottom: 5px;">${topIconSvg}</div>
-            <h2 style="font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 12px; line-height: 1.3; letter-spacing: -0.01em; font-family: var(--font-main);">
-                ${headingText}
-            </h2>
-            <p style="font-size: 1.15rem; color: #d6dfff; font-weight: 500; margin-bottom: 30px; line-height: 1.6; font-family: var(--font-main); display: flex; align-items: center; justify-content: center; flex-wrap: wrap;">
+        // 3. Create elegant, card-free floating text container
+        const textContainer = document.createElement('div');
+        textContainer.style.cssText = `
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.92);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 90%;
+            padding: 20px;
+            pointer-events: none; /* Allow click to pass through to overlay */
+        `;
+
+        textContainer.innerHTML = `
+            <div style="margin-bottom: 5px; filter: drop-shadow(0 0 15px rgba(255,255,255,0.15));">${topIconSvg}</div>
+            <p style="font-size: 1.8rem; font-weight: 800; color: #fff; text-shadow: 0 4px 15px rgba(0,0,0,0.6), 0 0 35px rgba(182, 107, 255, 0.5); letter-spacing: -0.01em; font-family: var(--font-main); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; line-height: 1.5; margin: 0;">
                 ${greetingMsg}
             </p>
-            <button id="eid-close-btn" class="btn btn-primary" style="padding: 12px 36px; font-size: 0.9rem; border-radius: 100px; width: auto; margin: 0 auto; box-shadow: 0 8px 24px rgba(182, 107, 255, 0.4); display: flex; align-items: center; gap: 8px; justify-content: center; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;">
-                Celebrate <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
-            </button>
         `;
-        overlay.appendChild(card);
+
+        overlay.appendChild(textContainer);
         document.body.appendChild(overlay);
 
         // Lock background scroll when celebration overlay is active
@@ -1034,7 +1020,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Burst Poppers from bottom corners shooting inwards
         const spawnPopper = (x, y, angle) => {
-            const count = isMobile ? 55 : 110; // Lower density on mobile for supreme performance
+            const count = isMobile ? 55 : 110;
             for (let i = 0; i < count; i++) {
                 const speed = Math.random() * 14 + 7;
                 const finalAngle = angle + (Math.random() - 0.5) * 0.45;
@@ -1055,8 +1041,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         // Simultaneous burst trigger
-        spawnPopper(0, window.innerHeight, -Math.PI / 4); // Bottom-left shoots up-right
-        spawnPopper(window.innerWidth, window.innerHeight, -3 * Math.PI / 4); // Bottom-right shoots up-left
+        spawnPopper(0, window.innerHeight, -Math.PI / 4);
+        spawnPopper(window.innerWidth, window.innerHeight, -3 * Math.PI / 4);
 
         let animFrameId;
         const animate = () => {
@@ -1098,29 +1084,37 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         animate();
 
-        // Show centered festive card after a delay of 1.1s (between 0.8s and 1.5s)
+        // Show floating text after a short delay
         setTimeout(() => {
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-            if (window.lucide) window.lucide.createIcons();
-        }, 1100);
+            textContainer.style.opacity = '1';
+            textContainer.style.transform = 'scale(1)';
+        }, 150);
 
-        // Dismiss Eid Celebration System
-        const dismiss = () => {
+        // AUTO-DISMISS & CLICK-ANYWHERE DISMISS BRIDGE
+        let dismissed = false;
+        const dismissAndReveal = () => {
+            if (dismissed) return;
+            dismissed = true;
+
             overlay.style.opacity = '0';
-            card.style.transform = 'translateY(-20px)';
-            document.body.classList.remove('chat-open'); // Restore scrolling
+            overlay.style.backdropFilter = 'blur(0px)';
+            overlay.style.webkitBackdropFilter = 'blur(0px)';
+            textContainer.style.transform = 'scale(0.95)';
+            
+            document.body.classList.remove('chat-open'); // Restore scroll
             cancelAnimationFrame(animFrameId);
             window.removeEventListener('resize', resize);
+            
             setTimeout(() => {
                 overlay.remove();
-            }, 800);
+            }, 600); // Wait for transition fade out to fully evict from DOM
         };
 
-        card.querySelector('#eid-close-btn').addEventListener('click', dismiss);
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) dismiss();
-        });
+        // Dismiss if the user clicks anywhere on the screen (here or there!)
+        overlay.addEventListener('click', dismissAndReveal);
+
+        // Or dismiss automatically after exactly 2.2 seconds
+        setTimeout(dismissAndReveal, 2200);
     };
 
     /* ═══════════════════════════════════════════════════════
