@@ -48,15 +48,13 @@ document.addEventListener('DOMContentLoaded', () => {
             heroVideo.addEventListener('canplaythrough', onReady, { once: true });
         }
 
-        // Safety timeout - shorter on mobile to prevent stuck black screens
-        const isMobile = window.matchMedia("(max-width: 768px)").matches;
-        const safetyDelay = isMobile ? 1800 : 5000;
+        // Safety timeout
         setTimeout(() => {
             if (preloader && !preloader.classList.contains('fade-out')) {
                 preloader.classList.add('fade-out');
                 navbar?.classList.add('show');
             }
-        }, safetyDelay);
+        }, 5000);
 
         // Audio hint
         setTimeout(() => {
