@@ -196,16 +196,16 @@ a {
 
 /* Navigation - Floating Pill */
 .navbar {
-    position: absolute;
+    position: fixed !important; /* Remain rock-solidly fixed at the top on scroll */
     top: 24px;
     left: 50%;
     transform: translateX(-50%);
     width: auto; /* Shrink to content width, making a beautiful premium floating glass pill */
     max-width: 95%; /* Responsive safety boundary */
     padding: 16px 40px; /* Spacious, high-end vertical and horizontal breathing room */
-    background: rgba(7, 11, 28, 0.82);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    background: rgba(7, 11, 28, 0.76) !important; /* Optimized semi-transparency */
+    backdrop-filter: blur(20px) !important; /* High-end blur of scrolling text underneath */
+    -webkit-backdrop-filter: blur(20px) !important;
     z-index: 1000;
     border-radius: 100px;
     border: 1px solid rgba(151, 178, 255, 0.24);
@@ -2017,6 +2017,7 @@ body.chat-open {
 
 /* Smooth SPA Page Transitions */
 main {
+    padding-top: 140px !important; /* Spacious premium vertical breathing room under fixed floating navbar */
     transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 1;
     transform: translateY(0);
