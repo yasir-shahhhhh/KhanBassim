@@ -7,7 +7,7 @@ exports.handler = async function(event, context) {
 
     try {
         const apiKey = process.env.ELEVENLABS_API_KEY;
-        const voiceId = process.env.VOICE_ID || "pNInz6obpg8nEByWQX7d";
+        const voiceId = process.env.VOICE_ID || "JBFqnCBsd6RMkjVDRZzb";
 
         if (!apiKey) {
             console.error('[BACKEND ERROR] ELEVENLABS_API_KEY is missing');

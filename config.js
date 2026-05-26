@@ -1,7 +1,7 @@
 const CONFIG = {
     GROQ_API_KEY: "hidden_in_netlify",
     ELEVENLABS_API_KEY: "hidden_in_netlify",
-    VOICE_ID: "pNInz6obpg8nEByWQX7d",
+    VOICE_ID: "JBFqnCBsd6RMkjVDRZzb",
     MODEL: "llama-3.3-70b-versatile",
     GOOGLE_CLIENT_ID: "745307481927-rsp7bpq1t0olgr6dden55htud0fqe4ih.apps.googleusercontent.com"
 };
