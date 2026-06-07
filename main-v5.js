@@ -3,9 +3,9 @@
  * Handles: Preloader, Hero Video/Audio Sync, Smooth Routing, and Global UX Polish
  */
 
-// FORCE CACHE & SERVICE WORKER EVICTION SYSTEM (v6.2.6)
+// FORCE CACHE & SERVICE WORKER EVICTION SYSTEM (v6.3.0)
 (function() {
-    const PURGE_KEY = 'baasim-cache-purge-v6.2.6';
+    const PURGE_KEY = 'baasim-cache-purge-v6.3.0';
     if (!localStorage.getItem(PURGE_KEY)) {
         console.warn('Purging all service workers and caches to resolve active user caching issues...');
         
@@ -259,7 +259,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const navLinks = document.querySelectorAll('.nav-links a, .mobile-nav-item');
         if (!navLinks.length) return;
 
-        const currentFile = normalizeNavHref(targetUrl);
+        let currentFile = normalizeNavHref(targetUrl);
+
+        // If we are on a project detail page (thumbnail-*, cover-*, or logo pages), keep the Project tab highlighted
+        if (
+            currentFile.startsWith('thumbnail-') ||
+            currentFile.startsWith('cover-') ||
+            currentFile.includes('-logo')
+        ) {
+            currentFile = 'projects.html';
+        }
 
         navLinks.forEach(link => {
             const linkHref = normalizeNavHref(link.getAttribute('href'));
@@ -845,10 +854,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const topBar = document.querySelector('.navbar');
         if (!topBar) return;
 
+        // Only enable hide-on-scroll on mobile viewports; desktop stays fixed
+        const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
+
         let lastScrollY = window.scrollY;
         const scrollThreshold = 10;
 
         window.addEventListener('scroll', () => {
+            if (!isMobile()) {
+                topBar.classList.remove('nav-hidden');
+                return;
+            }
+
             if (document.body.classList.contains('nav-open') || document.body.classList.contains('chat-open')) {
                 return;
             }
@@ -858,9 +875,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const diff = Math.abs(currentScrollY - lastScrollY);
             if (diff > scrollThreshold) {
-                if (currentScrollY > lastScrollY && currentScrollY > 80) {
-                    topBar.classList.add('nav-hidden');
-                } else if (currentScrollY < lastScrollY) {
+                // Keep the navigation bar fixed at all times
+                if (currentScrollY < lastScrollY) {
                     topBar.classList.remove('nav-hidden');
                 }
                 lastScrollY = currentScrollY;
@@ -1171,6 +1187,88 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!document.body.classList.contains('hero-mode')) {
         initEidCelebrationSystem();
     }
+    initImageLightbox();
     updateNavHighlight(window.location.pathname);
     if (window.lucide) window.lucide.createIcons();
 });
+
+/* ═══════════════════════════════════════════════════════
+   10. FULLSCREEN IMAGE LIGHTBOX
+   ═══════════════════════════════════════════════════════ */
+const initImageLightbox = () => {
+    let lightbox = document.querySelector('.portfolio-lightbox');
+    if (!lightbox) {
+        lightbox = document.createElement('div');
+        lightbox.className = 'portfolio-lightbox';
+        lightbox.innerHTML = `
+            <button class="lightbox-close" aria-label="Close image">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            <img class="lightbox-image" src="" alt="Fullscreen view">
+            <div class="lightbox-caption"></div>
+        `;
+        document.body.appendChild(lightbox);
+
+        const closeBtn = lightbox.querySelector('.lightbox-close');
+        const img = lightbox.querySelector('.lightbox-image');
+
+        const closeLightbox = () => {
+            lightbox.classList.remove('active');
+            document.body.classList.remove('lightbox-open');
+        };
+
+        closeBtn.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox || e.target === closeBtn || e.target.closest('.lightbox-close')) {
+                closeLightbox();
+            }
+        });
+
+        img.addEventListener('click', (e) => e.stopPropagation());
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                closeLightbox();
+            }
+        });
+    }
+
+    const openLightbox = (src, altText) => {
+        const img = lightbox.querySelector('.lightbox-image');
+        const caption = lightbox.querySelector('.lightbox-caption');
+        
+        img.src = src;
+        img.alt = altText || 'Fullscreen view';
+        if (altText) {
+            caption.textContent = altText;
+            caption.style.display = 'block';
+        } else {
+            caption.style.display = 'none';
+        }
+        
+        lightbox.classList.add('active');
+        document.body.classList.add('lightbox-open');
+    };
+
+    document.addEventListener('click', (e) => {
+        const img = e.target.closest('img');
+        if (!img) return;
+
+        const link = img.closest('a');
+        if (link && link.getAttribute('href') && !link.getAttribute('href').startsWith('#')) {
+            return;
+        }
+
+        if (
+            img.classList.contains('cert-img') ||
+            img.closest('.cert-card') ||
+            img.closest('.thumb-display') ||
+            img.closest('.cover-display') ||
+            img.closest('.logo-display') ||
+            img.closest('.project-card')
+        ) {
+            e.preventDefault();
+            openLightbox(img.src, img.alt);
+        }
+    });
+};

@@ -83,8 +83,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style-v45.css?v=6.2.6">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&family=Outfit:wght@200;300;400;500&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style-v45.css?v=6.3.1">
     
     <style>
         :root { --accent: #b66bff; }
@@ -131,26 +131,89 @@
         
         #hero-content { 
             text-align: center; z-index: 2; padding: 40px; 
-            animation: heroEnter 1.2s cubic-bezier(0.2, 0, 0.2, 1) both;
-        }
-        
-        @keyframes heroEnter {
-            from { opacity: 0; transform: translateY(30px) scale(0.95); filter: blur(10px); }
-            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
         }
 
+        /* Smash-in animation system: elements start way off and slam into place */
+        .hero-snap-item {
+            opacity: 0;
+            transform: translateY(80px) scale(0.6) rotate(-2deg);
+            filter: blur(12px);
+            transition: none;
+        }
+        .hero-snap-item.snapped {
+            opacity: 1;
+            transform: translateY(0) scale(1) rotate(0deg);
+            filter: blur(0);
+            animation: smashIn 0.35s cubic-bezier(0.22, 1.8, 0.36, 1) both;
+        }
+
+        /* Dust-out when leaving tab */
+        .hero-snap-item.dust-out {
+            animation: dustOut 0.25s cubic-bezier(0.55, 0, 1, 0.45) both;
+        }
+
+        /* Screen shake on impact */
+        @keyframes screenShake {
+            0% { transform: translate(0, 0); }
+            15% { transform: translate(-3px, 2px); }
+            30% { transform: translate(4px, -2px); }
+            45% { transform: translate(-2px, 3px); }
+            60% { transform: translate(2px, -1px); }
+            75% { transform: translate(-1px, 1px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        #hero-content.impact-shake {
+            animation: screenShake 0.25s ease-out;
+        }
+
+        @keyframes smashIn {
+            0% { 
+                opacity: 0; 
+                transform: translateY(80px) scale(0.6) rotate(-2deg); 
+                filter: blur(12px); 
+            }
+            50% { 
+                opacity: 1; 
+                transform: translateY(-8px) scale(1.06) rotate(0.5deg); 
+                filter: blur(0); 
+            }
+            70% { 
+                transform: translateY(3px) scale(0.98) rotate(-0.3deg); 
+            }
+            85% { 
+                transform: translateY(-1px) scale(1.01) rotate(0deg); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0) scale(1) rotate(0deg); 
+                filter: blur(0); 
+            }
+        }
+
+        @keyframes dustOut {
+            0% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); filter: blur(0); }
+            100% { opacity: 0; transform: translateY(-40px) scale(0.7) rotate(3deg); filter: blur(14px); }
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
         #hero-title { 
-            font-size: clamp(3rem, 8vw, 6rem); font-weight: 800; 
-            line-height: 0.9; margin-bottom: 20px; 
+            font-family: var(--font-display);
+            font-size: clamp(3.5rem, 8.5vw, 6.8rem); font-weight: 300; 
+            font-style: italic;
+            line-height: 0.95; margin-bottom: 20px; 
             color: #ffffff;
-            letter-spacing: -0.04em;
+            letter-spacing: -0.02em;
             text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
         #hero-sub { 
-            font-size: clamp(1rem, 2.5vw, 1.4rem); 
-            color: rgba(255,255,255,0.7); font-weight: 400; 
+            font-family: var(--font-accent);
+            font-size: clamp(1rem, 2.5vw, 1.25rem); 
+            color: rgba(255,255,255,0.75); font-weight: 300; 
             height: 30px; margin-bottom: 50px; 
-            letter-spacing: 0.05em;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
         }
         .typewriter-cursor { color: var(--accent); animation: blink 1s step-end infinite; }
         
@@ -177,9 +240,14 @@
             #hero-title { font-size: 3.5rem; }
         }
 
-        /* HERO MODE - Cinematic State */
+        /* HERO MODE - Cinematic Full-Screen Lockdown */
+        body.hero-mode { overflow: hidden !important; height: 100vh !important; margin: 0 !important; padding: 0 !important; }
+        body.hero-mode main { padding-top: 0 !important; margin: 0 !important; }
         body.hero-mode .navbar { display: none !important; }
         body.hero-mode #chat-button { display: none !important; }
+        body.hero-mode footer { display: none !important; }
+        body.hero-mode .hero-section,
+        body.hero-mode #hero { position: fixed !important; inset: 0 !important; height: 100vh !important; min-height: 100vh !important; width: 100% !important; }
     </style>
 </head>
 <body class="hero-mode">
@@ -240,9 +308,9 @@
             </video>
             <div id="hero-video-overlay"></div>
             <div id="hero-content">
-                <h1 id="hero-title">Baasim Fayaz Khan</h1>
-                <div id="hero-sub"><span id="typewriter"></span><span class="typewriter-cursor">|</span></div>
-                <div class="hero-buttons" style="display: flex; flex-direction: column; gap: 20px; align-items: center; margin-top: 30px;">
+                <h1 id="hero-title" class="hero-snap-item">Baasim Fayaz Khan</h1>
+                <div id="hero-sub" class="hero-snap-item"><span id="typewriter"></span><span class="typewriter-cursor">|</span></div>
+                <div class="hero-buttons hero-snap-item" style="display: flex; flex-direction: column; gap: 20px; align-items: center; margin-top: 30px;">
                     <a href="about.html" class="btn btn-primary" id="explore-btn">
                         Explore Work <i data-lucide="arrow-right"></i>
                     </a>
@@ -254,11 +322,80 @@
         </section>
     </main>
 
-    
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Baasim Fayaz Khan. All rights reserved.</p>
+            <p class="footer-credit">Made with &#10084;&#65039; by <a href="https://myintroductionn.netlify.app" target="_blank" rel="noopener noreferrer">Inventor Yasir</a></p>
+        </div>
+    </footer>
 
     <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
-    <script src="main-v5.js?v=6.2.6"></script>
-    <script src="khan-inject-v45.js?v=6.2.6"></script>
+    <script src="main-v5.js?v=6.3.1"></script>
+    <script src="khan-inject-v45.js?v=6.3.1"></script>
+
+    <script>
+    // HERO SMASH-IN SEQUENCE CONTROLLER
+    (function() {
+        const SMASH_DELAY = 180;  // ms between each element slamming in
+        const INITIAL_WAIT = 500; // ms after page load before first smash
+
+        function getSnapItems() {
+            return document.querySelectorAll('.hero-snap-item');
+        }
+
+        function triggerShake() {
+            const heroContent = document.getElementById('hero-content');
+            if (!heroContent) return;
+            heroContent.classList.remove('impact-shake');
+            void heroContent.offsetWidth;
+            heroContent.classList.add('impact-shake');
+            setTimeout(() => heroContent.classList.remove('impact-shake'), 300);
+        }
+
+        function runSmashSequence() {
+            const items = getSnapItems();
+            items.forEach((item, i) => {
+                item.classList.remove('snapped', 'dust-out');
+                void item.offsetWidth;
+                setTimeout(() => {
+                    item.classList.add('snapped');
+                    // Shake screen on the title slam (first element)
+                    if (i === 0) triggerShake();
+                }, INITIAL_WAIT + (i * SMASH_DELAY));
+            });
+        }
+
+        function dustOutAndReplay() {
+            const items = getSnapItems();
+            items.forEach(item => {
+                item.classList.remove('snapped');
+                item.classList.add('dust-out');
+            });
+            setTimeout(() => {
+                items.forEach(item => {
+                    item.classList.remove('dust-out');
+                    void item.offsetWidth;
+                });
+                runSmashSequence();
+            }, 350);
+        }
+
+        // Initial snap sequence on page load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', runSmashSequence);
+        } else {
+            runSmashSequence();
+        }
+
+        // Tab visibility: dust out when leaving, snap back when returning
+        document.addEventListener('visibilitychange', () => {
+            if (!document.body.classList.contains('hero-mode')) return;
+            if (document.visibilityState === 'visible') {
+                dustOutAndReplay();
+            }
+        });
+    })();
+    </script>
 </body>
 </html>
 
