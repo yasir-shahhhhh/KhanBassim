@@ -62,6 +62,30 @@
             <div style="max-width: 600px; margin: 0 auto; text-align: center;" class="fade-in">
                 <p style="color: var(--text-secondary); margin-bottom: 40px;">Ready to discuss strategic initiatives, creative branding, or AI-driven workflows? Reach out through the channels below.</p>
                 
+                <!-- Formspree Contact Form -->
+                <div style="background: rgba(20, 30, 70, 0.2); backdrop-filter: blur(10px); border: 1px solid var(--border-color); border-radius: 16px; padding: 32px; text-align: left; margin-bottom: 40px;" class="glass">
+                    <h3 style="color: var(--text-primary); margin-bottom: 24px; font-family: 'Outfit', sans-serif;">Send a Message</h3>
+                    
+                    <div data-fs-success style="color: #4ade80; margin-bottom: 16px; font-size: 0.95rem; font-weight: 500;"></div>
+                    <div data-fs-error style="color: #ef4444; margin-bottom: 16px; font-size: 0.95rem; font-weight: 500;"></div>
+                    
+                    <form id="my-form" style="display: flex; flex-direction: column; gap: 16px;">
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label for="email" style="color: var(--text-secondary); font-size: 0.9rem;">Email Address</label>
+                            <input type="email" id="email" name="email" data-fs-field style="padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: var(--text-primary); outline: none; font-family: inherit;" required />
+                            <span data-fs-error="email" style="color: #ef4444; font-size: 0.8rem;"></span>
+                        </div>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label for="message" style="color: var(--text-secondary); font-size: 0.9rem;">Your Message</label>
+                            <textarea id="message" name="message" data-fs-field rows="4" style="padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: var(--text-primary); outline: none; font-family: inherit; resize: vertical;" required></textarea>
+                            <span data-fs-error="message" style="color: #ef4444; font-size: 0.8rem;"></span>
+                        </div>
+                        
+                        <button type="submit" data-fs-submit-btn style="margin-top: 8px; padding: 14px 24px; border-radius: 8px; border: none; background: var(--accent-1); color: #fff; font-weight: 600; cursor: pointer; transition: opacity 0.2s;">Send Message</button>
+                    </form>
+                </div>
+
                 <div style="display: flex; flex-direction: column; gap: 20px;">
                     <a href="mailto:baasimkhan101@gmail.com" class="project-card glass" style="text-decoration: none; padding: 24px; display: flex; align-items: center; gap: 20px;">
                         <i data-lucide="mail" style="color: var(--accent-1);"></i>
@@ -101,6 +125,13 @@
     <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
     <script src="main-v5.js?v=6.3.1"></script>
     <script src="khan-inject-v45.js?v=6.3.1"></script>
+    
+    <!-- Formspree Integration -->
+    <script>
+      window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
+      formspree('initForm', { formElement: '#my-form', formId: 'xnjydlyb' });
+    </script>
+    <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 </body>
 </html>
 
