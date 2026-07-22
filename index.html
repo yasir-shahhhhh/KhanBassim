@@ -9,10 +9,16 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <script>
-        const CURRENT_SYSTEM_VER = '3.0.0';
-        const SITE_VERSION = '6.1.9';
+        const CURRENT_SYSTEM_VER = '4.0.0';
+        const SITE_VERSION = '7.0.0';
         if (localStorage.getItem('bfk_site_version') !== SITE_VERSION) {
             localStorage.setItem('bfk_site_version', SITE_VERSION);
+            if ('caches' in window) {
+                caches.keys().then(keys => keys.forEach(key => caches.delete(key)));
+            }
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
+            }
             window.location.reload(true);
         }
     </script>
