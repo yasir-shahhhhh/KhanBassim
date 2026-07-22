@@ -1,10 +1,33 @@
 {
   "name": "bassim",
   "version": "1.0.0",
-  "description": "> **v5.8 — The \"Furious\" Design System**",
+  "description": "Portfolio site with Globe React component and shadcn structure",
   "main": "config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite demo.html",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tabler/icons-react": "^3.45.0",
+    "clsx": "^2.1.0",
+    "framer-motion": "^12.42.2",
+    "lucide-react": "^0.344.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "simplex-noise": "^4.0.3",
+    "tailwind-merge": "^2.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "@types/react": "^18.2.61",
+    "@types/react-dom": "^18.2.19",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.18",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.4"
   },
   "repository": {
     "type": "git",
@@ -13,9 +36,5 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/yasir-shahhhhh/KhanBassim/issues"
-  },
-  "homepage": "https://github.com/yasir-shahhhhh/KhanBassim#readme"
+  "type": "commonjs"
 }

@@ -56,6 +56,193 @@ document.addEventListener('DOMContentLoaded', () => {
     let experienceActivated = false;
 
     /* ═══════════════════════════════════════════════════════
+       GLOBAL WAVE BACKGROUND ENGINE (wave-background.tsx)
+       ═══════════════════════════════════════════════════════ */
+    function initWaveBackground() {
+        const bgMesh = document.querySelector('.bg-mesh');
+        if (!bgMesh) return;
+
+        bgMesh.innerHTML = '';
+        bgMesh.style.background = '#02030b';
+        bgMesh.style.overflow = 'hidden';
+        bgMesh.style.filter = 'none';
+
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.style.width = '100%';
+        svg.style.height = '100%';
+        svg.style.display = 'block';
+        bgMesh.appendChild(svg);
+
+        function createNoise2D() {
+            const F2 = 0.5 * (Math.sqrt(3.0) - 1.0);
+            const G2 = (3.0 - Math.sqrt(3.0)) / 6.0;
+            const p = new Uint8Array(256);
+            for (let i = 0; i < 256; i++) p[i] = Math.floor(Math.random() * 256);
+            const perm = new Uint8Array(512);
+            const permMod12 = new Uint8Array(512);
+            for (let i = 0; i < 512; i++) {
+                perm[i] = p[i & 255];
+                permMod12[i] = (perm[i] % 12);
+            }
+            const grad3 = new Float32Array([
+                1, 1, 0, -1, 1, 0, 1, -1, 0, -1, -1, 0,
+                1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, -1,
+                0, 1, 1, 0, -1, 1, 0, 1, -1, 0, -1, -1
+            ]);
+            return function(xin, yin) {
+                let n0, n1, n2;
+                const s = (xin + yin) * F2;
+                const i = Math.floor(xin + s);
+                const j = Math.floor(yin + s);
+                const t = (i + j) * G2;
+                const X0 = i - t;
+                const Y0 = j - t;
+                const x0 = xin - X0;
+                const y0 = yin - Y0;
+                let i1, j1;
+                if (x0 > y0) { i1 = 1; j1 = 0; } else { i1 = 0; j1 = 1; }
+                const x1 = x0 - i1 + G2;
+                const y1 = y0 - j1 + G2;
+                const x2 = x0 - 1.0 + 2.0 * G2;
+                const y2 = y0 - 1.0 + 2.0 * G2;
+                const ii = i & 255;
+                const jj = j & 255;
+                let t0 = 0.5 - x0 * x0 - y0 * y0;
+                if (t0 < 0) n0 = 0.0;
+                else {
+                    t0 *= t0;
+                    const gi0 = permMod12[ii + perm[jj]] * 3;
+                    n0 = t0 * t0 * (grad3[gi0] * x0 + grad3[gi0 + 1] * y0);
+                }
+                let t1 = 0.5 - x1 * x1 - y1 * y1;
+                if (t1 < 0) n1 = 0.0;
+                else {
+                    t1 *= t1;
+                    const gi1 = permMod12[ii + i1 + perm[jj + j1]] * 3;
+                    n1 = t1 * t1 * (grad3[gi1] * x1 + grad3[gi1 + 1] * y1);
+                }
+                let t2 = 0.5 - x2 * x2 - y2 * y2;
+                if (t2 < 0) n2 = 0.0;
+                else {
+                    t2 *= t2;
+                    const gi2 = permMod12[ii + 1 + perm[jj + 1]] * 3;
+                    n2 = t2 * t2 * (grad3[gi2] * x2 + grad3[gi2 + 1] * y2);
+                }
+                return 70.0 * (n0 + n1 + n2);
+            };
+        }
+
+        const noise = createNoise2D();
+        let mouse = { x: -10, y: 0, lx: 0, ly: 0, sx: 0, sy: 0, v: 0, vs: 0, a: 0, set: false };
+        let paths = [];
+        let lines = [];
+
+        function setLines() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            lines = [];
+            paths.forEach(p => p.remove());
+            paths = [];
+
+            const xGap = 14;
+            const yGap = 14;
+            const oWidth = width + 200;
+            const oHeight = height + 30;
+            const totalLines = Math.ceil(oWidth / xGap);
+            const totalPoints = Math.ceil(oHeight / yGap);
+            const xStart = (width - xGap * totalLines) / 2;
+            const yStart = (height - yGap * totalPoints) / 2;
+
+            for (let i = 0; i < totalLines; i++) {
+                const points = [];
+                for (let j = 0; j < totalPoints; j++) {
+                    points.push({
+                        x: xStart + xGap * i,
+                        y: yStart + yGap * j,
+                        wave: { x: 0, y: 0 },
+                        cursor: { x: 0, y: 0, vx: 0, vy: 0 }
+                    });
+                }
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('fill', 'none');
+                path.setAttribute('stroke', 'rgba(182, 107, 255, 0.25)');
+                path.setAttribute('stroke-width', '1');
+                svg.appendChild(path);
+                paths.push(path);
+                lines.push(points);
+            }
+        }
+
+        setLines();
+        window.addEventListener('resize', setLines);
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            if (!mouse.set) {
+                mouse.sx = mouse.x; mouse.sy = mouse.y;
+                mouse.lx = mouse.x; mouse.ly = mouse.y;
+                mouse.set = true;
+            }
+        });
+
+        function tick(time) {
+            mouse.sx += (mouse.x - mouse.sx) * 0.1;
+            mouse.sy += (mouse.y - mouse.sy) * 0.1;
+            const dx = mouse.x - mouse.lx;
+            const dy = mouse.y - mouse.ly;
+            const d = Math.hypot(dx, dy);
+            mouse.v = d;
+            mouse.vs += (d - mouse.vs) * 0.1;
+            mouse.vs = Math.min(100, mouse.vs);
+            mouse.lx = mouse.x; mouse.ly = mouse.y;
+            mouse.a = Math.atan2(dy, dx);
+
+            lines.forEach(points => {
+                points.forEach(p => {
+                    const move = noise((p.x + time * 0.008) * 0.003, (p.y + time * 0.003) * 0.002) * 8;
+                    p.wave.x = Math.cos(move) * 12;
+                    p.wave.y = Math.sin(move) * 6;
+
+                    const pdx = p.x - mouse.sx;
+                    const pdy = p.y - mouse.sy;
+                    const pd = Math.hypot(pdx, pdy);
+                    const l = Math.max(175, mouse.vs);
+                    if (pd < l) {
+                        const s = 1 - pd / l;
+                        const f = Math.cos(pd * 0.001) * s;
+                        p.cursor.vx += Math.cos(mouse.a) * f * l * mouse.vs * 0.00035;
+                        p.cursor.vy += Math.sin(mouse.a) * f * l * mouse.vs * 0.00035;
+                    }
+                    p.cursor.vx += (0 - p.cursor.x) * 0.01;
+                    p.cursor.vy += (0 - p.cursor.y) * 0.01;
+                    p.cursor.vx *= 0.95;
+                    p.cursor.vy *= 0.95;
+                    p.cursor.x += p.cursor.vx;
+                    p.cursor.y += p.cursor.vy;
+                    p.cursor.x = Math.min(50, Math.max(-50, p.cursor.x));
+                    p.cursor.y = Math.min(50, Math.max(-50, p.cursor.y));
+                });
+            });
+
+            lines.forEach((points, lIndex) => {
+                if (points.length < 2 || !paths[lIndex]) return;
+                const first = points[0];
+                let pathStr = `M ${first.x + first.wave.x} ${first.y + first.wave.y}`;
+                for (let i = 1; i < points.length; i++) {
+                    const pt = points[i];
+                    pathStr += ` L ${pt.x + pt.wave.x + pt.cursor.x} ${pt.y + pt.wave.y + pt.cursor.y}`;
+                }
+                paths[lIndex].setAttribute('d', pathStr);
+            });
+
+            requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+    }
+    initWaveBackground();
+
+    /* ═══════════════════════════════════════════════════════
        2. CINEMATIC PRELOADER & VIDEO INIT
        ═══════════════════════════════════════════════════════ */
     const initExperience = () => {
