@@ -56,6 +56,146 @@ document.addEventListener('DOMContentLoaded', () => {
     let experienceActivated = false;
 
     /* ═══════════════════════════════════════════════════════
+       GLOBAL NEURAL FLOW FIELD BACKGROUND ENGINE
+       ═══════════════════════════════════════════════════════ */
+    function initNeuralFlowFieldBackground() {
+        const bgMesh = document.querySelector('.bg-mesh');
+        if (!bgMesh) return;
+
+        bgMesh.innerHTML = '';
+        bgMesh.style.background = '#02030b';
+        bgMesh.style.overflow = 'hidden';
+        bgMesh.style.filter = 'none';
+
+        const canvas = document.createElement('canvas');
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100vw';
+        canvas.style.height = '100vh';
+        canvas.style.pointerEvents = 'none';
+        canvas.style.zIndex = '1';
+        bgMesh.appendChild(canvas);
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        let particles = [];
+        let mouse = { x: -1000, y: -1000 };
+        const particleCount = 800;
+        const speed = 1.2;
+        const trailOpacity = 0.1;
+        const color = '#a5b4fc';
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = 0;
+                this.vy = 0;
+                this.age = 0;
+                this.life = Math.random() * 220 + 120;
+            }
+
+            update() {
+                const angle = (Math.cos(this.x * 0.005) + Math.sin(this.y * 0.005)) * Math.PI;
+                this.vx += Math.cos(angle) * 0.2 * speed;
+                this.vy += Math.sin(angle) * 0.2 * speed;
+
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const interactionRadius = 180;
+
+                if (distance < interactionRadius) {
+                    const force = (interactionRadius - distance) / interactionRadius;
+                    this.vx -= dx * force * 0.06;
+                    this.vy -= dy * force * 0.06;
+                }
+
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vx *= 0.94;
+                this.vy *= 0.94;
+
+                this.age++;
+                if (this.age > this.life) {
+                    this.reset();
+                }
+
+                if (this.x < 0) this.x = width;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                if (this.y > height) this.y = 0;
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = 0;
+                this.vy = 0;
+                this.age = 0;
+                this.life = Math.random() * 220 + 120;
+            }
+
+            draw(context) {
+                context.fillStyle = color;
+                const alpha = 1 - Math.abs((this.age / this.life) - 0.5) * 2;
+                context.globalAlpha = Math.max(0.15, Math.min(1, alpha * 1.2));
+                context.fillRect(this.x, this.y, 2.2, 2.2);
+            }
+        }
+
+        function init() {
+            const dpr = window.devicePixelRatio || 1;
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width * dpr;
+            canvas.height = height * dpr;
+            ctx.scale(dpr, dpr);
+            canvas.style.width = `${width}px`;
+            canvas.style.height = `${height}px`;
+
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = `rgba(2, 3, 11, ${trailOpacity})`;
+            ctx.fillRect(0, 0, width, height);
+
+            particles.forEach((p) => {
+                p.update();
+                p.draw(ctx);
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => {
+            init();
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('mouseleave', () => {
+            mouse.x = -1000;
+            mouse.y = -1000;
+        });
+
+        init();
+        animate();
+    }
+    initNeuralFlowFieldBackground();
+
+    /* ═══════════════════════════════════════════════════════
        2. CINEMATIC PRELOADER & VIDEO INIT
        ═══════════════════════════════════════════════════════ */
     const initExperience = () => {

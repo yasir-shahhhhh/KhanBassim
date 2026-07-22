@@ -5,6 +5,12 @@
 
 # Dependencies
 node_modules/
+dist/
+
+# Scratch & Temporary
+scratch/
+*.patch
+deploy-check.txt
 
 # OS Files
 .DS_Store

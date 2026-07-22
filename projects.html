@@ -135,46 +135,236 @@
                 </div>
             </div>
 
-            <!-- Logo Design & Identity Section (Last) -->
+            <!-- Animated Logomark Stack Section (3D Card Shuffle) -->
             <div class="project-category fade-in" style="margin-top: var(--spacing-lg);">
-                <h3 class="category-title"><i data-lucide="pen-tool"></i> Visual Identity & Logo Design</h3>
-                <div class="project-grid">
-                    <a href="proteios-logo.html" class="project-card glass">
-                        <div style="padding: 30px; display: flex; justify-content: center; align-items: center; background: rgba(255,255,255,0.02); height: 240px;">
-                            <img src="assets/logo3.jpeg?v=5.0" alt="Proteios Education Logo" style="max-width: 85%; max-height: 85%; border-radius: 12px; filter: drop-shadow(0 10px 30px rgba(0,0,0,0.4));">
-                        </div>
-                        <div class="project-details">
-                            <h4 style="color: var(--text-primary); margin-bottom: 4px;">Proteios Education</h4>
-                            <p style="font-size: 0.8rem; color: var(--accent-1); margin-bottom: 8px; font-weight: 600;">Full Brand Identity Design</p>
-                            <p>Strategic logo mark designed to represent upward momentum and academic excellence.</p>
-                        </div>
-                    </a>
+                <h3 class="category-title"><i data-lucide="layers"></i> Visual Identity & Brand Logomark Stack</h3>
+                
+                <div id="animated-logos-container" style="max-width: 900px; margin: 40px auto; padding: 36px; position: relative; background: rgba(20, 30, 70, 0.25); backdrop-filter: blur(16px); border-radius: 28px; border: 1px solid var(--border-color); box-shadow: 0 30px 60px rgba(0,0,0,0.5);" class="glass">
+                    <style>
+                        .animated-logo-card {
+                            position: absolute;
+                            inset: 0;
+                            border-radius: 24px;
+                            overflow: hidden;
+                            box-shadow: 0 25px 50px rgba(0,0,0,0.7), 0 0 30px rgba(182, 107, 255, 0.25);
+                            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease, z-index 0.5s ease;
+                            border: 1px solid rgba(255,255,255,0.15);
+                            background: #06091a;
+                            transform-origin: bottom center;
+                            cursor: pointer;
+                        }
+                        .animated-logo-card.shuffling {
+                            animation: cardShuffleFlyOut 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+                        }
+                        @keyframes cardShuffleFlyOut {
+                            0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+                            50% { transform: translateY(-90px) scale(0.9) rotate(-12deg); opacity: 0.7; }
+                            100% { transform: translateY(0) scale(0.9) rotate(8deg); opacity: 0.4; }
+                        }
+                        .logo-img-wrapper {
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            padding: 36px;
+                            background: radial-gradient(circle at center, rgba(182, 107, 255, 0.15), transparent 75%);
+                        }
+                        .logo-img-wrapper img {
+                            max-width: 85%;
+                            max-height: 85%;
+                            object-fit: contain;
+                            filter: drop-shadow(0 12px 24px rgba(0,0,0,0.7));
+                        }
+                        .nav-btn {
+                            width: 48px;
+                            height: 48px;
+                            border-radius: 50%;
+                            background: rgba(255,255,255,0.08);
+                            border: 1px solid rgba(255,255,255,0.2);
+                            color: #fff;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            cursor: pointer;
+                            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+                        }
+                        .nav-btn:hover {
+                            background: var(--accent-1);
+                            border-color: var(--accent-1);
+                            transform: scale(1.12);
+                            box-shadow: 0 0 20px rgba(122, 141, 255, 0.4);
+                        }
+                        .word-span {
+                            display: inline-block;
+                            opacity: 0;
+                            transform: translateY(6px);
+                            filter: blur(8px);
+                            animation: wordReveal 0.3s ease forwards;
+                        }
+                        @keyframes wordReveal {
+                            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+                        }
+                    </style>
 
-                    <a href="x-club-logo.html" class="project-card glass">
-                        <div style="padding: 30px; display: flex; justify-content: center; align-items: center; background: #fff; height: 240px;">
-                            <img src="assets/logo1.jpeg?v=5.0" alt="X Club Fitness Logo" style="max-width: 85%; max-height: 85%;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; align-items: center;">
+                        <div style="position: relative; height: 320px; width: 100%;">
+                            <div id="logo-cards-stack" style="position: relative; width: 100%; height: 100%;"></div>
                         </div>
-                        <div class="project-details">
-                            <h4 style="color: var(--text-primary); margin-bottom: 4px;">X Club Fitness</h4>
-                            <p style="font-size: 0.8rem; color: var(--accent-1); margin-bottom: 8px; font-weight: 600;">Logo Design</p>
-                            <p>Bold, high-contrast typography and silhouette integration for a premier fitness center.</p>
-                        </div>
-                    </a>
 
-                    <a href="prime-design-logo.html" class="project-card glass">
-                        <div style="padding: 30px; display: flex; justify-content: center; align-items: center; background: #000; height: 240px;">
-                            <img src="assets/logo2.jpeg?v=5.0" alt="Prime Design Logo" style="max-width: 85%; max-height: 85%;">
+                        <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%; min-height: 280px;">
+                            <div>
+                                <h3 id="logo-title" style="font-size: 1.9rem; font-weight: 700; color: #fff; margin-bottom: 6px; font-family: 'Outfit', sans-serif;"></h3>
+                                <p id="logo-subtitle" style="font-size: 0.85rem; color: var(--accent-1); font-weight: 600; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.1em;"></p>
+                                <div id="logo-desc" style="font-size: 1.05rem; color: var(--text-secondary); line-height: 1.7;"></div>
+                            </div>
+
+                            <div style="display: flex; gap: 16px; margin-top: 28px;">
+                                <button id="logo-prev-btn" class="nav-btn" aria-label="Previous Logo"><i data-lucide="arrow-left"></i></button>
+                                <button id="logo-next-btn" class="nav-btn" aria-label="Next Logo"><i data-lucide="arrow-right"></i></button>
+                            </div>
                         </div>
-                        <div class="project-details">
-                            <h4 style="color: var(--text-primary); margin-bottom: 4px;">Prime Design</h4>
-                            <p style="font-size: 0.8rem; color: var(--accent-1); margin-bottom: 8px; font-weight: 600;">Creative Branding</p>
-                            <p>Minimalist chess-inspired mark exploring precision and strategic creative direction.</p>
-                        </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         </section>
     </main>
+
+    <script>
+    (function() {
+        const logos = [
+            {
+                name: "Proteios Education",
+                designation: "Full Brand Identity Design",
+                quote: "Strategic logo mark designed to represent upward momentum and academic excellence in education.",
+                src: "assets/logo3.jpeg"
+            },
+            {
+                name: "X-Club Fitness",
+                designation: "Logo & Visual Identity",
+                quote: "Bold high-contrast typography and silhouette integration for a premier fitness center.",
+                src: "assets/logo1.jpeg"
+            },
+            {
+                name: "Prime Design Studio",
+                designation: "Creative Direction & Brand Mark",
+                quote: "Minimalist chess-inspired mark exploring precision and strategic creative direction.",
+                src: "assets/logo2.jpeg"
+            },
+            {
+                name: "inAmigos Foundation",
+                designation: "Community & Social Impact Mark",
+                quote: "Emblem representing youth empowerment, community collaboration, and social progress.",
+                src: "assets/inAmigos Foundation.png"
+            },
+            {
+                name: "Khan AI Systems",
+                designation: "AI Workflow & Brand Mark",
+                quote: "Modern futuristic neural mark representing autonomous workflows and intelligent systems.",
+                src: "assets/Khan AI logo.png"
+            }
+        ];
+
+        let active = 0;
+        const stack = document.getElementById('logo-cards-stack');
+        const title = document.getElementById('logo-title');
+        const subtitle = document.getElementById('logo-subtitle');
+        const desc = document.getElementById('logo-desc');
+        const prevBtn = document.getElementById('logo-prev-btn');
+        const nextBtn = document.getElementById('logo-next-btn');
+
+        if (!stack || !title) return;
+
+        // Random rotation offsets for shuffle stack depth effect
+        const randomRotations = [-8, 6, -5, 9, -7];
+
+        function render() {
+            stack.innerHTML = '';
+            logos.forEach((item, idx) => {
+                const card = document.createElement('div');
+                card.className = 'animated-logo-card';
+                const isActive = idx === active;
+                
+                const rot = isActive ? 0 : randomRotations[idx % randomRotations.length];
+                const scale = isActive ? 1 : 0.93;
+                const opacity = isActive ? 1 : 0.6;
+                const zIndex = isActive ? 99 : (logos.length - Math.abs(idx - active));
+
+                card.style.transform = `scale(${scale}) rotate(${rot}deg) translateY(${isActive ? '0px' : '12px'})`;
+                card.style.opacity = opacity;
+                card.style.zIndex = zIndex;
+
+                card.innerHTML = `
+                    <div class="logo-img-wrapper">
+                        <img src="${item.src}" alt="${item.name}" draggable="false" />
+                    </div>
+                `;
+
+                card.addEventListener('click', () => {
+                    if (!isActive) {
+                        active = idx;
+                        shuffleRender();
+                    }
+                });
+
+                stack.appendChild(card);
+            });
+
+            const cur = logos[active];
+            title.innerText = cur.name;
+            subtitle.innerText = cur.designation;
+            
+            // Animated Word-by-Word Blur Reveal
+            desc.innerHTML = '';
+            const words = cur.quote.split(' ');
+            words.forEach((word, wIdx) => {
+                const span = document.createElement('span');
+                span.className = 'word-span';
+                span.style.animationDelay = `${0.02 * wIdx}s`;
+                span.innerHTML = word + '&nbsp;';
+                desc.appendChild(span);
+            });
+        }
+
+        function shuffleRender() {
+            const activeCard = stack.children[active];
+            if (activeCard) {
+                activeCard.classList.add('shuffling');
+                setTimeout(() => {
+                    render();
+                }, 200);
+            } else {
+                render();
+            }
+        }
+
+        prevBtn?.addEventListener('click', () => {
+            active = (active - 1 + logos.length) % logos.length;
+            shuffleRender();
+        });
+
+        nextBtn?.addEventListener('click', () => {
+            active = (active + 1) % logos.length;
+            shuffleRender();
+        });
+
+        // Autoplay card shuffle every 5 seconds
+        let autoplay = setInterval(() => {
+            active = (active + 1) % logos.length;
+            shuffleRender();
+        }, 5000);
+
+        stack.addEventListener('mouseenter', () => clearInterval(autoplay));
+        stack.addEventListener('mouseleave', () => {
+            autoplay = setInterval(() => {
+                active = (active + 1) % logos.length;
+                shuffleRender();
+            }, 5000);
+        });
+
+        render();
+    })();
+    </script>
 
     <footer>
         <div class="footer-content">
