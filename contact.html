@@ -99,31 +99,84 @@
 
 
 
-                <div style="display: flex; flex-direction: column; gap: 20px;">
-                    <a href="mailto:baasimfayazkhan@gmail.com" class="project-card glass" style="text-decoration: none; padding: 24px; display: flex; align-items: center; gap: 20px;">
+                <form id="portfolioContactForm" class="glass" style="padding: 30px; border-radius: 20px; text-align: left; margin-bottom: 30px; border: 1px solid var(--border-color);">
+                    <h3 style="color: var(--text-primary); margin-bottom: 20px; font-size: 1.3rem; display: flex; align-items: center; gap: 10px;">
+                        <i data-lucide="send" style="color: var(--accent-1); width: 20px; height: 20px;"></i> Send a Direct Message
+                    </h3>
+                    
+                    <div style="margin-bottom: 16px;">
+                        <label for="senderName" style="display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 6px;">Your Name</label>
+                        <input type="text" id="senderName" required placeholder="Enter your full name" style="width: 100%; padding: 12px 16px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: var(--text-primary); font-size: 0.95rem; outline: none;">
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label for="senderEmail" style="display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 6px;">Your Email</label>
+                        <input type="email" id="senderEmail" required placeholder="your.email@example.com" style="width: 100%; padding: 12px 16px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: var(--text-primary); font-size: 0.95rem; outline: none;">
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label for="msgSubject" style="display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 6px;">Subject</label>
+                        <input type="text" id="msgSubject" placeholder="e.g. Collaboration Opportunity / Inquiry" style="width: 100%; padding: 12px 16px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: var(--text-primary); font-size: 0.95rem; outline: none;">
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label for="msgBody" style="display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 6px;">Message</label>
+                        <textarea id="msgBody" rows="5" required placeholder="Type your message here..." style="width: 100%; padding: 12px 16px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: var(--text-primary); font-size: 0.95rem; outline: none; resize: vertical;"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; cursor: pointer; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--accent-1), #8b5cf6); color: white;">
+                        <i data-lucide="mail"></i> Open Email App & Send Message
+                    </button>
+                </form>
+
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <a href="mailto:baasimfayazkhan@gmail.com?subject=Portfolio%20Inquiry%20%7C%20Message%20for%20Baasim&body=Hi%20Baasim,%0A%0AI%20am%20reaching%20out%20after%20visiting%20your%20portfolio..." class="project-card glass" style="text-decoration: none; padding: 20px; display: flex; align-items: center; gap: 18px;">
                         <i data-lucide="mail" style="color: var(--accent-1);"></i>
-                        <div style="text-align: left;">
-                            <h4 style="color: var(--text-primary);">Email</h4>
+                        <div style="text-align: left; flex-grow: 1;">
+                            <h4 style="color: var(--text-primary); margin-bottom: 2px;">Direct Email</h4>
                             <p style="color: var(--text-secondary); font-size: 0.9rem;">baasimfayazkhan@gmail.com</p>
                         </div>
+                        <span style="font-size: 0.78rem; color: var(--accent-1); font-weight: 600;">Open Mail &rarr;</span>
                     </a>
 
-                    <a href="https://www.linkedin.com/in/khan-baasim-41b055408" target="_blank" class="project-card glass" style="text-decoration: none; padding: 24px; display: flex; align-items: center; gap: 20px;">
+                    <a href="https://www.linkedin.com/in/khan-baasim-41b055408" target="_blank" class="project-card glass" style="text-decoration: none; padding: 20px; display: flex; align-items: center; gap: 18px;">
                         <i data-lucide="linkedin" style="color: var(--accent-1);"></i>
-                        <div style="text-align: left;">
-                            <h4 style="color: var(--text-primary);">LinkedIn</h4>
+                        <div style="text-align: left; flex-grow: 1;">
+                            <h4 style="color: var(--text-primary); margin-bottom: 2px;">LinkedIn</h4>
                             <p style="color: var(--text-secondary); font-size: 0.9rem;">Baasim Fayaz Khan</p>
                         </div>
+                        <span style="font-size: 0.78rem; color: var(--text-secondary);">Connect &rarr;</span>
                     </a>
 
-                    <a href="https://www.instagram.com/khan__baasim/" target="_blank" class="project-card glass" style="text-decoration: none; padding: 24px; display: flex; align-items: center; gap: 20px;">
+                    <a href="https://www.instagram.com/khan__baasim/" target="_blank" class="project-card glass" style="text-decoration: none; padding: 20px; display: flex; align-items: center; gap: 18px;">
                         <i data-lucide="instagram" style="color: var(--accent-1);"></i>
-                        <div style="text-align: left;">
-                            <h4 style="color: var(--text-primary);">Instagram</h4>
+                        <div style="text-align: left; flex-grow: 1;">
+                            <h4 style="color: var(--text-primary); margin-bottom: 2px;">Instagram</h4>
                             <p style="color: var(--text-secondary); font-size: 0.9rem;">@khan__baasim</p>
                         </div>
+                        <span style="font-size: 0.78rem; color: var(--text-secondary);">Follow &rarr;</span>
                     </a>
                 </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const form = document.getElementById('portfolioContactForm');
+                        if (form) {
+                            form.addEventListener('submit', function(e) {
+                                e.preventDefault();
+                                const name = document.getElementById('senderName').value.trim();
+                                const email = document.getElementById('senderEmail').value.trim();
+                                const subject = document.getElementById('msgSubject').value.trim() || 'Portfolio Message for Baasim Fayaz Khan';
+                                const message = document.getElementById('msgBody').value.trim();
+
+                                const emailBody = `Hi Baasim,\n\n${message}\n\n---\nSender Name: ${name}\nSender Email: ${email}`;
+                                const mailtoUrl = `mailto:baasimfayazkhan@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+                                
+                                window.location.href = mailtoUrl;
+                            });
+                        }
+                    });
+                </script>
 
 
             </div>
