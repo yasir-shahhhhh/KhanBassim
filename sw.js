@@ -1,4 +1,4 @@
-const CACHE_NAME = 'baasim-portfolio-v7.2.0';
+const CACHE_NAME = 'baasim-portfolio-v7.3.0';
 const ASSETS = [
     '/',
     '/index.html',
