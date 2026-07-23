@@ -5,7 +5,7 @@
 
 // FORCE CACHE & SERVICE WORKER EVICTION SYSTEM (v6.3.0)
 (function() {
-    const PURGE_KEY = 'baasim-cache-purge-v9.3.0';
+    const PURGE_KEY = 'baasim-cache-purge-v9.4.0';
     if (!localStorage.getItem(PURGE_KEY)) {
         console.warn('Purging all service workers and caches to resolve active user caching issues...');
         
@@ -580,7 +580,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const link = e.target.closest('a');
         if (!link) return;
 
-        // Skip clicks inside the mobile nav drawer — handled separately with close animation
+        // Skip clicks inside the mobile nav drawer - handled separately with close animation
         if (link.closest('.mobile-nav-overlay')) return;
 
         // Skip clicks inside the Khan AI chat elements to prevent duplicate routing interference
