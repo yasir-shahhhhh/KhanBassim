@@ -5,7 +5,7 @@
 
 // FORCE CACHE & SERVICE WORKER EVICTION SYSTEM (v6.3.0)
 (function() {
-    const PURGE_KEY = 'baasim-cache-purge-v7.0.0';
+    const PURGE_KEY = 'baasim-cache-purge-v7.1.0';
     if (!localStorage.getItem(PURGE_KEY)) {
         console.warn('Purging all service workers and caches to resolve active user caching issues...');
         
