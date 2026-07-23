@@ -1,4 +1,4 @@
-const CACHE_NAME = 'baasim-portfolio-v8.5.0';
+const CACHE_NAME = 'baasim-portfolio-v8.6.0';
 const ASSETS = [
     '/',
     '/index.html',
@@ -12,6 +12,7 @@ const ASSETS = [
     '/vitasta.html',
     '/mla-pulwama.html',
     '/wathharbor.html',
+    '/basti-ki-pathshala.html',
     '/inamigos.html',
     '/style-v45.css?v=6.3.1',
     '/main-v5.js?v=6.3.1',
