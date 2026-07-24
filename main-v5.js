@@ -489,20 +489,17 @@ document.addEventListener('DOMContentLoaded', () => {
         isRouting = true;
 
         const currentMain = document.querySelector('main');
-        if (currentMain) {
-            currentMain.classList.add('page-leaving');
-        }
 
-        const fetchPromise = fetch(url).then(res => {
-            if (!res.ok) throw new Error('Network response was not ok');
-            return res.text();
-        });
-
-        // Parallelize leaving animation (250ms) and network fetch for lightning speed
-        const delayPromise = new Promise(resolve => setTimeout(resolve, 250));
+        // Create timeout controller to fallback to direct navigation if network takes > 400ms
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 400);
 
         try {
-            const [html] = await Promise.all([fetchPromise, delayPromise]);
+            const res = await fetch(url, { signal: controller.signal });
+            clearTimeout(timeoutId);
+            if (!res.ok) throw new Error('Fetch failed');
+            const html = await res.text();
+
             const parser = new DOMParser();
             const newDoc = parser.parseFromString(html, 'text/html');
             const newMain = newDoc.querySelector('main');
