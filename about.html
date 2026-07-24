@@ -56,10 +56,6 @@
 </head>
 <body>
     <div class="bg-mesh"></div>
-    <!-- Global Particles Background -->
-    <link rel="stylesheet" href="dist-react/style.css">
-    <div id="particles-react-root"></div>
-    <script type="module" src="dist-react/global-particles.js"></script>
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
@@ -200,13 +196,11 @@
                 </div>
             </div>
 
-            <!-- Interactive 3D Scene -->
-            <!-- Interactive 3D Scene React Mount Point -->
-            <div class="fade-in" style="margin-top: 80px; margin-bottom: 50px;">
-                <link rel="stylesheet" href="dist-react/style.css">
-                <div id="react-spline-root"></div>
-                <script src="dist-react/about-react.js"></script>
+            <!-- Interactive 3D Scene (React Component) -->
+            <div class="fade-in" style="margin-top: 80px; display: flex; justify-content: center; margin-bottom: 50px;">
+                <div id="react-spline-root" style="width: 100%; max-width: 1000px;"></div>
             </div>
+            <script type="module" src="dist-react/about-react.js"></script>
         </section>
     </main>
 
