@@ -273,5 +273,26 @@
     <script src="https://unpkg.com/lucide@0.473.0/dist/umd/lucide.js"></script>
     <script src="main-v5.js?v=6.3.1"></script>
     <script src="khan-inject-v45.js?v=6.3.1"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const projectVideos = document.querySelectorAll('.video-wrapper video');
+            projectVideos.forEach(video => {
+                video.addEventListener('click', (e) => {
+                    if (video.paused) {
+                        video.play();
+                    } else {
+                        video.pause();
+                    }
+                });
+                video.addEventListener('play', () => {
+                    projectVideos.forEach(otherVideo => {
+                        if (otherVideo !== video && !otherVideo.paused) {
+                            otherVideo.pause();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 </body>
 </html>
