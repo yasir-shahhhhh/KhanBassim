@@ -7602,7 +7602,7 @@ function qd({
   );
 }
 function Zd() {
-  return /* @__PURE__ */ j.jsxs(wi, { className: "w-full h-[500px] bg-black/[0.96] relative overflow-hidden", children: [
+  return /* @__PURE__ */ j.jsxs(wi, { className: "w-full h-[500px] glass bg-transparent relative overflow-hidden border-0", children: [
     /* @__PURE__ */ j.jsx(
       qd,
       {
