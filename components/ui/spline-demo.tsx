@@ -6,7 +6,7 @@ import { Spotlight } from "@/components/ui/spotlight"
  
 export function SplineSceneBasic() {
   return (
-    <Card className="w-full h-[500px] glass bg-transparent relative overflow-hidden border-0">
+    <Card className="w-full h-[500px] bg-black/[0.96] relative overflow-hidden">
       <Spotlight
         className="-top-40 left-0 md:left-60 md:-top-20"
         fill="white"
