@@ -1,17 +1,11 @@
 import { r as T, j, c as dr, R as hr } from "./client-DCx-n2Z2.js";
-const fr = T.lazy(() => import("./react-spline-CkwwXRmk.js"));
+import fr from "./react-spline-CkwwXRmk.js";
 function pr({ scene: t, className: e }) {
   return /* @__PURE__ */ j.jsx(
-    T.Suspense,
+    fr,
     {
-      fallback: /* @__PURE__ */ j.jsx("div", { className: "w-full h-full flex items-center justify-center", children: /* @__PURE__ */ j.jsx("span", { className: "loader" }) }),
-      children: /* @__PURE__ */ j.jsx(
-        fr,
-        {
-          scene: t,
-          className: e
-        }
-      )
+      scene: t,
+      className: e
     }
   );
 }
