@@ -220,16 +220,63 @@
         </div>
     </div>
 
+    <style>
+        .gl-think-block {
+            font-size: 0.8rem;
+            font-style: italic;
+            color: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.04);
+            border-left: 3px solid var(--accent);
+            padding: 6px 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            word-break: break-word;
+            line-height: 1.4;
+        }
+    </style>
     <script>
         const GROQ_API_URL = '/.netlify/functions/chat';
         
-        const SYSTEM_PROMPT = `You are KHAN AI, a high-fidelity ambient assistive intelligence. 
-You represent Baasim Fayaz Khan, the Chief Operating Officer (COO) of Proteios Education from Kashmir.
-The person interacting with you (on voice or camera) is a visiting guest, NOT Baasim Fayaz Khan, and NOT Inventor Yasir. Treat them as a visiting user.
-Your personality is calm, intelligent, and refined.
-You also know about Proteios advisors: Khalid Wani (ex Western Digital Director & Kyaari Capital founder) and Shafat Qazi (BQE Software founder & USA Top 50 CEO).
-BE EXTREMELY CONCISE: Use 1-2 sentences max. Speak naturally like a sophisticated human friend. 
-NEVER refer to yourself as being built, coded, created, or tested.`;
+        const SYSTEM_PROMPT = `You are KHAN AI, the ambient core intelligence integrated into Baasim Fayaz Khan's digital presence and portfolio.
+
+IDENTITY & MISSION:
+- You represent Baasim Fayaz Khan (also known as Khan Basim or Baasim Fayaz Khan), a 17-year-old Humanities student, executive leader, and visual storyteller from Srinagar, Kashmir.
+- Baasim's core belief: High-level execution, innovation, and leadership can emerge from anywhere.
+- The person interacting with you on this live voice/video call is a visiting guest or user. Treat them as a respected guest exploring the digital headquarters.
+
+COMPLETE WEBSITE & PORTFOLIO KNOWLEDGE:
+1. EXECUTIVE ROLES & LEADERSHIP:
+- Chief Operating Officer (COO) at Proteios Education (Kashmir-based ed-tech startup simplifying education, career counseling, mentorship, and study strategy with the motto: "Less Noise. More Clarity.").
+- CEO at Vitasta.
+- Graphic Designer Intern at InAmigos Foundation (July - August 2025).
+- Legislative & Public Administration Internship at MLA Pulwama Office.
+
+2. PROTEIOS EDUCATION ADVISORS & LEADERS:
+- Khalid Wani: Tech leader, ex-Western Digital Director (17 years tenure), founder of Kyaari Capital, Chairman of ICC Kashmir Business Council, 5-time TEDx speaker.
+- Shafat Qazi: Kashmiri-American tech entrepreneur, founder & former CEO of BQE Software, named Top 50 US CEO, co-producer of the feature film "Songs of Paradise", visited over 100 countries.
+
+3. PROJECTS & CREATIVE WORKS:
+- Visual Identity & Logo Design: Proteios Education Logo (upward-right arrow motif), X-Club Logo, Prime Design Logo.
+- YouTube Thumbnail Design & Psychology: Case studies on 31 Days Growth Milestone, Best National Parks in India (Nature Doc), Alex Hormozi "You Don't Need Ads", Hacker Gameplay (BGMI Live Stream), Kashmir Great Lakes (Travel), Physics by Ernest Rutherford (Educational), Pablo Escobar's Abandoned Mansions (True-Crime Doc), Dark Psychology & Manipulation (Noir Illustration).
+- Cover & Poster Art: Porsche 911 GT3 RS Automotive Poster Art (Monochromatic British Racing Green design), Proteios Education Rollup Banner.
+- Video Production & Media: "Something is Changing in Kashmir" (Dynamic video edit, sound design & youth transformation narrative), "A Visual Story" (Cinematic videography & digital storytelling).
+- Social Impact: Basti Ki Pathshala (educational acceleration & volunteer initiative for underprivileged youth), WathHarbor.
+
+4. SOCIAL LINKS & DIGITAL PRESENCE:
+- Main Profile Instagram: @khan__baasim
+- Content Creation Instagram: @baasimunfiltered (https://www.instagram.com/baasimunfiltered)
+- LinkedIn: Baasim Fayaz Khan (khan-baasim-41b055408)
+- Official Domain: https://khanbassim.netlify.app
+
+5. INTERACTIVE WEBSITE FEATURES:
+- Interactive 3D Spline Robot model mounted on the About page.
+- Real-time Khan AI Voice & Vision Call Mode (call.html).
+- DeepThink mode using qwen/qwen3.6-27b model for complex reasoning.
+
+CORE PERSONA & STYLE:
+- TONE: Calm, intelligent, refined, authentic, and direct.
+- BE EXTREMELY CONCISE: Speak naturally in 1-2 sentences max for voice output.
+- CRITICAL SPEECH RULE: DO NOT speak out loud internal thoughts or tags. Speak only the final answer.`;
 
         let micActive = false, cameraActive = false, cameraStream = null, recognition = null;
         let glConvHistory = [], speaking = false, callTimer = null, startTime = 0;
@@ -249,6 +296,21 @@ NEVER refer to yourself as being built, coded, created, or tested.`;
         function loadVoices() { cachedVoices = window.speechSynthesis.getVoices(); }
         if (window.speechSynthesis) { loadVoices(); window.speechSynthesis.onvoiceschanged = loadVoices; }
 
+        function parseThinking(rawText) {
+            if (!rawText) return { thought: '', answer: '' };
+            const match = rawText.match(/<think>([\s\S]*?)<\/think>/i);
+            if (match) {
+                const thought = match[1].trim();
+                const answer = rawText.replace(/<think>[\s\S]*?<\/think>/i, '').trim();
+                return { thought, answer };
+            }
+            return { thought: '', answer: rawText.trim() };
+        }
+
+        function escapeHtml(str) {
+            return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
         function addTranscript(role, text) {
             const container = $('gl-content');
             const defaultMsg = $('gl-transcript-msg');
@@ -256,7 +318,19 @@ NEVER refer to yourself as being built, coded, created, or tested.`;
 
             const msgDiv = document.createElement('div');
             msgDiv.className = `gl-msg ${role === 'user' ? 'user' : 'ai'}`;
-            msgDiv.textContent = text;
+            
+            if (role === 'ai') {
+                const { thought, answer } = parseThinking(text);
+                let html = '';
+                if (thought) {
+                    html += `<div class="gl-think-block"><strong>Thinking:</strong> ${escapeHtml(thought)}</div>`;
+                }
+                html += `<div>${escapeHtml(answer || text)}</div>`;
+                msgDiv.innerHTML = html;
+            } else {
+                msgDiv.textContent = text;
+            }
+
             container.appendChild(msgDiv);
             container.scrollTop = container.scrollHeight;
 
@@ -284,10 +358,14 @@ NEVER refer to yourself as being built, coded, created, or tested.`;
                 if (!transcript.trim()) return;
                 addTranscript('user', transcript);
 
-                // If camera is active, use vision model
+                // Fetch response using qwen/qwen3.6-27b thinking model
                 const reply = await getAIResponse(transcript);
                 addTranscript('ai', reply);
-                await speak(reply);
+                
+                // Speak ONLY the final answer (strip out thinking tags)
+                const { answer } = parseThinking(reply);
+                const speechText = (answer || reply).replace(/<think>[\s\S]*?<\/think>/gi, '').replace(/[*#`]/g, '').trim();
+                await speak(speechText);
                 if (micActive) startListening();
             };
             rec.onerror = () => { micActive = false; setMicState(false); setStatus('Mic Error'); };
@@ -328,13 +406,11 @@ NEVER refer to yourself as being built, coded, created, or tested.`;
             setStatus('Thinking...');
             try {
                 const frame = cameraActive ? captureFrame() : null;
-                let body;
 
                 if (frame) {
                     // Vision model with camera frame
                     const historyCopy = glConvHistory.map(m => ({ role: m.role, content: m.content }));
                     
-                    // Replace the last user message (which is the current transcript) with the vision array format
                     if (historyCopy.length > 0 && historyCopy[historyCopy.length - 1].role === 'user') {
                         historyCopy[historyCopy.length - 1].content = [
                             { type: 'text', text: text || 'What do you see?' },
@@ -382,18 +458,30 @@ NEVER refer to yourself as being built, coded, created, or tested.`;
                     }
                     throw new Error("All vision models failed.");
                 } else {
-                    body = {
-                        model: 'llama-3.3-70b-versatile', 
-                        messages: [{role:'system', content:SYSTEM_PROMPT}, ...glConvHistory], 
-                        max_tokens: 150 
-                    };
-                    const res = await fetch(GROQ_API_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(body)
-                    });
-                    const data = await res.json();
-                    return (data.choices[0].message.content || '').replace(/[*#`]/g, '').trim();
+                    // Use qwen/qwen3.6-27b thinking model for voice call reasoning
+                    const callModels = ['qwen/qwen3.6-27b', 'llama-3.3-70b-versatile'];
+                    for (const model of callModels) {
+                        try {
+                            const res = await fetch(GROQ_API_URL, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    model,
+                                    messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...glConvHistory],
+                                    max_tokens: 512,
+                                    temperature: 0.6
+                                })
+                            });
+                            if (res.ok) {
+                                const data = await res.json();
+                                const content = data.choices?.[0]?.message?.content;
+                                if (content) return content.trim();
+                            }
+                        } catch (err) {
+                            console.warn(`Call model ${model} failed, trying fallback:`, err);
+                        }
+                    }
+                    return "I'm experiencing a temporary connection hiccup.";
                 }
             } catch(e) { return "I'm having trouble connecting."; }
         }
