@@ -2696,7 +2696,7 @@ function initializeKhanLogic() {
 
             // Load history context
             const chatCtx = window._chatConversationHistory || [];
-            glConvHistory = [{ role: 'system', content: SYSTEM_PROMPT + '\n\nVoice mode: Be concise ├óΓé¼ΓÇ¥ 1-3 sentences max. Natural and conversational.' }];
+            glConvHistory = [{ role: 'system', content: SYSTEM_PROMPT + '\n\nVoice mode: Be concise — 1-3 sentences max. Natural and conversational.\n\nCRITICAL: You are a thinking model. You MUST wrap all your internal reasoning, persona checks, and visual analysis steps inside <think>...</think> tags. ONLY the final, polished response should be outside the tags.' }];
             // Ensure we don't duplicate the system prompt from context
             chatCtx.filter(m => m.role !== 'system').slice(-10).forEach(m => glConvHistory.push({ role: m.role, content: m.content }));
 
@@ -2860,7 +2860,7 @@ function initializeKhanLogic() {
         async function getAIResponse(userText) {
             setStatus('Thinking...', 'thinking');
             const frame = captureFrame();
-            const sysPrompt = SYSTEM_PROMPT + '\n\nVoice mode: Be concise ├óΓé¼ΓÇ¥ 1-3 sentences max. If the camera is on, you can see the user. Describe what you see if relevant.';
+            const sysPrompt = SYSTEM_PROMPT + '\n\nVoice mode: Be concise — 1-3 sentences max. If the camera is on, you can see the user. Describe what you see if relevant.\n\nCRITICAL: You are a thinking model. You MUST wrap all your internal reasoning, persona checks, and visual analysis steps strictly inside <think>...</think> tags. ONLY the final, polished response should be outside the tags. Never output raw thought processes without these tags.';
 
             if (glConvHistory.length === 0 || glConvHistory[0].role !== 'system') {
                 glConvHistory.unshift({ role: 'system', content: sysPrompt });
