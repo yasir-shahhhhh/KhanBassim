@@ -712,19 +712,20 @@ a {
 /* About Section */
 .about-grid {
     display: grid;
-    grid-template-columns: 1.6fr 1.2fr 1fr;
+    grid-template-columns: 1.35fr 1.2fr 0.85fr;
     gap: var(--spacing-lg);
     align-items: center;
 }
 
 .profile-img {
     width: 100%;
-    aspect-ratio: 4/5;
+    aspect-ratio: 4 / 5;
     object-fit: cover;
-    border-radius: 16px;
+    object-position: center top;
+    border-radius: 18px;
     border: 1px solid var(--border-color);
-    filter: grayscale(20%);
-    transition: filter 0.3s ease;
+    filter: grayscale(0%);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .profile-img:hover {
