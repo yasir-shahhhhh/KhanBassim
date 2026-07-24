@@ -37,11 +37,6 @@
         } catch (e) {
             console.error('Failed to set purge key in localStorage:', e);
         }
-
-        // 4. Force hard reload (bypass browser cache) after a tiny delay
-        setTimeout(() => {
-            window.location.reload(true);
-        }, 150);
     }
 })();
 
@@ -246,12 +241,28 @@ document.addEventListener('DOMContentLoaded', () => {
        2. CINEMATIC PRELOADER & VIDEO INIT
        ═══════════════════════════════════════════════════════ */
     const initExperience = () => {
+        const preloaderSeen = sessionStorage.getItem('bfk_preloader_seen');
+
         if (!heroVideo) {
-            // If no hero video (sub-pages), fade out preloader quickly
-            setTimeout(() => {
-                preloader?.classList.add('fade-out');
-                navbar?.classList.add('show');
-            }, 1000);
+            // Sub-pages: hide preloader & show navbar immediately
+            if (preloader) {
+                preloader.classList.add('fade-out');
+                preloader.style.display = 'none';
+            }
+            navbar?.classList.add('show');
+            return;
+        }
+
+        // If preloader was already seen in this session, skip delay
+        if (preloaderSeen && preloader) {
+            preloader.classList.add('fade-out');
+            preloader.style.display = 'none';
+            navbar?.classList.add('show');
+            heroVideo.muted = true;
+            heroVideo.loop = true;
+            heroVideo.playsInline = true;
+            heroVideo.preload = 'auto';
+            heroVideo.play().catch(e => console.warn("Autoplay blocked:", e));
             return;
         }
 
@@ -267,8 +278,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (preloader) {
                     preloader.classList.add('fade-out');
                     navbar?.classList.add('show');
+                    try { sessionStorage.setItem('bfk_preloader_seen', 'true'); } catch(e){}
                 }
-            }, 1500);
+            }, 800);
         };
 
         if (heroVideo.readyState >= 3) {
@@ -282,8 +294,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (preloader && !preloader.classList.contains('fade-out')) {
                 preloader.classList.add('fade-out');
                 navbar?.classList.add('show');
+                try { sessionStorage.setItem('bfk_preloader_seen', 'true'); } catch(e){}
             }
-        }, 5000);
+        }, 2500);
 
         // Audio hint
         setTimeout(() => {
