@@ -2869,7 +2869,7 @@ function initializeKhanLogic() {
                     const finalMsgs = [{ role: 'user', content: 'System: ' + sysPrompt }, { role: 'assistant', content: 'Understood.' }, ...visionMsgs];
                     
                     const visionModels = [
-                        'meta-llama/llama-4-scout-17b-16e-instruct',
+                        'qwen/qwen3.6-27b',
                         'llama-3.2-90b-vision-preview',
                         'llama-3.2-11b-vision-preview'
                     ];
