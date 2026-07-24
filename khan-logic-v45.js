@@ -2913,19 +2913,38 @@ function initializeKhanLogic() {
                     }
                 } else {
                     glConvHistory.push({ role: 'user', content: userText });
-                    body = { model: 'llama-3.3-70b-versatile', messages: glConvHistory, max_tokens: 200 };
-                    const response = await fetch(GROQ_CHAT_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(body)
-                    });
-                    if (!response.ok) {
-                        if (response.status === 404) throw new Error('API proxy not found. Ensure Netlify functions are deployed.');
-                        if (response.status === 401 || response.status === 403) throw new Error('API Key missing or invalid in Netlify settings.');
-                        throw new Error(`Connection error (${response.status})`);
+                    
+                    const callModels = ['qwen/qwen3.6-27b', 'llama-3.3-70b-versatile'];
+                    let ok = false;
+                    let lastErr = null;
+                    
+                    for (const cm of callModels) {
+                        try {
+                            body = { model: cm, messages: glConvHistory, max_tokens: 512, temperature: 0.6 };
+                            const response = await fetch(GROQ_CHAT_URL, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(body)
+                            });
+                            
+                            if (response.ok) {
+                                const data = await response.json();
+                                reply = (data?.choices?.[0]?.message?.content || 'I did not catch that.').replace(/[*#`]/g, '').trim();
+                                ok = true;
+                                break;
+                            } else {
+                                if (response.status === 404) throw new Error('API proxy not found. Ensure Netlify functions are deployed.');
+                                if (response.status === 401 || response.status === 403) throw new Error('API Key missing or invalid in Netlify settings.');
+                                lastErr = new Error(`Connection error (${response.status})`);
+                            }
+                        } catch (err) {
+                            lastErr = err;
+                        }
                     }
-                    const data = await response.json();
-                    reply = (data?.choices?.[0]?.message?.content || 'I did not catch that.').replace(/[*#`]/g, '').trim();
+                    
+                    if (!ok) {
+                        throw lastErr || new Error('All call models failed.');
+                    }
                 }
 
                 glConvHistory.push({ role: 'assistant', content: reply });
