@@ -575,6 +575,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateCursor();
                 initMobileMenu();
                 initCard3DTilt();
+                if (typeof window.mountSplineRobot === 'function') {
+                    window.mountSplineRobot();
+                }
             } else {
                 window.location.href = url;
             }

@@ -7613,7 +7613,28 @@ function Zd() {
     ) }) })
   ] });
 }
-const fi = document.getElementById("react-spline-root");
-fi && dr.createRoot(fi).render(
-  /* @__PURE__ */ j.jsx(hr.StrictMode, { children: /* @__PURE__ */ j.jsx(Zd, {}) })
-);
+window.mountSplineRobot = function() {
+  const rootEl = document.getElementById("react-spline-root");
+  if (rootEl && !rootEl._spline_mounted) {
+    rootEl._spline_mounted = true;
+    dr.createRoot(rootEl).render(
+      /* @__PURE__ */ j.jsx(hr.StrictMode, { children: /* @__PURE__ */ j.jsx(Zd, {}) })
+    );
+  }
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => window.mountSplineRobot());
+} else {
+  window.mountSplineRobot();
+}
+
+if (typeof window !== 'undefined') {
+  const observer = new MutationObserver(() => {
+    const el = document.getElementById("react-spline-root");
+    if (el && !el._spline_mounted) {
+      window.mountSplineRobot();
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+}
