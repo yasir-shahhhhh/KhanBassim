@@ -12,13 +12,19 @@ export default defineConfig({
   build: {
     outDir: 'dist-react',
     lib: {
-      entry: 'src/about-react.tsx',
-      name: 'AboutReact',
-      formats: ['iife'],
-      fileName: () => 'about-react.js'
+      entry: {
+        'about-react': 'src/about-react.tsx',
+        'global-particles': 'src/global-particles.tsx'
+      },
+      name: 'ReactComponents',
+      formats: ['es'],
     },
     rollupOptions: {
-      // Intentionally not externalizing react/react-dom so they bundle
+      // output formatting for multiple entries
+      output: {
+        entryFileNames: '[name].js',
+        chunkFileNames: '[name]-[hash].js',
+      }
     }
   },
   define: {
