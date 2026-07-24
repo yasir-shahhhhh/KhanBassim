@@ -2584,7 +2584,18 @@ function initializeKhanLogic() {
                 msgDiv.style.marginRight = 'auto';
             }
 
-            msgDiv.textContent = text;
+            if (role === 'ai') {
+                const { thought, answer } = splitThoughtAndAnswer(text);
+                let html = '';
+                if (thought) {
+                    html += `<div style="font-size: 0.85rem; font-style: italic; color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.1); border-left: 3px solid #22c55e; padding: 6px 10px; border-radius: 4px; margin-bottom: 8px; word-break: break-word; line-height: 1.4;"><strong>Thinking:</strong> ${escapeHtml(thought)}</div>`;
+                }
+                html += `<div>${escapeHtml(answer || text)}</div>`;
+                msgDiv.innerHTML = html;
+            } else {
+                msgDiv.textContent = text;
+            }
+
             container.appendChild(msgDiv);
 
             // Keep scrolled to bottom
@@ -2632,7 +2643,8 @@ function initializeKhanLogic() {
                 addTranscript('user', transcript.trim());
                 const reply = await getAIResponse(transcript.trim());
                 addTranscript('ai', reply);
-                await speak(reply);
+                const { answer } = splitThoughtAndAnswer(reply);
+                await speak(answer || reply);
                 if (isOpen) setTimeout(() => { if (isOpen && !speaking) startListening(); }, 400);
             };
             rec.onerror = (e) => {
