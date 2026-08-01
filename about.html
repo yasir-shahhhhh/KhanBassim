@@ -201,9 +201,12 @@
 
             <!-- Interactive 3D Scene + Quote Section (Side-by-Side) -->
             <style>
+                #react-spline-root {
+                    overflow: visible !important;
+                }
                 #react-spline-root canvas {
-                    transform: scale(1.65) !important;
-                    transform-origin: center center !important;
+                    transform: scale(1.5) translateY(45px) !important;
+                    transform-origin: center top !important;
                 }
             </style>
             <div class="fade-in" style="margin-top: 60px; margin-bottom: 60px; max-width: 1200px; margin-left: auto; margin-right: auto; padding: 0 20px;">
@@ -213,8 +216,8 @@
                     gap: 40px;
                     align-items: center;
                 ">
-                    <!-- Left: 3D Skeleton Robot (Scaled 1.65x, Unclipped) -->
-                    <div style="width: 100%; height: 580px; display: flex; align-items: center; justify-content: center; position: relative;">
+                    <!-- Left: 3D Skeleton Robot (Fully Visible, Headroom Added) -->
+                    <div style="width: 100%; height: 650px; display: flex; align-items: center; justify-content: center; position: relative;">
                         <div id="react-spline-root" style="width: 100%; height: 100%;"></div>
                     </div>
 
