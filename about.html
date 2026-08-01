@@ -199,11 +199,11 @@
                 </div>
             </div>
 
-            <!-- Interactive 3D Scene + Quote Section (Side-by-Side Level) -->
+            <!-- Interactive 3D Scene + Quote Section (Side-by-Side) -->
             <style>
                 .robot-quote-grid {
                     display: grid;
-                    grid-template-columns: 1.1fr 0.9fr;
+                    grid-template-columns: 1.15fr 0.85fr;
                     gap: 40px;
                     align-items: center;
                 }
@@ -211,25 +211,29 @@
                     .robot-quote-grid {
                         grid-template-columns: 1fr;
                     }
+                    .quote-card-container {
+                        margin-top: 0px !important;
+                    }
                 }
                 #react-spline-root, #react-spline-root * {
                     overflow: visible !important;
                 }
                 #react-spline-root canvas {
-                    transform: scale(1.4) translateY(-15px) !important;
+                    transform: scale(1.45) !important;
                     transform-origin: center center !important;
                 }
             </style>
             <div class="fade-in" style="margin-top: 50px; margin-bottom: 60px; max-width: 1280px; margin-left: auto; margin-right: auto; padding: 0 20px;">
                 <div class="robot-quote-grid">
-                    <!-- Left: 3D Skeleton Robot (Level with Quote Card) -->
-                    <div style="width: 100%; height: 420px; display: flex; align-items: center; justify-content: center; position: relative;">
+                    <!-- Left: 3D Skeleton Robot -->
+                    <div style="width: 100%; height: 520px; display: flex; align-items: center; justify-content: center; position: relative;">
                         <div id="react-spline-root" style="width: 100%; height: 100%;"></div>
                     </div>
 
-                    <!-- Right: Inspirational Quote Card -->
-                    <div style="
+                    <!-- Right: Inspirational Quote Card (Pulled Down to Match Robot) -->
+                    <div class="quote-card-container" style="
                         position: relative;
+                        margin-top: 45px;
                         padding: 48px 40px;
                         background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
                         border: 1px solid rgba(255,255,255,0.08);
