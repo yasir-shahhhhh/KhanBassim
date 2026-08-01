@@ -200,16 +200,22 @@
             </div>
 
             <!-- Interactive 3D Scene + Quote Section (Side-by-Side) -->
-            <div class="fade-in" style="margin-top: 80px; margin-bottom: 60px; max-width: 1200px; margin-left: auto; margin-right: auto; padding: 0 20px;">
+            <style>
+                #react-spline-root canvas, #react-spline-root > div {
+                    transform: scale(1.6) !important;
+                    transform-origin: center center !important;
+                }
+            </style>
+            <div class="fade-in" style="margin-top: 60px; margin-bottom: 60px; max-width: 1200px; margin-left: auto; margin-right: auto; padding: 0 20px;">
                 <div style="
                     display: grid;
                     grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr));
                     gap: 40px;
                     align-items: center;
                 ">
-                    <!-- Left: 3D Skeleton Robot -->
-                    <div style="width: 100%; min-height: 450px; display: flex; align-items: center; justify-content: center; position: relative;">
-                        <div id="react-spline-root" style="width: 100%; height: 450px;"></div>
+                    <!-- Left: 3D Skeleton Robot (Scaled Up) -->
+                    <div style="width: 100%; min-height: 520px; display: flex; align-items: center; justify-content: center; position: relative; overflow: visible;">
+                        <div id="react-spline-root" style="width: 100%; height: 520px;"></div>
                     </div>
 
                     <!-- Right: Inspirational Quote Card -->
@@ -268,7 +274,7 @@
                                     letter-spacing: 0.05em;
                                     display: block;
                                     margin-top: 2px;
-                                ">Software Engineer</span>
+                                ">Executive Leader & Visual Storyteller</span>
                             </div>
                         </div>
                     </div>
