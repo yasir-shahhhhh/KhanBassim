@@ -212,9 +212,12 @@
                         grid-template-columns: 1fr;
                     }
                 }
+                #react-spline-root, #react-spline-root * {
+                    overflow: visible !important;
+                }
                 #react-spline-root canvas {
-                    transform: scale(1.75) !important;
-                    transform-origin: center center !important;
+                    transform: scale(1.45) translateY(75px) !important;
+                    transform-origin: center top !important;
                 }
             </style>
             <div class="fade-in" style="margin-top: 40px; margin-bottom: 60px; max-width: 1280px; margin-left: auto; margin-right: auto; padding: 0 20px;">
