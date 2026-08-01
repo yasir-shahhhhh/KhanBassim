@@ -199,9 +199,80 @@
                 </div>
             </div>
 
-            <!-- Interactive 3D Scene (React Component) -->
-            <div class="fade-in" style="margin-top: 80px; display: flex; justify-content: center; margin-bottom: 50px;">
-                <div id="react-spline-root" style="width: 100%; max-width: 1000px;"></div>
+            <!-- Interactive 3D Scene + Quote Section (Side-by-Side) -->
+            <div class="fade-in" style="margin-top: 80px; margin-bottom: 60px; max-width: 1200px; margin-left: auto; margin-right: auto; padding: 0 20px;">
+                <div style="
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr));
+                    gap: 40px;
+                    align-items: center;
+                ">
+                    <!-- Left: 3D Skeleton Robot -->
+                    <div style="width: 100%; min-height: 450px; display: flex; align-items: center; justify-content: center; position: relative;">
+                        <div id="react-spline-root" style="width: 100%; height: 450px;"></div>
+                    </div>
+
+                    <!-- Right: Inspirational Quote Card -->
+                    <div style="
+                        position: relative;
+                        padding: 48px 40px;
+                        background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+                        border: 1px solid rgba(255,255,255,0.08);
+                        border-radius: 20px;
+                        backdrop-filter: blur(16px);
+                        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                    ">
+                        <div style="
+                            position: absolute;
+                            top: -18px;
+                            left: 36px;
+                            font-size: 3.5rem;
+                            line-height: 1;
+                            color: var(--accent-1);
+                            opacity: 0.35;
+                            font-family: 'Cormorant Garamond', serif;
+                        ">&ldquo;</div>
+                        <p style="
+                            font-family: 'Cormorant Garamond', serif;
+                            font-size: 1.55rem;
+                            font-weight: 400;
+                            font-style: italic;
+                            color: var(--text-primary);
+                            line-height: 1.8;
+                            letter-spacing: 0.01em;
+                            margin: 10px 0 24px;
+                        ">Don't wait for the world to hand you a stage &mdash; build one, light it yourself, and let the work speak louder than any introduction ever could.</p>
+                        <div style="
+                            display: flex;
+                            align-items: center;
+                            gap: 14px;
+                        ">
+                            <div style="width: 36px; height: 1px; background: var(--accent-1); opacity: 0.6;"></div>
+                            <div>
+                                <span style="
+                                    font-family: 'Space Grotesk', sans-serif;
+                                    font-size: 0.88rem;
+                                    font-weight: 600;
+                                    letter-spacing: 0.12em;
+                                    text-transform: uppercase;
+                                    color: var(--accent-1);
+                                    display: block;
+                                ">Baasim Fayaz Khan</span>
+                                <span style="
+                                    font-family: 'Inter', sans-serif;
+                                    font-size: 0.75rem;
+                                    color: var(--text-secondary);
+                                    letter-spacing: 0.05em;
+                                    display: block;
+                                    margin-top: 2px;
+                                ">Software Engineer</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <script type="module" src="dist-react/about-react.js"></script>
         </section>
