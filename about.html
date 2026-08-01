@@ -199,53 +199,35 @@
                 </div>
             </div>
 
-            <!-- Unified Sleek Black Box (Robot + Quote) with Bright White Torch & White Outline Effect -->
+            <!-- Unified Sleek Black Box (Robot + Quote) with Smooth White Ambient Spotlight & White Outline -->
             <style>
                 .torch-card-wrapper {
                     position: relative;
                     background: #050508;
-                    border: 1.5px solid rgba(255, 255, 255, 0.25);
+                    border: 1.5px solid rgba(255, 255, 255, 0.2);
                     border-radius: 26px;
                     padding: 44px;
                     overflow: hidden;
-                    box-shadow: 0 0 15px rgba(255, 255, 255, 0.08), 0 35px 70px -15px rgba(0, 0, 0, 0.95);
-                    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+                    box-shadow: 0 0 20px rgba(255, 255, 255, 0.06), 0 35px 70px -15px rgba(0, 0, 0, 0.95);
+                    transition: border-color 0.4s ease, box-shadow 0.4s ease;
                 }
                 .torch-card-wrapper:hover {
-                    border-color: rgba(255, 255, 255, 0.95) !important;
-                    box-shadow: 0 0 45px rgba(255, 255, 255, 0.35), inset 0 0 25px rgba(255, 255, 255, 0.12);
+                    border-color: rgba(255, 255, 255, 0.85) !important;
+                    box-shadow: 0 0 35px rgba(255, 255, 255, 0.25), inset 0 0 20px rgba(255, 255, 255, 0.08);
                 }
                 .torch-light-overlay {
                     position: absolute;
                     inset: 0;
                     pointer-events: none;
                     background: radial-gradient(
-                        550px circle at var(--torch-x, 50%) var(--torch-y, 50%),
-                        rgba(255, 255, 255, 0.45) 0%,
-                        rgba(255, 255, 255, 0.18) 30%,
-                        rgba(255, 255, 255, 0.03) 65%,
-                        rgba(0, 0, 0, 0) 80%
+                        600px circle at var(--torch-x, 50%) var(--torch-y, 50%),
+                        rgba(255, 255, 255, 0.22) 0%,
+                        rgba(255, 255, 255, 0.08) 35%,
+                        rgba(255, 255, 255, 0.015) 65%,
+                        transparent 80%
                     );
                     z-index: 2;
-                    transition: opacity 0.2s ease;
-                }
-                .torch-ring {
-                    position: absolute;
-                    width: 140px;
-                    height: 140px;
-                    border-radius: 50%;
-                    border: 1.5px solid rgba(255, 255, 255, 0.6);
-                    box-shadow: 0 0 30px rgba(255, 255, 255, 0.7), inset 0 0 20px rgba(255, 255, 255, 0.3);
-                    pointer-events: none;
-                    top: var(--torch-y, 50%);
-                    left: var(--torch-x, 50%);
-                    transform: translate(-50%, -50%);
-                    z-index: 3;
-                    opacity: 0;
                     transition: opacity 0.3s ease;
-                }
-                .torch-card-wrapper:hover .torch-ring {
-                    opacity: 1;
                 }
                 .robot-quote-inner-grid {
                     display: grid;
@@ -277,7 +259,6 @@
                 <!-- Single Unified Black Box -->
                 <div class="torch-card-wrapper" id="torchCardWrapper">
                     <div class="torch-light-overlay" id="torchLightOverlay"></div>
-                    <div class="torch-ring"></div>
 
                     <div class="robot-quote-inner-grid">
                         <!-- Left: 3D Skeleton Robot -->
